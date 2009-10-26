@@ -64,5 +64,8 @@ INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}/include )
 
 ADD_SUBDIRECTORY( src )
+
+# Copy data into the build directory
+RECURSIVELY_COPY_DIRECTORY( ${PROJECT_SOURCE_DIR}/media/export ${PROJECT_BINARY_DIR}/media/export )
   
 MESSAGE( STATUS "Build Type: ${CMAKE_BUILD_TYPE}" )

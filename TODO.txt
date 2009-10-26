@@ -1,0 +1,5 @@
+- Tidy up and commit to git
+
+- Draw 3D axes as a GUI element on screen
+- Add a debug camera to look around the scene
+- Work out the best way to export .x files from Blender

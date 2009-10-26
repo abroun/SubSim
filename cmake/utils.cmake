@@ -77,6 +77,47 @@ MACRO( LIST_TO_STRING _string _list )
 ENDMACRO( LIST_TO_STRING )
 
 #-------------------------------------------------------------------------------
+# Configure time copying of directories. Use with care as it's pretty 
+# inefficient
+MACRO( RECURSIVELY_COPY_DIRECTORY _srcDir _destDir)
+    MESSAGE( STATUS "Copying directory ${_srcDir}" )
+    FILE( MAKE_DIRECTORY ${_destDir} )
 
+    # Get a list of all files below the source directory (this seems to be the only way
+    # to get a list of subdirectories)
+    FILE( GLOB_RECURSE subFileList ${_srcDir}/* )
+
+    FOREACH ( subFile ${subFileList} )
+
+        # Get the length of the source dir, have to refresh it each time as it 
+        # may be changed by other calls to RECURSIVELY_COPY_DIRECTORY
+        STRING( LENGTH ${_srcDir} srcDirLength )
+        MATH( EXPR srcDirLength "${srcDirLength} + 1" ) # Skip trailing slash - may fail if it's not there
+
+        # Get the length of the string without the source directory  
+        STRING( LENGTH ${subFile} subFileLength )
+        MATH( EXPR subStringLength "${subFileLength} - ${srcDirLength}" )
+        
+        # Remove the source directory from the file name
+        STRING( SUBSTRING ${subFile} ${srcDirLength} ${subStringLength} subString )
+
+        STRING( REGEX MATCH "^[^/]*" subDirString ${subString} )
+        STRING( LENGTH ${subDirString} subDirStringLength )
+
+        IF ( ${subDirStringLength} LESS ${subStringLength} )
+            
+            #MESSAGE( STATUS "Copying ${_srcDir}/${subDirString}" )
+            RECURSIVELY_COPY_DIRECTORY( ${_srcDir}/${subDirString} ${_destDir}/${subDirString} )
+
+        ELSE ( ${subDirStringLength} LESS ${subStringLength} )
+
+            #MESSAGE( STATUS "Copying ${_srcDir}/${subString}" )
+            EXECUTE_PROCESS( COMMAND ${CMAKE_COMMAND} -E copy ${_srcDir}/${subString} ${_destDir}/${subString} )
+
+        ENDIF ( ${subDirStringLength} LESS ${subStringLength} )
+
+    ENDFOREACH ( subFile )
+
+ENDMACRO( RECURSIVELY_COPY_DIRECTORY )
 
 #-------------------------------------------------------------------------------

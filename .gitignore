@@ -1,5 +1,7 @@
 # Directories
 build
+.kdev4
 
 # Files
 *~
+*.kdev4
