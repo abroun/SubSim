@@ -42,6 +42,33 @@ int main()
         pNode->setMaterialFlag( irr::video::EMF_LIGHTING, false );
     }
     
+    // Create an arrow
+    const irr::scene::IGeometryCreator* pCreator = pSceneMgr->getGeometryCreator();
+    
+    irr::scene::IMesh* pArrowMeshZ = pCreator->createArrowMesh( 
+        4, 8, 1.0f, 0.6f, 0.05f, 0.1f, 
+        irr::video::SColor( 255, 0, 0, 255 ), irr::video::SColor( 255, 0, 0, 255 ) ); 
+    irr::scene::IMeshSceneNode* pArrowNodeZ = pSceneMgr->addMeshSceneNode( pArrowMeshZ );
+    pArrowNodeZ->setPosition( irr::core::vector3df( 4.0f, 0.0f, 0.0f ) );
+    pArrowNodeZ->setRotation( irr::core::vector3df( 90.0f, 0.0f, 0.0f ) );
+    pArrowNodeZ->setMaterialFlag( irr::video::EMF_LIGHTING, false );
+    
+    irr::scene::IMesh* pArrowMeshY = pCreator->createArrowMesh( 
+        4, 8, 1.0f, 0.6f, 0.05f, 0.1f, 
+        irr::video::SColor( 255, 0, 255, 0 ), irr::video::SColor( 255, 0, 255, 0 ) ); 
+    irr::scene::IMeshSceneNode* pArrowNodeY = pSceneMgr->addMeshSceneNode( pArrowMeshY );
+    pArrowNodeY->setPosition( irr::core::vector3df( 4.0f, 0.0f, 0.0f ) );
+    pArrowNodeY->setRotation( irr::core::vector3df( 0.0f, 0.0f, 0.0f ) );
+    pArrowNodeY->setMaterialFlag( irr::video::EMF_LIGHTING, false );
+    
+    irr::scene::IMesh* pArrowMeshX = pCreator->createArrowMesh( 
+        4, 8, 1.0f, 0.6f, 0.05f, 0.1f, 
+        irr::video::SColor( 255, 255, 0, 0 ), irr::video::SColor( 255, 255, 0, 0 ) ); 
+    irr::scene::IMeshSceneNode* pArrowNodeX = pSceneMgr->addMeshSceneNode( pArrowMeshX );
+    pArrowNodeX->setPosition( irr::core::vector3df( 4.0f, 0.0f, 0.0f ) );
+    pArrowNodeX->setRotation( irr::core::vector3df( 0.0f, 0.0f, -90.0f ) );
+    pArrowNodeX->setMaterialFlag( irr::video::EMF_LIGHTING, false );
+    
     // Setup the camera
     pSceneMgr->addCameraSceneNode( 0, irr::core::vector3df( 0, 10, -10 ), irr::core::vector3df( 0, 0, 0 ) );
                                     
