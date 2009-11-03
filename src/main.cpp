@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <irrlicht/irrlicht.h>
 
+#include "IrrMonitor.h"
+
 //------------------------------------------------------------------------------
 int main()
 {   
@@ -11,6 +13,7 @@ int main()
         irr::video::EDT_OPENGL, 
         irr::core::dimension2d<irr::u32>( 640, 480 ), 
         16, false, false, false, 0 );
+    IrrMonitor<irr::IrrlichtDevice> irrDeviceMonitor( pIrrDevice );
 
     if ( NULL == pIrrDevice )
     {
@@ -32,11 +35,11 @@ int main()
     if ( NULL == pMesh )
     {
         fprintf( stderr, "Error: Unable to load mesh\n" );
-        pIrrDevice->drop();
         return -1;
     }
     
     irr::scene::IAnimatedMeshSceneNode* pNode = pSceneMgr->addAnimatedMeshSceneNode( pMesh );
+    IrrMonitor<irr::scene::IAnimatedMeshSceneNode> subNodeMonitor( pNode );
     if ( NULL != pNode )
     {
         pNode->setMaterialFlag( irr::video::EMF_LIGHTING, false );
@@ -49,6 +52,9 @@ int main()
         4, 8, 1.0f, 0.6f, 0.05f, 0.1f, 
         irr::video::SColor( 255, 0, 0, 255 ), irr::video::SColor( 255, 0, 0, 255 ) ); 
     irr::scene::IMeshSceneNode* pArrowNodeZ = pSceneMgr->addMeshSceneNode( pArrowMeshZ );
+    IrrMonitor<irr::scene::IMesh> arrowMeshZMonitor( pArrowMeshZ );    
+    IrrMonitor<irr::scene::IMeshSceneNode> arrowNodeZMonitor( pArrowNodeZ );
+
     pArrowNodeZ->setPosition( irr::core::vector3df( 4.0f, 0.0f, 0.0f ) );
     pArrowNodeZ->setRotation( irr::core::vector3df( 90.0f, 0.0f, 0.0f ) );
     pArrowNodeZ->setMaterialFlag( irr::video::EMF_LIGHTING, false );
@@ -57,6 +63,9 @@ int main()
         4, 8, 1.0f, 0.6f, 0.05f, 0.1f, 
         irr::video::SColor( 255, 0, 255, 0 ), irr::video::SColor( 255, 0, 255, 0 ) ); 
     irr::scene::IMeshSceneNode* pArrowNodeY = pSceneMgr->addMeshSceneNode( pArrowMeshY );
+    IrrMonitor<irr::scene::IMesh> arrowMeshYMonitor( pArrowMeshY );    
+    IrrMonitor<irr::scene::IMeshSceneNode> arrowNodeYMonitor( pArrowNodeY );
+
     pArrowNodeY->setPosition( irr::core::vector3df( 4.0f, 0.0f, 0.0f ) );
     pArrowNodeY->setRotation( irr::core::vector3df( 0.0f, 0.0f, 0.0f ) );
     pArrowNodeY->setMaterialFlag( irr::video::EMF_LIGHTING, false );
@@ -65,6 +74,10 @@ int main()
         4, 8, 1.0f, 0.6f, 0.05f, 0.1f, 
         irr::video::SColor( 255, 255, 0, 0 ), irr::video::SColor( 255, 255, 0, 0 ) ); 
     irr::scene::IMeshSceneNode* pArrowNodeX = pSceneMgr->addMeshSceneNode( pArrowMeshX );
+    IrrMonitor<irr::scene::IMesh> arrowMeshXMonitor( pArrowMeshX );    
+    IrrMonitor<irr::scene::IMeshSceneNode> arrowNodeXMonitor( pArrowNodeX );
+
+    
     pArrowNodeX->setPosition( irr::core::vector3df( 4.0f, 0.0f, 0.0f ) );
     pArrowNodeX->setRotation( irr::core::vector3df( 0.0f, 0.0f, -90.0f ) );
     pArrowNodeX->setMaterialFlag( irr::video::EMF_LIGHTING, false );
