@@ -45,6 +45,21 @@ int main()
         pNode->setMaterialFlag( irr::video::EMF_LIGHTING, false );
     }
     
+    // Load pool
+    irr::scene::IAnimatedMesh* pPoolMesh = pSceneMgr->getMesh( "media/export/pool.x" );
+    if ( NULL == pPoolMesh )
+    {
+        fprintf( stderr, "Error: Unable to load mesh\n" );
+        return -1;
+    }
+    
+    irr::scene::IAnimatedMeshSceneNode* pPoolNode = pSceneMgr->addAnimatedMeshSceneNode( pPoolMesh );
+    IrrMonitor<irr::scene::IAnimatedMeshSceneNode> poolNodeMonitor( pPoolNode );
+    if ( NULL != pPoolNode )
+    {
+        pPoolNode->setMaterialFlag( irr::video::EMF_LIGHTING, false );
+    }
+    
     // Create an arrow
     const irr::scene::IGeometryCreator* pCreator = pSceneMgr->getGeometryCreator();
     
@@ -56,7 +71,7 @@ int main()
     IrrMonitor<irr::scene::IMeshSceneNode> arrowNodeZMonitor( pArrowNodeZ );
 
     pArrowNodeZ->setPosition( irr::core::vector3df( 4.0f, 0.0f, 0.0f ) );
-    pArrowNodeZ->setRotation( irr::core::vector3df( 90.0f, 0.0f, 0.0f ) );
+    pArrowNodeZ->setRotation( irr::core::vector3df( 0.0f, 0.0f, 0.0f ) );
     pArrowNodeZ->setMaterialFlag( irr::video::EMF_LIGHTING, false );
     
     irr::scene::IMesh* pArrowMeshY = pCreator->createArrowMesh( 
@@ -67,7 +82,7 @@ int main()
     IrrMonitor<irr::scene::IMeshSceneNode> arrowNodeYMonitor( pArrowNodeY );
 
     pArrowNodeY->setPosition( irr::core::vector3df( 4.0f, 0.0f, 0.0f ) );
-    pArrowNodeY->setRotation( irr::core::vector3df( 0.0f, 0.0f, 0.0f ) );
+    pArrowNodeY->setRotation( irr::core::vector3df( 90.0f, 0.0f, 0.0f ) );
     pArrowNodeY->setMaterialFlag( irr::video::EMF_LIGHTING, false );
     
     irr::scene::IMesh* pArrowMeshX = pCreator->createArrowMesh( 

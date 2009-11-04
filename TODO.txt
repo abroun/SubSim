@@ -1,5 +1,22 @@
-- Tidy up and commit to git
+- Tidy up and commit to git - Done
 
-- Draw 3D axes as a GUI element on screen
+- Draw 3D axes as a GUI element on screen - Drawn, but not as GUI
+- Work out the best way to export .x files from Blender - Done
+
+- Create Swimming pool, buoy and gate objects (quickly)
+- Write some code to transform between the two co-ordinate systems (and unit test it)
 - Add a debug camera to look around the scene
-- Work out the best way to export .x files from Blender
+- Transfer over to laptop
+
+Coordinate system
+=================
+
+The coordinate system in the simulator is right-handed (as opposed to Irrlicht which is left-handed)
+
+The z-axis in the simulator points up so it is Irrlict's y-axis
+The x-axis in the simulator points along Irrlicht's positive x-axis
+The y-axis in the simulator points along Irrlicht's positive z-axis
+
+So, in order to move from simulator space into Irrlict space we need to rotate -90 degrees around the x-axis and then reverse the y-axis.
+
+To get back from Irrlich space we need to reverse the process by flipping the y-axis and rotating 90 degrees around the x-axis
