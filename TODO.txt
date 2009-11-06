@@ -19,4 +19,4 @@ The y-axis in the simulator points along Irrlicht's positive z-axis
 
 So, in order to move from simulator space into Irrlict space we need to rotate -90 degrees around the x-axis and then reverse the y-axis.
 
-To get back from Irrlich space we need to reverse the process by flipping the y-axis and rotating 90 degrees around the x-axis
+To get back from Irrlicht space we need to reverse the process by flipping the y-axis and rotating 90 degrees around the x-axis

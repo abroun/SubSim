@@ -10,7 +10,12 @@ INCLUDE_DIRECTORIES(
 LINK_DIRECTORIES(  
     ${global_link_dirs} )
 
-ADD_EXECUTABLE( subsim main.cpp )
+SET( srcFiles 
+    main.cpp 
+    Sub.cpp 
+    CoordinateSystemAxes.cpp )
+
+ADD_EXECUTABLE( subsim ${srcFiles} )
 SET_TARGET_PROPERTIES( subsim PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR} )
 
 LIST_TO_STRING( SUBSIM_CFLAGS "${global_cflags}" )
