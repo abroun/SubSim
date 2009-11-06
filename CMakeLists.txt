@@ -56,11 +56,23 @@ ELSE ( PKG_CONFIG_FOUND )
 ENDIF ( PKG_CONFIG_FOUND )
 
 #-------------------------------------------------------------------------------
+# Add in CxxTest unit tests
+ENABLE_TESTING()
+
+# Use Python interpreter
+FIND_PACKAGE(PythonInterp)
+
+SET(CXXTESTGEN /home/abroun/dev/extra/cxxtest/cxxtestgen.py)
+
+ADD_CXXTEST( unitTests ${PROJECT_SOURCE_DIR}/unitTests/VectorTests.h )
+
+#-------------------------------------------------------------------------------
 # Include the source files
 
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR} 
     ${PROJECT_BINARY_DIR}
+    /home/abroun/dev/extra/cxxtest
     ${PROJECT_SOURCE_DIR}/include )
 
 ADD_SUBDIRECTORY( src )

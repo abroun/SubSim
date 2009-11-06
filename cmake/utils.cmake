@@ -121,3 +121,25 @@ MACRO( RECURSIVELY_COPY_DIRECTORY _srcDir _destDir)
 ENDMACRO( RECURSIVELY_COPY_DIRECTORY )
 
 #-------------------------------------------------------------------------------
+MACRO( ADD_CXXTEST _name )
+  IF ( PYTHONINTERP_FOUND )
+    #file( MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/unitTests )
+    ADD_CUSTOM_COMMAND(
+      OUTPUT ${PROJECT_BINARY_DIR}/${_name}.cpp
+      COMMAND
+        ${PYTHON_EXECUTABLE} ${CXXTESTGEN}
+        --runner=ErrorPrinter
+        -o ${PROJECT_BINARY_DIR}/${_name}.cpp ${ARGN}
+      DEPENDS ${ARGN}
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+    )
+  ENDIF ( PYTHONINTERP_FOUND )
+
+  ADD_EXECUTABLE(${_name} ${PROJECT_BINARY_DIR}/${_name}.cpp ${ARGN})
+
+  ADD_TEST(${_name} ${_name})
+ENDMACRO ( ADD_CXXTEST )
+
+
+
+#-------------------------------------------------------------------------------
