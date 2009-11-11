@@ -75,4 +75,37 @@ void Sub::DeInit()
     mbInitialised = false;
 }
 
+//------------------------------------------------------------------------------
+void Sub::SetPosition( const Vector& pos )
+{
+    if ( mbInitialised )
+    {
+    }
+}
+
+//------------------------------------------------------------------------------
+void Sub::GetPosition( Vector* pPosOut ) const
+{
+    if ( mbInitialised )
+    {
+    }
+}
+
+//------------------------------------------------------------------------------
+void Sub::SetYaw( F32 yawAngle )
+{
+    if ( mbInitialised )
+    {
+    }
+}
+
+//------------------------------------------------------------------------------
+F32 Sub::GetYaw() const
+{
+    if ( mbInitialised )
+    {
+    }
+
+    return 0.0f;
+}
 

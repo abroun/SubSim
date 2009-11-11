@@ -133,7 +133,7 @@ public:
         TS_ASSERT( v1 == v2 );
         TS_ASSERT( v1 != v3 );
         TS_ASSERT( v3.Equals( v1, 10.0f ) );
-        TS_ASSERT( v1 != v4 );
+        TS_ASSERT( !v1.PseudoEquals( v4 ) );
     }
     
     //--------------------------------------------------------------------------
@@ -145,7 +145,7 @@ public:
         TS_ASSERT( v.mX == 3.0f );
         TS_ASSERT( v.mY == 9.0f );
         TS_ASSERT( v.mZ == 6.0f );
-        TS_ASSERT( v.mbIsPseudoVector == true );
+        TS_ASSERT( v.mbIsPseudoVector == false );
     }
     
     //--------------------------------------------------------------------------

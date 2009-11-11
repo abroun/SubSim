@@ -33,18 +33,18 @@ class Vector
     // Operators
     public: Vector operator-() const 
     { 
-        return Vector( -mX, -mY, -mZ ); 
+        return Vector( -mX, -mY, -mZ, mbIsPseudoVector ); 
     }
     
     public: Vector& operator=( const Vector& v ) 
     { 
-        mX = v.mX; mY = v.mY; mZ = v.mZ; 
+        mX = v.mX; mY = v.mY; mZ = v.mZ; mbIsPseudoVector = v.mbIsPseudoVector;
         return *this; 
     }
 
     public: Vector operator+( const Vector& v ) const 
     { 
-        return Vector( mX + v.mX, mY + v.mY, mZ + v.mZ ); 
+        return Vector( mX + v.mX, mY + v.mY, mZ + v.mZ, mbIsPseudoVector ); 
     }
 
     public: Vector& operator+=( const Vector& v ) 
@@ -55,7 +55,7 @@ class Vector
 
     public: Vector operator-( const Vector& v ) const 
     { 
-        return Vector( mX - v.mX, mY - v.mY, mZ - v.mZ ); 
+        return Vector( mX - v.mX, mY - v.mY, mZ - v.mZ, mbIsPseudoVector ); 
     }
 
     public: Vector& operator-=( const Vector& v ) 
@@ -66,7 +66,7 @@ class Vector
  
     public: Vector operator*( F32 s ) const 
     { 
-        return Vector( mX * s, mY * s, mZ * s ); 
+        return Vector( mX * s, mY * s, mZ * s, mbIsPseudoVector ); 
     }
 
     public: Vector& operator*=( F32 s ) 
@@ -78,7 +78,7 @@ class Vector
     public: Vector operator/( F32 s ) const 
     { 
         F32 scale = 1.0 / s; 
-        return Vector( mX * scale, mY * scale, mZ * scale ); 
+        return Vector( mX * scale, mY * scale, mZ * scale, mbIsPseudoVector ); 
     }
 
     public: Vector& operator/=( F32 s ) 
@@ -101,9 +101,17 @@ class Vector
     // Functions
     public: bool Equals( const Vector& v, F32 tolerance = Common::DEFAULT_EPSILON ) const
     {        
+        // Ignores 'mbIsPseudoVector'
         return ( fabsf( v.mX - mX ) <= tolerance
             && fabsf( v.mY - mY ) <= tolerance
-            && fabsf( v.mZ - mZ ) <= tolerance 
+            && fabsf( v.mZ - mZ ) <= tolerance );
+    }
+
+    public: bool PseudoEquals( const Vector& v, F32 tolerance = Common::DEFAULT_EPSILON ) const
+    {        
+        return ( fabsf( v.mX - mX ) <= tolerance
+            && fabsf( v.mY - mY ) <= tolerance
+            && fabsf( v.mZ - mZ ) <= tolerance
             && mbIsPseudoVector == v.mbIsPseudoVector );
     }
  
@@ -166,7 +174,7 @@ class Vector
 };
 
 //------------------------------------------------------------------------------
-Vector operator*( F32 s, const Vector& v ) { return v*s; }
+inline Vector operator*( F32 s, const Vector& v ) { return v*s; }
 
 #endif // VECTOR_H
 
