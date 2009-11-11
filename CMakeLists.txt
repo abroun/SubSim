@@ -64,7 +64,9 @@ FIND_PACKAGE(PythonInterp)
 
 SET(CXXTESTGEN /home/abroun/dev/extra/cxxtest/cxxtestgen.py)
 
-ADD_CXXTEST( unitTests ${PROJECT_SOURCE_DIR}/unitTests/VectorTests.h )
+ADD_CXXTEST( unitTests 
+            ${PROJECT_SOURCE_DIR}/unitTests/VectorTests.h
+            ${PROJECT_SOURCE_DIR}/unitTests/MathUtilsTests.h )
 
 #-------------------------------------------------------------------------------
 # Include the source files
@@ -73,7 +75,9 @@ INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR} 
     ${PROJECT_BINARY_DIR}
     /home/abroun/dev/extra/cxxtest
-    ${PROJECT_SOURCE_DIR}/include )
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/src
+    ${global_include_dirs} )
 
 ADD_SUBDIRECTORY( src )
 

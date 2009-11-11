@@ -103,10 +103,12 @@ void Sub::SetYaw( F32 yawAngle )
 //------------------------------------------------------------------------------
 F32 Sub::GetYaw() const
 {
+    F32 yawAngle = 0.0f;
+
     if ( mbInitialised )
     {
     }
 
-    return 0.0f;
+    return yawAngle;
 }
 

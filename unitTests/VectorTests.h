@@ -5,9 +5,8 @@
 //------------------------------------------------------------------------------
 class VectorTests : public CxxTest::TestSuite 
 {
-public:
     //--------------------------------------------------------------------------
-    void testConstructor()
+    public: void testConstructor()
     {
         Vector v1( 1.0f, 2.0f, 4.0f, true );
         Vector v2( v1 );
@@ -23,7 +22,7 @@ public:
     }
     
     //--------------------------------------------------------------------------
-    void testAssignment()
+    public: void testAssignment()
     {
         Vector v1( 1.0f, 2.0f, 4.0f );
         
@@ -35,7 +34,7 @@ public:
     }
     
     //--------------------------------------------------------------------------
-    void testAddition()
+    public: void testAddition()
     {
         Vector v1( 1.0f, 2.0f, 4.0f );
         Vector v2( 3.0f, 5.0f, 0.0f, true );
@@ -55,7 +54,7 @@ public:
     } 
     
     //--------------------------------------------------------------------------
-    void testSubtraction()
+    public: void testSubtraction()
     {
         Vector v1( 1.0f, 2.0f, 4.0f, true );
         Vector v2( 3.0f, 5.0f, 0.0f );
@@ -80,7 +79,7 @@ public:
     }
     
     //--------------------------------------------------------------------------
-    void testMultiplication()
+    public: void testMultiplication()
     {
         Vector v( 1.0f, 2.0f, 4.0f, true );
 
@@ -104,7 +103,7 @@ public:
     }
     
     //--------------------------------------------------------------------------
-    void testDivision()
+    public: void testDivision()
     {
         Vector v( 1.0f, 2.0f, 4.0f, true );
 
@@ -123,7 +122,7 @@ public:
     }
     
     //--------------------------------------------------------------------------
-    void testEquality()
+    public: void testEquality()
     {
         Vector v1( 1.0f, 2.0f, 4.0f );
         Vector v2( 1.0f, 2.0f, 4.0f + Common::DEFAULT_EPSILON / 2.0f );
@@ -137,7 +136,7 @@ public:
     }
     
     //--------------------------------------------------------------------------
-    void testSet()
+    public: void testSet()
     {
         Vector v( 1.0f, 2.0f, 4.0f, true );
         
@@ -149,7 +148,7 @@ public:
     }
     
     //--------------------------------------------------------------------------
-    void testGetLength()
+    public: void testGetLength()
     {
         Vector v( 3.0f, 4.0f, 0.0f );
         
@@ -157,7 +156,7 @@ public:
     }
     
     //--------------------------------------------------------------------------
-    void testGetLengthSquared()
+    public: void testGetLengthSquared()
     {
         Vector v( 3.0f, 0.0f, 4.0f );
         
@@ -165,7 +164,7 @@ public:
     }
 
     //--------------------------------------------------------------------------
-    void testDotProduct()
+    public: void testDotProduct()
     {
         Vector v1( 3.0f, 4.0f, 1.0f, true );
         Vector v2( 3.0f, 0.0f, 5.0f );
@@ -174,7 +173,7 @@ public:
     }
     
     //--------------------------------------------------------------------------
-    void testCrossProduct()
+    public: void testCrossProduct()
     {
         Vector vX( 1.0f, 0.0f, 0.0f );
         Vector vY( 0.0f, 1.0f, 0.0f );
@@ -190,7 +189,7 @@ public:
     }
  
     //--------------------------------------------------------------------------
-    void testNormalise()
+    public: void testNormalise()
     {
         Vector v( 3.0f, 4.0f, 9.0f, true );
         

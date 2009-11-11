@@ -11,7 +11,8 @@ LINK_DIRECTORIES(
     ${global_link_dirs} )
 
 SET( srcFiles 
-    main.cpp )
+    main.cpp
+    MathUtils.cpp )
 
 ADD_SUBDIRECTORY( Entities )
 
