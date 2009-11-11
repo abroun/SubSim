@@ -5,8 +5,8 @@
 #include <irrlicht/irrlicht.h>
 
 #include "IrrMonitor.h"
-#include "Sub.h"
-#include "CoordinateSystemAxes.h"
+#include "Entities/Sub.h"
+#include "Entities/CoordinateSystemAxes.h"
 #include "Vector.h"
 
 //------------------------------------------------------------------------------
