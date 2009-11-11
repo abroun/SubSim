@@ -143,7 +143,7 @@ if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 ADD_EXECUTABLE(${_name} ${PROJECT_BINARY_DIR}/${_name}.cpp ${ARGN})
-  TARGET_LINK_LIBRARIES( ${_name} ${global_link_libs} entities )
+  TARGET_LINK_LIBRARIES( ${_name} ${global_link_libs} entities mathUtils )
 
   ADD_TEST(${_name} ${_name})
 ENDMACRO ( ADD_CXXTEST )

@@ -1,6 +1,6 @@
 // MyTestSuite.h
 #include <cxxtest/TestSuite.h>
-#include "MathUtils.h"
+#include "Common/MathUtils.h"
 
 //------------------------------------------------------------------------------
 class MathUtilsTests : public CxxTest::TestSuite 

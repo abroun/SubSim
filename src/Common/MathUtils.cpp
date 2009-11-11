@@ -14,7 +14,7 @@ Vector MathUtils::TransformVector_IrrToSub( const irr::core::vector3df& irrVecto
 {
     // This should be equivilant to flipping the y-axis and then rotating 90
     // degrees around the x-axis
-    return Vector( irrVector.x, irrVector.z, irrVector.y );
+    return Vector( irrVector.X, irrVector.Z, irrVector.Y );
 }
 
 //------------------------------------------------------------------------------
