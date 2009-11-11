@@ -1,6 +1,15 @@
 //------------------------------------------------------------------------------
 // File: Vector.h
-// Desc: A simple 3D vector for use in the simulator
+// Desc: A 3D vector for use in the simulator.
+//
+// Note: This vector keeps track of whether it is a pseudovector or not. A
+//       vector produced by the cross product may be a pseudovector. If a
+//       pseudovector is subject to an improper rotation (i.e. due to a 
+//       transformation from a Left Handed coordinate system to a Right Handed
+//       coordinate system) then it is first scaled by -1.0f.
+//
+//       See http://en.wikipedia.org/wiki/Cross_product#Cross_product_and_handedness
+//       for further details
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -15,10 +24,10 @@ class Vector
 {
     //--------------------------------------------------------------------------
     public: Vector() {}
-    public: Vector( F32 x, F32 y, F32 z, F32 w = 1.0f )
-        : mX( x ), mY( y ), mZ( z ), mW( w ) {}
+    public: Vector( F32 x, F32 y, F32 z, bool bIsPseudoVector = false )
+        : mX( x ), mY( y ), mZ( z ), mbIsPseudoVector( bIsPseudoVector ) {}
     public: Vector( const Vector& v )
-        : mX( v.mX ), mY( v.mY ), mZ( v.mZ ), mW( v.mW ) {}
+        : mX( v.mX ), mY( v.mY ), mZ( v.mZ ), mbIsPseudoVector( v.mbIsPseudoVector ) {}
 
     //--------------------------------------------------------------------------
     // Operators
@@ -90,16 +99,17 @@ class Vector
     
     //--------------------------------------------------------------------------
     // Functions
-    public: bool Equals( const Vector& v, F32 tolerance = DEFAULT_TOLERANCE ) const
-    {
+    public: bool Equals( const Vector& v, F32 tolerance = Common::DEFAULT_EPSILON ) const
+    {        
         return ( fabsf( v.mX - mX ) <= tolerance
             && fabsf( v.mY - mY ) <= tolerance
-            && fabsf( v.mZ - mZ ) <= tolerance );
+            && fabsf( v.mZ - mZ ) <= tolerance 
+            && mbIsPseudoVector == v.mbIsPseudoVector );
     }
  
-    public: Vector& Set( F32 x, F32 y, F32 z ) 
+    public: Vector& Set( F32 x, F32 y, F32 z, bool bIsPseudoVector = false ) 
     {
-        mX = x; mY = y; mZ = z; 
+        mX = x; mY = y; mZ = z; mbIsPseudoVector = bIsPseudoVector;
         return *this;
     }
  
@@ -118,13 +128,24 @@ class Vector
         return mX*v.mX + mY*v.mY + mZ*v.mZ;
     }
  
-    public: Vector CrossProductLeftHanded( const Vector& v ) const
+    public: Vector CrossProduct( const Vector& v ) const
     {
+        bool bNewVectorIsPseudoVector;
+        
+        if ( !mbIsPseudoVector )
+        {
+            bNewVectorIsPseudoVector = !v.mbIsPseudoVector;
+        }
+        else
+        {
+            bNewVectorIsPseudoVector = v.mbIsPseudoVector;
+        }
+        
         return Vector( mY * v.mZ - mZ * v.mY, 
-            mZ * v.mX - mX * v.mZ, mX * v.mY - mY * v.mX );
+            mZ * v.mX - mX * v.mZ, mX * v.mY - mY * v.mX, bNewVectorIsPseudoVector );
     }
  
-    public: Vector& Normalize()
+    public: Vector& Normalise()
     {
         F32 lengthSquared = GetLengthSquared();
         if ( lengthSquared > 0.0f )
@@ -138,11 +159,10 @@ class Vector
         return *this;
     }       
 
-    public: static const F32 DEFAULT_TOLERANCE = 0.0001f;
-
     //--------------------------------------------------------------------------
     // Variables
-    public: F32 mX, mY, mZ, mW;
+    public: F32 mX, mY, mZ;
+    public: bool mbIsPseudoVector;
 };
 
 //------------------------------------------------------------------------------

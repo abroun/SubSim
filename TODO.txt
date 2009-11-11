@@ -1,7 +1,10 @@
-- Tidy up and commit to git - Done
+- Write the unit tests for the vector class
+- Write a left handed and right-handed cross product routine for the vector class.
+- Write some code for the Sub entity to let it be posistioned in the world using a right-hand coordinate system
+- Build up the rest of the world
 
 - Draw 3D axes as a GUI element on screen - Drawn, but not as GUI
-- Work out the best way to export .x files from Blender - Done
+
 
 - Create Swimming pool, buoy and gate objects (quickly)
 - Write some code to transform between the two co-ordinate systems (and unit test it)
@@ -20,3 +23,9 @@ The y-axis in the simulator points along Irrlicht's positive z-axis
 So, in order to move from simulator space into Irrlict space we need to rotate -90 degrees around the x-axis and then reverse the y-axis.
 
 To get back from Irrlicht space we need to reverse the process by flipping the y-axis and rotating 90 degrees around the x-axis
+
+Done
+====
+
+- Work out the best way to export .x files from Blender - Done
+- Tidy up and commit to git - Done
