@@ -20,4 +20,13 @@ Vector MathUtils::TransformVector_IrrToSub( const irr::core::vector3df& irrVecto
 //------------------------------------------------------------------------------
 irr::core::vector3df MathUtils::TransformVector_SubToIrr( const Vector& subVector )
 {
+    irr::core::vector3df irrVector( subVector.mX, subVector.mZ, subVector.mY );
+    
+    if ( subVector.mbIsPseudoVector )
+    {
+        // Pseudo vectors need to be inverted
+        irrVector *= -1.0f;
+    }   
+
+    return irrVector;
 }
