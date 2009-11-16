@@ -8,8 +8,12 @@ INCLUDE_DIRECTORIES(
     ${global_include_dirs} )
 
 SET( entitySrcFiles 
+    Entity.cpp
     Sub.cpp 
-    CoordinateSystemAxes.cpp )
+    CoordinateSystemAxes.cpp
+    Buoy.cpp
+    Gate.cpp 
+    Pool.cpp )
 
 ADD_LIBRARY( entities ${entitySrcFiles} )
 

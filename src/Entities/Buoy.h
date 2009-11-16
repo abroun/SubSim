@@ -1,21 +1,21 @@
 //------------------------------------------------------------------------------
-// File: Sub.h
-// Desc: The submarine entity
+// File: Buoy.h
+// Desc: A floating buoy entity
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-#ifndef SUB_H
-#define SUB_H
+#ifndef BUOY_H
+#define BUOY_H
 
 //------------------------------------------------------------------------------
 #include "Entity.h"
 
 //------------------------------------------------------------------------------
-class Sub : public Entity
+class Buoy : public Entity
 {
     //--------------------------------------------------------------------------
-    public: Sub();
-    public: ~Sub();
+    public: Buoy();
+    public: ~Buoy();
 
     //--------------------------------------------------------------------------
     public: bool Init( irr::scene::ISceneManager* pSceneManager );
@@ -24,10 +24,8 @@ class Sub : public Entity
     //--------------------------------------------------------------------------
     // Members
     private: bool mbInitialised;
-    private: irr::scene::IMesh* mpConeMesh;
-    private: irr::scene::IMesh* mpBodyMesh;
-    private: irr::scene::IMeshSceneNode* mpConeMeshNode;
-    private: irr::scene::IMeshSceneNode* mpBodyMeshNode;
+    private: irr::scene::IMesh* mpMesh;
+    private: irr::scene::IMeshSceneNode* mpMeshNode;
 };
 
-#endif // SUB_H
+#endif // BUOY_H

@@ -9,7 +9,13 @@
 
 //------------------------------------------------------------------------------
 CoordinateSystemAxes::CoordinateSystemAxes()
-    : mbInitialised( false )
+    : mbInitialised( false ),
+    mpArrowMeshX( NULL ),
+    mpArrowMeshY( NULL ),
+    mpArrowMeshZ( NULL ),
+    mpArrowNodeX( NULL ),
+    mpArrowNodeY( NULL ),
+    mpArrowNodeZ( NULL )
 {
 }
 
@@ -24,11 +30,14 @@ bool CoordinateSystemAxes::Init( irr::scene::ISceneManager* pSceneManager )
 {
     if ( !mbInitialised )
     {
-        mpSceneManager = pSceneManager;
-        mpSceneManager->grab();
+        if ( !Entity::Init( pSceneManager ) )
+        {
+            DeInit();
+            return false;
+        }
 
         // Create arrows to make up the axes
-        const irr::scene::IGeometryCreator* pCreator = mpSceneManager->getGeometryCreator();
+        const irr::scene::IGeometryCreator* pCreator = pSceneManager->getGeometryCreator();
     
         if ( !CreateArrow( pCreator, irr::video::SColor( 255, 0, 0, 255 ), 
             &mpArrowMeshX, &mpArrowNodeX ) )
@@ -56,21 +65,12 @@ bool CoordinateSystemAxes::Init( irr::scene::ISceneManager* pSceneManager )
         mpArrowNodeY->setRotation( irr::core::vector3df( 90.0f, 0.0f, 0.0f ) );
         mpArrowNodeZ->setRotation( irr::core::vector3df( 0.0f, 0.0f, 0.0f ) );
 
-        // Create a root scene node to hold the arrows
-        mpRootSceneNode = mpSceneManager->addDummyTransformationSceneNode();
-        if ( NULL == mpRootSceneNode )
-        {
-            DeInit();
-            return false;
-        }
-
-        mpRootSceneNode->addChild( mpArrowNodeX );
-        mpRootSceneNode->addChild( mpArrowNodeY );
-        mpRootSceneNode->addChild( mpArrowNodeZ );
-
-        irr::core::matrix4& rootTransform = mpRootSceneNode->getRelativeTransformationMatrix();
-        rootTransform.makeIdentity();
-        rootTransform.setTranslation( irr::core::vector3d<F32>( 4.0f, 0.0f, 0.0f ) );
+        // Put the nodes under the control of SubSim
+        AddChildNode( mpArrowNodeX );
+        AddChildNode( mpArrowNodeY );
+        AddChildNode( mpArrowNodeZ );
+        
+        SetPosition( Vector( 4.0f, 0.0f, 0.0f ) );
 
         mbInitialised = true;
     }
@@ -81,11 +81,8 @@ bool CoordinateSystemAxes::Init( irr::scene::ISceneManager* pSceneManager )
 //------------------------------------------------------------------------------
 void CoordinateSystemAxes::DeInit()
 {
-    if ( NULL != mpRootSceneNode )
-    {
-        mpRootSceneNode = NULL;
-    }
-
+    RemoveAllChildNodes();
+    
     // Get rid of arrow scene nodes
     if ( NULL != mpArrowNodeX )
     {
@@ -121,11 +118,7 @@ void CoordinateSystemAxes::DeInit()
         mpArrowMeshZ = NULL;
     }
 
-    if ( NULL != mpSceneManager )
-    {
-        mpSceneManager->drop();
-        mpSceneManager = NULL;
-    }
+    Entity::DeInit();
 
     mbInitialised = false;
 }
@@ -137,6 +130,8 @@ bool CoordinateSystemAxes::CreateArrow(
         irr::scene::IMesh** ppArrowMeshOut, 
         irr::scene::IMeshSceneNode** ppArrowNodeOut )
 {
+    irr::scene::ISceneManager* pSceneManager = GetSceneManager();
+    
     *ppArrowMeshOut = pCreator->createArrowMesh( 
         4, 8, 1.0f, 0.6f, 0.05f, 0.1f, colour, colour );
     if ( NULL == *ppArrowMeshOut )
@@ -144,7 +139,7 @@ bool CoordinateSystemAxes::CreateArrow(
         return false;
     } 
     
-    *ppArrowNodeOut = mpSceneManager->addMeshSceneNode( *ppArrowMeshOut );
+    *ppArrowNodeOut = pSceneManager->addMeshSceneNode( *ppArrowMeshOut );
     if ( NULL == *ppArrowMeshOut )
     {
         return false;

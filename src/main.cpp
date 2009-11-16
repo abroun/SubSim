@@ -8,6 +8,9 @@
 #include "Common/MathUtils.h"
 #include "Entities/Sub.h"
 #include "Entities/CoordinateSystemAxes.h"
+#include "Entities/Gate.h"
+#include "Entities/Buoy.h"
+#include "Entities/Pool.h"
 #include "Vector.h"
 
 //------------------------------------------------------------------------------
@@ -31,8 +34,8 @@ int main()
     irr::scene::ISceneManager* pSceneMgr = pIrrDevice->getSceneManager();
     irr::gui::IGUIEnvironment* pGUIEnvironment = pIrrDevice->getGUIEnvironment();
     
-    pGUIEnvironment->addStaticText( L"Hello World!", 
-                                    irr::core::rect< irr::s32 >( 10, 10, 200, 40 ), true );
+    irr::gui::IGUIStaticText* pText = pGUIEnvironment->addStaticText( 
+        L"Hello World!", irr::core::rect< irr::s32 >( 10, 10, 200, 40 ), true );
     
     // Create sub
     Sub sub;
@@ -52,6 +55,22 @@ int main()
         return -1;
     }
     
+    Gate gate;
+    gate.Init( pSceneMgr );
+    gate.SetPosition( Vector( 0.0f, 15.0f, 0.0f ) );
+    
+    Buoy buoy;
+    buoy.Init( pSceneMgr );
+    buoy.SetPosition( Vector( 0.0f, 5.0f, 0.0f ) );
+    
+    Pool pool;
+    pool.Init( pSceneMgr );
+    pool.SetPosition( Vector( 0.0f, -15.0f, 0.0f ) );
+    
+    // Create some fog to represent underwater visibility
+    pVideoDriver->setFog( irr::video::SColor( 0,0,25,220 ), 
+                          irr::video::EFT_FOG_EXP, 50, 3000, 0.005f, true, false );
+    
     /*// Load pool
     irr::scene::IAnimatedMesh* pPoolMesh = pSceneMgr->getMesh( "media/export/pool.x" );
     //IrrMonitor<irr::scene::IAnimatedMesh> poolMeshMonitor( pPoolMesh );
@@ -68,8 +87,11 @@ int main()
     }*/
       
     // Setup the camera
-    pSceneMgr->addCameraSceneNode( 0, irr::core::vector3df( 0, 10, -10 ), irr::core::vector3df( 0, 0, 0 ) );
-                                    
+    //pSceneMgr->addCameraSceneNode( 0, irr::core::vector3df( 0, 10, -10 ), irr::core::vector3df( 0, 0, 0 ) );
+    irr::scene::ICameraSceneNode* pCamera = pSceneMgr->addCameraSceneNodeMaya( 0, -750.0f, 200.0f, 300.0f ); 
+    pCamera->setTarget( irr::core::vector3df( 0, 0, 0 ) );
+    
+    S32 lastFPS = -1;
     while ( pIrrDevice->run() )
     {
         pVideoDriver->beginScene( true, true, irr::video::SColor( 255, 100, 101, 140 ) );
@@ -78,6 +100,17 @@ int main()
         pGUIEnvironment->drawAll();
         
         pVideoDriver->endScene();
+        
+        // Update FPS counter
+        S32 fps = pVideoDriver->getFPS();
+        if ( lastFPS != fps )
+        {
+            irr::core::stringw str = L"Hello World - FPS: ";
+            str += fps;
+            
+            pText->setText( str.c_str() );
+            lastFPS = fps;
+        }
     }
     
     // Clean up

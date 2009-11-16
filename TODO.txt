@@ -1,17 +1,12 @@
 
 
-- Build up the rest of the world
-
 - Draw 3D axes as a GUI element on screen - Drawn, but not as GUI
-
-
-- Create Swimming pool, buoy and gate objects (quickly)
-- Write some code to transform between the two co-ordinate systems (and unit test it)
-- Add a debug camera to look around the scene
 
 - Start work on the interface with Player
     - Get the simulation to load as a plug-in
     - Implement the simulation and position3d (or maybe position2d) interfaces
+
+- Create a replacement debug camera class to give more control over the cameras initial position and also to let the camera be moved ithe the keyboard
 
 Coordinate system
 =================
@@ -33,4 +28,9 @@ Done
 - Tidy up and commit to git - Done
 - Write the unit tests for the vector class - 11/11/09
 - Write a left handed and right-handed cross product routine for the vector class. - 11/11/09
+- Write some code to transform between the two co-ordinate systems (and unit test it) - 16/11/09
 - Write some code for the Sub entity to let it be posistioned in the world using a right-hand coordinate system - 16/11/09
+- Add a debug camera to look around the scene - 11/11/09
+- Build up the rest of the world - 11/11/09
+- Create Swimming pool, buoy and gate objects (quickly) - 11/11/09
+- Try to add a blue fog to the world to approximate the visibility in the water - 11/11/09

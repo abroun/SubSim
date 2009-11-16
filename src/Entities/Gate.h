@@ -1,21 +1,21 @@
 //------------------------------------------------------------------------------
-// File: Sub.h
-// Desc: The submarine entity
+// File: Gate.h
+// Desc: An entity that represents one of the gates the sub must drive through
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-#ifndef SUB_H
-#define SUB_H
+#ifndef GATE_H
+#define GATE_H
 
 //------------------------------------------------------------------------------
 #include "Entity.h"
 
 //------------------------------------------------------------------------------
-class Sub : public Entity
+class Gate : public Entity
 {
     //--------------------------------------------------------------------------
-    public: Sub();
-    public: ~Sub();
+    public: Gate();
+    public: ~Gate();
 
     //--------------------------------------------------------------------------
     public: bool Init( irr::scene::ISceneManager* pSceneManager );
@@ -24,10 +24,19 @@ class Sub : public Entity
     //--------------------------------------------------------------------------
     // Members
     private: bool mbInitialised;
-    private: irr::scene::IMesh* mpConeMesh;
-    private: irr::scene::IMesh* mpBodyMesh;
-    private: irr::scene::IMeshSceneNode* mpConeMeshNode;
-    private: irr::scene::IMeshSceneNode* mpBodyMeshNode;
+    private: irr::scene::IMesh* mpTopMesh;
+    private: irr::scene::IMesh* mpBottomMesh;
+    private: irr::scene::IMesh* mpLeftMesh;
+    private: irr::scene::IMesh* mpRightMesh;
+    private: irr::scene::IMeshSceneNode* mpTopMeshNode;
+    private: irr::scene::IMeshSceneNode* mpBottomMeshNode;
+    private: irr::scene::IMeshSceneNode* mpLeftMeshNode;
+    private: irr::scene::IMeshSceneNode* mpRightMeshNode;
+    
+    private: static const irr::video::SColor COLOUR;
+    private: static const F32 HEIGHT;
+    private: static const F32 WIDTH;
+    private: static const F32 STRUT_RADIUS;
 };
 
-#endif // SUB_H
+#endif // GATE_H
