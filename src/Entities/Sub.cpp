@@ -27,25 +27,62 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager )
         mpSceneManager = pSceneManager;
         mpSceneManager->grab();
 
-        // Create a cylinder for the sub
+        // Create a cone and cylinder for the sub
         const irr::scene::IGeometryCreator* pCreator = mpSceneManager->getGeometryCreator();
 
-        mpMesh = pCreator->createConeMesh( 2, 6, 16, irr::video::SColor( 255, 255, 255, 0 ) );
-        if ( NULL == mpMesh )
+        mpConeMesh = pCreator->createConeMesh( 2, 6, 16, irr::video::SColor( 255, 255, 255, 0 ) );
+        if ( NULL == mpConeMesh )
         {
-            fprintf( stderr, "Error: Unable to create mesh" );
+            fprintf( stderr, "Error: Unable to create cone mesh" );
             DeInit();
             return false;
         }
         
-        mpSceneNode = mpSceneManager->addMeshSceneNode( mpMesh );
-        if ( NULL == mpSceneNode )
+        mpBodyMesh = pCreator->createCylinderMesh( 2, 3, 16, irr::video::SColor( 255, 255, 0, 0 ) );
+        if ( NULL == mpBodyMesh )
         {
-            fprintf( stderr, "Error: Unable to create scene node" );
+            fprintf( stderr, "Error: Unable to create body mesh" );
             DeInit();
             return false;
         }
-        mpSceneNode->setMaterialFlag( irr::video::EMF_LIGHTING, false );
+        
+        mpConeMeshNode = mpSceneManager->addMeshSceneNode( mpConeMesh );
+        if ( NULL == mpConeMeshNode )
+        {
+            fprintf( stderr, "Error: Unable to create cone mesh node" );
+            DeInit();
+            return false;
+        }
+        mpConeMeshNode->setMaterialFlag( irr::video::EMF_LIGHTING, false );
+        
+        mpBodyMeshNode = mpSceneManager->addMeshSceneNode( mpBodyMesh );
+        if ( NULL == mpBodyMeshNode )
+        {
+            fprintf( stderr, "Error: Unable to create body mesh node" );
+            DeInit();
+            return false;
+        }
+        mpBodyMeshNode->setMaterialFlag( irr::video::EMF_LIGHTING, false );
+        
+        // Correctly position the sub model
+        mpConeMeshNode->setRotation( irr::core::vector3df( 90.0f, 0.0f, 0.0f ) );
+        mpConeMeshNode->setPosition( irr::core::vector3df( 0.0f, 0.0f, 3.0f ) );
+        mpBodyMeshNode->setRotation( irr::core::vector3df( 90.0f, 0.0f, 0.0f ) );
+        
+        // Now create a parent node to hold any further sub transformations
+        mpTransformNode = mpSceneManager->addDummyTransformationSceneNode();
+        if ( NULL == mpTransformNode )
+        {
+            DeInit();
+            return false;
+        }
+
+        mpTransformNode->addChild( mpConeMeshNode );
+        mpTransformNode->addChild( mpBodyMeshNode );
+        
+        mTranslation.Set( 0.0f, 0.0f, 0.0f );
+        mRotation.Set( 0.0f, 0.0f, 0.0f );
+        UpdateTransform();
 
         mbInitialised = true;
     }
@@ -56,15 +93,20 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager )
 //------------------------------------------------------------------------------
 void Sub::DeInit()
 {
-    if ( NULL != mpSceneNode )
+    if ( NULL != mpTransformNode )
     {
-        mpSceneNode = NULL;
+        mpTransformNode = NULL;
+    }
+    
+    if ( NULL != mpConeMeshNode )
+    {
+        mpConeMeshNode = NULL;
     }
 
-    if ( NULL != mpMesh )
+    if ( NULL != mpConeMesh )
     {
-        mpMesh->drop();
-        mpMesh = NULL;
+        mpConeMesh->drop();
+        mpConeMesh = NULL;
     }
 
     if ( NULL != mpSceneManager )
@@ -81,15 +123,15 @@ void Sub::SetPosition( const Vector& pos )
 {
     if ( mbInitialised )
     {
+        mTranslation = pos;
+        UpdateTransform();
     }
 }
 
 //------------------------------------------------------------------------------
-void Sub::GetPosition( Vector* pPosOut ) const
+const Vector& Sub::GetPosition() const
 {
-    if ( mbInitialised )
-    {
-    }
+    return mTranslation;
 }
 
 //------------------------------------------------------------------------------
@@ -97,18 +139,24 @@ void Sub::SetYaw( F32 yawAngle )
 {
     if ( mbInitialised )
     {
+        mRotation.mZ = yawAngle;
+        UpdateTransform();
     }
 }
 
 //------------------------------------------------------------------------------
 F32 Sub::GetYaw() const
 {
-    F32 yawAngle = 0.0f;
-
-    if ( mbInitialised )
-    {
-    }
-
-    return yawAngle;
+    return mRotation.mZ;
 }
 
+//------------------------------------------------------------------------------
+void Sub::UpdateTransform()
+{
+    irr::core::vector3df irrRotation = MathUtils::TransformRotation_SubToIrr( mRotation );
+    irr::core::vector3df irrTranslation = MathUtils::TransformVector_SubToIrr( mTranslation );
+    
+    irr::core::matrix4& subTransform = mpTransformNode->getRelativeTransformationMatrix();
+    subTransform.setRotationRadians( irrRotation );
+    subTransform.setTranslation( irrTranslation );
+}

@@ -30,3 +30,20 @@ irr::core::vector3df MathUtils::TransformVector_SubToIrr( const Vector& subVecto
 
     return irrVector;
 }
+
+//------------------------------------------------------------------------------
+Vector MathUtils::TransformRotation_IrrToSub( const irr::core::vector3df& irrRotationVector )
+{
+    return Vector( 2.0f*M_PI - irrRotationVector.X,
+                   2.0f*M_PI - irrRotationVector.Z,
+                   2.0f*M_PI - irrRotationVector.Y );
+}
+
+//------------------------------------------------------------------------------
+irr::core::vector3df MathUtils::TransformRotation_SubToIrr( const Vector& subRotationVector )
+{
+    return irr::core::vector3df( 
+        2.0f*M_PI - subRotationVector.mX,
+        2.0f*M_PI - subRotationVector.mZ,
+        2.0f*M_PI - subRotationVector.mY );
+}

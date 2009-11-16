@@ -41,5 +41,35 @@ class MathUtilsTests : public CxxTest::TestSuite
         TS_ASSERT( irrV2 == irr::core::vector3df( 0.0f, 0.0f, 1.0f ) );
         TS_ASSERT( irrV3 == irr::core::vector3df( 0.0f, 1.0f, 0.0f ) );
         TS_ASSERT( irrV4 == irr::core::vector3df( 1.0f, 3.0f, 2.0f ) );
+        
+        Vector subCrossVector = subV1.CrossProduct( subV2 );
+        irr::core::vector3df irrCrossVector = MathUtils::TransformVector_SubToIrr( subCrossVector );
+        
+        // This only works because pseudovectors are handled by our Vector class
+        TS_ASSERT( irrCrossVector == irrV1.crossProduct( irrV2 ) );
+    }
+    
+    //--------------------------------------------------------------------------
+    public: void testRotationTransformFromIrrlichtToSub()
+    {
+        irr::core::vector3df irrRotation( 
+            MathUtils::DegToRad( 45.0f ), MathUtils::DegToRad( -20.0f ), MathUtils::DegToRad( 175.0f ) );
+        Vector subRotation = MathUtils::TransformRotation_IrrToSub( irrRotation );
+        
+        TS_ASSERT_DELTA( sinf( subRotation.mX ), sinf( MathUtils::DegToRad( -45.0f ) ), Common::DEFAULT_EPSILON );
+        TS_ASSERT_DELTA( sinf( subRotation.mY ), sinf( MathUtils::DegToRad( -175.0f ) ), Common::DEFAULT_EPSILON );
+        TS_ASSERT_DELTA( sinf( subRotation.mZ ), sinf( MathUtils::DegToRad( 20.0f ) ), Common::DEFAULT_EPSILON );
+    }
+    
+    //--------------------------------------------------------------------------
+    public: void testRotationTransformFromSubToIrrlicht()
+    {
+        Vector subRotation( 
+            MathUtils::DegToRad( 45.0f ), MathUtils::DegToRad( -20.0f ), MathUtils::DegToRad( 175.0f ) );
+        irr::core::vector3df irrRotation = MathUtils::TransformRotation_SubToIrr( subRotation );
+        
+        TS_ASSERT_DELTA( sinf( irrRotation.X ), sinf( MathUtils::DegToRad( -45.0f ) ), Common::DEFAULT_EPSILON );
+        TS_ASSERT_DELTA( sinf( irrRotation.Y ), sinf( MathUtils::DegToRad( -175.0f ) ), Common::DEFAULT_EPSILON );
+        TS_ASSERT_DELTA( sinf( irrRotation.Z ), sinf( MathUtils::DegToRad( 20.0f ) ), Common::DEFAULT_EPSILON );
     }
 };

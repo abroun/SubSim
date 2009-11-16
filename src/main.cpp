@@ -5,6 +5,7 @@
 #include <irrlicht/irrlicht.h>
 
 #include "IrrMonitor.h"
+#include "Common/MathUtils.h"
 #include "Entities/Sub.h"
 #include "Entities/CoordinateSystemAxes.h"
 #include "Vector.h"
@@ -40,6 +41,8 @@ int main()
         fprintf( stderr, "Error: Unable to create sub\n" );
         return -1;
     }
+    sub.SetYaw( MathUtils::DegToRad( 45.0f ) );
+    sub.SetPosition( Vector( -4.0f, 0.0f, 0.0f ) );
 
     // Create axes to show coordinate system
     CoordinateSystemAxes axes;
@@ -49,8 +52,9 @@ int main()
         return -1;
     }
     
-    // Load pool
+    /*// Load pool
     irr::scene::IAnimatedMesh* pPoolMesh = pSceneMgr->getMesh( "media/export/pool.x" );
+    //IrrMonitor<irr::scene::IAnimatedMesh> poolMeshMonitor( pPoolMesh );
     if ( NULL == pPoolMesh )
     {
         fprintf( stderr, "Error: Unable to load mesh\n" );
@@ -58,11 +62,10 @@ int main()
     }
     
     irr::scene::IAnimatedMeshSceneNode* pPoolNode = pSceneMgr->addAnimatedMeshSceneNode( pPoolMesh );
-    IrrMonitor<irr::scene::IAnimatedMeshSceneNode> poolNodeMonitor( pPoolNode );
     if ( NULL != pPoolNode )
     {
         pPoolNode->setMaterialFlag( irr::video::EMF_LIGHTING, false );
-    }
+    }*/
       
     // Setup the camera
     pSceneMgr->addCameraSceneNode( 0, irr::core::vector3df( 0, 10, -10 ), irr::core::vector3df( 0, 0, 0 ) );
@@ -78,8 +81,11 @@ int main()
     }
     
     // Clean up
-    pIrrDevice->drop();
-    pIrrDevice = NULL;
+    //sub.DeInit();
+    //axes.DeInit();
+    //pPoolMesh->drop();
+    //pIrrDevice->drop();
+    //pIrrDevice = NULL;
 
     return 0;
 }
