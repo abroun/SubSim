@@ -30,7 +30,7 @@ Done
 - Write a left handed and right-handed cross product routine for the vector class. - 11/11/09
 - Write some code to transform between the two co-ordinate systems (and unit test it) - 16/11/09
 - Write some code for the Sub entity to let it be posistioned in the world using a right-hand coordinate system - 16/11/09
-- Add a debug camera to look around the scene - 11/11/09
-- Build up the rest of the world - 11/11/09
-- Create Swimming pool, buoy and gate objects (quickly) - 11/11/09
-- Try to add a blue fog to the world to approximate the visibility in the water - 11/11/09
+- Add a debug camera to look around the scene - 16/11/09
+- Build up the rest of the world - 16/11/09
+- Create Swimming pool, buoy and gate objects (quickly) - 16/11/09
+- Try to add a blue fog to the world to approximate the visibility in the water - 16/11/09
