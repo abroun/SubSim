@@ -8,12 +8,12 @@ INCLUDE_DIRECTORIES(
     ${global_include_dirs} )
 
 SET( srcFiles 
-    Entity.cpp
-    Sub.cpp 
-    CoordinateSystemAxes.cpp
-    Buoy.cpp
-    Gate.cpp 
-    Pool.cpp )
+    SubSimDriver.cpp
+    SubSimInterface.cpp
+    SimulationInterface.cpp )
 
-ADD_LIBRARY( entities ${srcFiles} )
+LINK_DIRECTORIES( ${global_link_dirs} )
+ADD_LIBRARY( subsimplugin SHARED ${srcFiles} )
+
+TARGET_LINK_LIBRARIES( subsimplugin ${global_link_libs} )
 

@@ -33,6 +33,8 @@ STRING( TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE )
 SET( IRRLICHT_VERSION 1.6 CACHE INTERNAL "Irrlicht version requirement" FORCE )
 SET( IRRLICHT_LIBRARY_PATH "/usr/local/lib" CACHE INTERNAL "Irrlicht library path" )
 
+SET( PLAYER_VERSION 3.0.0 CACHE INTERNAL "Player version requirement" FORCE )
+
 IF ( PKG_CONFIG_FOUND )
 
     pkg_check_modules( IRRLICHT Irrlicht>=${IRRLICHT_VERSION} )
@@ -47,6 +49,19 @@ IF ( PKG_CONFIG_FOUND )
                                 ${IRRLICHT_LIBRARIES}
                                 ${IRRLICHT_LDFLAGS} )
     ENDIF ( NOT IRRLICHT_FOUND )
+
+    pkg_check_modules( PLAYER playercore>=${PLAYER_VERSION} )
+    IF ( NOT PLAYER_FOUND )
+        MESSAGE (SEND_ERROR "\nError: Player version >=${PLAYER_VERSION} and development files not found.")
+    ELSE ( NOT PLAYER_FOUND )
+
+        SET( PLAYER_LIBRARY_PATH ${PLAYER_LIBRARY_DIRS} CACHE INTERNAL "Player library path" )
+        APPEND_LIBRARY_VARS_TO_CACHED_LISTS( ${PLAYER_INCLUDE_DIRS}
+                                ${PLAYER_LIBRARY_DIRS}
+                                ${PLAYER_LINK_LIBS}
+                                ${PLAYER_LIBRARIES}
+                                ${PLAYER_LDFLAGS} )
+    ENDIF ( NOT PLAYER_FOUND )
 
 ELSE ( PKG_CONFIG_FOUND )
 
