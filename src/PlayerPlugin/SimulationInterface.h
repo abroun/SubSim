@@ -46,26 +46,6 @@ class SimulationInterface : public SubSimInterface
 
     // Update this interface, publish new info.
     public: virtual void Update();
-
-    // Open a SHM interface when a subscription is received.
-    // This is called from SubSimDriver::Subscribe
-    public: virtual void Subscribe();
-
-    // Close a SHM interface. This is called from SubSimDriver::Unsubscribe
-    public: virtual void Unsubscribe();
-
-    // Server Id. The name of the server
-    private: char mServerIdString[ 1024 ];
-
-    /// \brief Pointer to the Simulation Interface
-    //public: SimulationIface *iface;
-
-    //private: QueuePointer *responseQueue;
-
-    private: player_simulation_pose3d_req_t mPose3dReq;
-
-    private: player_simulation_pose2d_req_t mPose2dReq;
-    //private: static boost::recursive_mutex *mutex;
 };
 
 #endif // SIMULATION_INTERFACE_H

@@ -1,12 +1,22 @@
 
+- Implement the position3d interface to control the Submarine with Player
+- Put a camera on the nose of the Submarine
+- Implement the camera interface to look through the camera
+- Try to understand how time is handled in Player and if necessary get the simulator to handle time
+- Create a simple python script to make the submarine wander... :)
+- Look at hooking the simulator up to PyRobot
+
+- Talk to the sensor and motion groups about the types of interfaces they will be providing
+- Write an article about the simulator on the Sub google group
+- Make the simulation more closely ressemble the challenge
+    - Get everything to a more appropriate scale, and position gates and obstacles correctly
+    - Create 3D models for entities in the simulation (see if you can find somebody artistic to do this)
 
 - Draw 3D axes as a GUI element on screen - Drawn, but not as GUI
 
-- Start work on the interface with Player
-    - Get the simulation to load as a plug-in
-    - Implement the simulation and position3d (or maybe position2d) interfaces
-
 - Create a replacement debug camera class to give more control over the cameras initial position and also to let the camera be moved ithe the keyboard
+
+- Create a test harness that will start up the simulator along with a control program and rate the control program on how well it does at completing the course
 
 Coordinate system
 =================
@@ -34,3 +44,7 @@ Done
 - Build up the rest of the world - 16/11/09
 - Create Swimming pool, buoy and gate objects (quickly) - 16/11/09
 - Try to add a blue fog to the world to approximate the visibility in the water - 16/11/09
+
+- Start work on the interface with Player
+    - Get the simulation to load as a plug-in - 23/11/09
+

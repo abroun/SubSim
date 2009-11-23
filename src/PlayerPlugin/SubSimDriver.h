@@ -9,6 +9,7 @@
 
 //------------------------------------------------------------------------------
 #include <libplayercore/playercore.h>
+#include "Simulator/Simulator.h"
 
 //------------------------------------------------------------------------------
 // Forward declarations
@@ -32,12 +33,6 @@ class SubSimDriver : public Driver
                                         player_msghdr* pHeader, 
                                         void* pData );
 
-    // Subscribe a device to this driver
-    public: virtual int Subscribe( player_devaddr_t addr );
-
-    // Remove a device from this driver
-    public: virtual int Unsubscribe( player_devaddr_t addr );
-
     // The server thread calls this method frequently. We use it 
     // to check  for new commands and configs
     private: virtual void Update();
@@ -56,6 +51,8 @@ class SubSimDriver : public Driver
 
     // Max device count
     protected: int mMaxNumDevices;
+    
+    public: Simulator mSim;
 };
 
 #endif // SUB_SIM_DRIVER_H

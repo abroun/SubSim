@@ -14,6 +14,9 @@ SET( srcFiles
 
 LINK_DIRECTORIES( ${global_link_dirs} )
 ADD_LIBRARY( subsimplugin SHARED ${srcFiles} )
+SET_TARGET_PROPERTIES( subsimplugin PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR} )
+# delete the "lib" prefix from the plugin
+SET_TARGET_PROPERTIES( subsimplugin PROPERTIES PREFIX "" )
 
-TARGET_LINK_LIBRARIES( subsimplugin ${global_link_libs} )
+TARGET_LINK_LIBRARIES( subsimplugin simulator entities mathUtils ${global_link_libs} )
 

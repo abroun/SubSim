@@ -28,7 +28,7 @@ void SubSimDriverRegister( DriverTable* pTable )
 {
     if (!player_quiet_startup)
     {
-        printf("\n ** SubSim plugin **" );
+        printf("\n ** SubSim plugin **\n" );
 
         //printf("\n * Part of the Player/Stage Project [http://playerstage.sourceforge.net]\n"
         //    " * Copyright 2000-2006 Richard Vaughan, Andrew Howard, Brian Gerkey, Nathan Koenig\n"
@@ -62,9 +62,17 @@ SubSimDriver::SubSimDriver( ConfigFile* pConfigFile, int section )
     mNumDevices( 0 ),
     mMaxNumDevices( 0 )
 {
-    if ( LoadDevices( pConfigFile, section ) < 0 )
+    if ( !mSim.Init() )
     {
         fprintf( stderr, "Error: Unable load devices\n" );
+    }
+    else
+    { 
+        this->alwayson = true;
+        if ( LoadDevices( pConfigFile, section ) < 0 )
+        {
+            fprintf( stderr, "Error: Unable load devices\n" );
+        }
     }
 }
 
@@ -103,46 +111,9 @@ int SubSimDriver::ProcessMessage( QueuePointer& respQueue,
     else
     {
         fprintf( stderr, "Error: Can't find interface for device %d.%d.%d",
-            this->device_addr.robot,
-            this->device_addr.interf,
-            this->device_addr.index );
-        return -1;
-    }
-}
-
-//------------------------------------------------------------------------------
-// Subscribe an device to this driver
-int SubSimDriver::Subscribe( player_devaddr_t addr )
-{
-    SubSimInterface* pDeviceInterface = LookupDevice( addr );
-
-    if ( NULL != pDeviceInterface )
-    {
-        pDeviceInterface->Subscribe();
-        return Driver::Subscribe( addr );
-    }
-    else
-    {
-        fprintf( stderr, "Error: Failed to find a device." );
-        return -1;
-    }
-}
-
-
-//------------------------------------------------------------------------------
-// Remove a device from this driver
-int SubSimDriver::Unsubscribe( player_devaddr_t addr )
-{
-    SubSimInterface* pDeviceInterface = LookupDevice( addr );
-
-    if ( NULL != pDeviceInterface )
-    {
-        pDeviceInterface->Unsubscribe();
-        return Driver::Unsubscribe( addr );
-    }
-    else
-    {
-        fprintf( stderr, "Error: Failed to find a device." );
+            pHeader->addr.robot,
+            pHeader->addr.interf,
+            pHeader->addr.index );
         return -1;
     }
 }
@@ -159,6 +130,16 @@ void SubSimDriver::Update()
     {
         SubSimInterface* pDeviceInterface = mpDeviceList[ deviceIdx ];
         pDeviceInterface->Update();
+    }
+    
+    if ( mSim.IsRunning() )
+    {
+        mSim.Update();
+    }
+    else
+    {
+        // Rather abrupt, but this seems to be what Stage does...
+        exit( 0 );
     }
 
     return;
@@ -195,8 +176,10 @@ int SubSimDriver::LoadDevices( ConfigFile* pConfigFile, int section )
 
         if ( !player_quiet_startup )
         {
-            printf( "    %d.%d.%d is ",
-                playerAddr.robot, playerAddr.interf, playerAddr.index );
+            printf( "    %d.%s.%d is",
+                playerAddr.robot, 
+                interf_to_str( playerAddr.interf ),
+                playerAddr.index );
             fflush(stdout);
         }
 
@@ -224,7 +207,7 @@ int SubSimDriver::LoadDevices( ConfigFile* pConfigFile, int section )
             }*/
         default:
             {
-                fprintf( stderr, "Error: Gazebo driver doesn't support interface type %d\n",
+                fprintf( stderr, "Error: SubSim driver doesn't support interface type %d\n",
                     playerAddr.interf );
                 SetError( -1 );
                 return -1;
@@ -234,7 +217,7 @@ int SubSimDriver::LoadDevices( ConfigFile* pConfigFile, int section )
         if ( NULL != pDeviceInterface )
         {
             // Attempt to add this interface and we're done
-            if ( AddInterface( pDeviceInterface->device_addr ) != 0 )
+            if ( AddInterface( pDeviceInterface->mDeviceAddress ) != 0 )
             {
                 printf( "SubSim driver error: AddInterface() failed\n" );
                 SetError( -2 );
@@ -268,11 +251,11 @@ SubSimInterface* SubSimDriver::LookupDevice( player_devaddr_t addr )
 
     for ( int deviceIdx = 0; deviceIdx < mNumDevices; deviceIdx++ )
     {
-        SubSimInterface* pTestInteface = (GazeboInterface*)this->devices[i];
+        SubSimInterface* pTestInterface = (SubSimInterface*)mpDeviceList[ deviceIdx ];
 
-        if ( pTestInteface->device_addr.robot == addr.robot 
-            && pTestInteface->device_addr.interf == addr.interf 
-            && pTestInteface->device_addr.index == addr.index )
+        if ( pTestInterface->mDeviceAddress.robot == addr.robot 
+            && pTestInterface->mDeviceAddress.interf == addr.interf 
+            && pTestInterface->mDeviceAddress.index == addr.index )
         {
             // We've found the device
             pResult = pTestInterface;

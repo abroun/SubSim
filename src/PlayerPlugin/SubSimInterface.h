@@ -32,12 +32,6 @@ class SubSimInterface
     // Update this interface, publish new info.
     public: virtual void Update() = 0;
 
-    // Open an interface when a subscription is received.
-    public: virtual void Subscribe() = 0;
-
-    // Close an interface.
-    public: virtual void Unsubscribe() = 0;
-
     // Address of the Player Device
     public: player_devaddr_t mDeviceAddress;
 

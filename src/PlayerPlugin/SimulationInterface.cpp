@@ -16,42 +16,13 @@
 //------------------------------------------------------------------------------
 SimulationInterface::SimulationInterface( player_devaddr_t addr, 
     SubSimDriver* pDriver, ConfigFile* pConfigFile, int section )
-    : GazeboInterface( addr, pDriver, pConfigFile, section )
+    : SubSimInterface( addr, pDriver, pConfigFile, section )
 {
-    // Get the ID of the interface
-    //strcat(this->gz_id, GazeboClient::prefixId);
-    mServerIdString[ 0 ] = '\0';
-    strncat( mServerIdString, sizeof( mServerIdString ), 
-        pConfigFile->ReadString( section, "server_id", "default" ) );
-    mServerIdString[ sizeof( mServerIdString ) - 1 ] = '\0';    // Make sure the string is NUL terminated
-
-    // ID of the server
-    int serverId = atoi( (char*)cf->ReadString( section, "server_id", "default" ) );
-
-    // Initialize the Client. Creates the SHM connection
-    GazeboClient::Init( serverId, "" );
-
-    /*this->iface = new SimulationIface();
-
-    this->responseQueue = NULL;
-
-    memset( &this->pose3dReq, 0, sizeof(this->pose3dReq) ); 
-    memset( &this->pose2dReq, 0, sizeof(this->pose2dReq) ); 
-
-    if (this->mutex == NULL)
-        this->mutex = new boost::recursive_mutex();*/
 }
 
 //------------------------------------------------------------------------------
 SimulationInterface::~SimulationInterface()
 {
-    /*delete this->iface;
-
-    if (this->responseQueue)
-    {
-        delete this->responseQueue;
-        this->responseQueue = NULL;
-    }*/
 }
 
 //------------------------------------------------------------------------------
@@ -287,7 +258,8 @@ int SimulationInterface::ProcessMessage( QueuePointer& respQueue,
   //else
   //  printf("Unhandled Process message[%d][%d]\n",0,0);
 
-  return 0;
+    printf( "Unhandled message\n" );
+    return -1;
 }
 
 
@@ -390,30 +362,5 @@ void SimulationInterface::Update()
   return;
 }
 
-//------------------------------------------------------------------------------
-// Open a SHM interface when a subscription is received. 
-void SimulationInterface::Subscribe()
-{
-  /*// Open the interface
-  try
-  {
-    boost::recursive_mutex::scoped_lock lock(*this->mutex);
-    this->iface->Open(GazeboClient::client, this->gz_id);
-  }
-  catch (std::string e)
-  {
-    //std::ostringstream stream;
-    std::cout <<"Error Subscribing to Gazebo Simulation Interface\n"
-    << e << "\n";
-    //gzthrow(stream.str());
-    exit(0);
-  }*/
-}
 
-//------------------------------------------------------------------------------
-// Close a SHM interface.
-void SimulationInterface::Unsubscribe()
-{
-  //boost::recursive_mutex::scoped_lock lock(*this->mutex);
-  //this->iface->Close();
-}
+
