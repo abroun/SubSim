@@ -20,6 +20,18 @@ class Sub : public Entity
     //--------------------------------------------------------------------------
     public: bool Init( irr::scene::ISceneManager* pSceneManager );
     public: void DeInit();
+    
+    //--------------------------------------------------------------------------
+    // Updates the entity by a given number of milliseconds
+    public: virtual void Update( S32 timeStepMS );
+    
+    //--------------------------------------------------------------------------
+    //! Sets the desired forward speed of the submarine in metres per second
+    public: void SetForwardSpeed( F32 forwardSpeed ) { mForwardSpeed = forwardSpeed; }
+    
+    //--------------------------------------------------------------------------
+    //! Sets the desired yaw speed of the submarine in radians per second
+    public: void SetYawSpeed( F32 yawSpeed ) { mYawSpeed = yawSpeed; }
 
     //--------------------------------------------------------------------------
     // Members
@@ -28,6 +40,8 @@ class Sub : public Entity
     private: irr::scene::IMesh* mpBodyMesh;
     private: irr::scene::IMeshSceneNode* mpConeMeshNode;
     private: irr::scene::IMeshSceneNode* mpBodyMeshNode;
+    private: F32 mForwardSpeed;
+    private: F32 mYawSpeed;
 };
 
 #endif // SUB_H

@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "SubSimDriver.h"
 #include "SimulationInterface.h"
+#include "Position3DInterface.h"
 
 //------------------------------------------------------------------------------
 // A factory creation function, declared outside of the class so that it
@@ -124,12 +125,19 @@ void SubSimDriver::Update()
 {
     SubSimInterface* pDeviceInterface;
 
-    Driver::ProcessMessages();
-
-    for ( int deviceIdx = 0; deviceIdx < mNumDevices; deviceIdx++ )
+    static int count = 0;
+    
+    if ( count++ >= 0 )
     {
-        SubSimInterface* pDeviceInterface = mpDeviceList[ deviceIdx ];
-        pDeviceInterface->Update();
+        Driver::ProcessMessages();
+
+        for ( int deviceIdx = 0; deviceIdx < mNumDevices; deviceIdx++ )
+        {
+            SubSimInterface* pDeviceInterface = mpDeviceList[ deviceIdx ];
+            pDeviceInterface->Update();
+        }
+        
+        count = 0;
     }
     
     if ( mSim.IsRunning() )
@@ -198,13 +206,13 @@ int SubSimDriver::LoadDevices( ConfigFile* pConfigFile, int section )
                 if ( !player_quiet_startup ) printf( " a camera interface.\n" );
                 pDeviceInterface = new CameraInterface( playerAddr, this, pConfigFile, section );
                 break;
-            }
+            }*/
         case PLAYER_POSITION3D_CODE:
             {
                 if ( !player_quiet_startup ) printf( " a position3d interface.\n" );
-                pDeviceInterface = new Position3dInterface( playerAddr, this, pConfigFile, section );
+                pDeviceInterface = new Position3DInterface( playerAddr, this, pConfigFile, section );
                 break;
-            }*/
+            }
         default:
             {
                 fprintf( stderr, "Error: SubSim driver doesn't support interface type %d\n",

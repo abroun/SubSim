@@ -29,9 +29,6 @@
 ///    - "pause_time" returns double
 
 //------------------------------------------------------------------------------
-class SubSimDriver;
-
-//------------------------------------------------------------------------------
 class SimulationInterface : public SubSimInterface
 {
     // Constructor

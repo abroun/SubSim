@@ -82,6 +82,9 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager )
         // Put the nodes under the control of SubSim
         AddChildNode( mpConeMeshNode );
         AddChildNode( mpBodyMeshNode );
+        
+        mForwardSpeed = 0.0f;
+        mYawSpeed = 0.0f;
 
         mbInitialised = true;
     }
@@ -119,5 +122,22 @@ void Sub::DeInit()
     Entity::DeInit();
 
     mbInitialised = false;
+}
+
+//------------------------------------------------------------------------------
+void Sub::Update( S32 timeStepMS )
+{
+    // For now we assume that the motion is linear and that forward motion
+    // happens before changes in heading
+    
+    // Update the position of the sub
+    F32 oldYaw = GetYaw();
+    Vector heading( -(F32)sin( oldYaw ), (F32)cos( oldYaw ), 0.0f );
+    Vector newPos = GetPosition() + (heading * mForwardSpeed * (F32)timeStepMS) / 1000.0f;
+    
+    F32 newYaw = oldYaw + (mYawSpeed * (F32)timeStepMS) / 1000.0f;
+    
+    SetPosition( newPos );
+    SetYaw( newYaw );
 }
 

@@ -10,7 +10,8 @@ INCLUDE_DIRECTORIES(
 SET( srcFiles 
     SubSimDriver.cpp
     SubSimInterface.cpp
-    SimulationInterface.cpp )
+    SimulationInterface.cpp
+    Position3DInterface.cpp )
 
 LINK_DIRECTORIES( ${global_link_dirs} )
 ADD_LIBRARY( subsimplugin SHARED ${srcFiles} )

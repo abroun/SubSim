@@ -51,6 +51,10 @@ class Entity
     protected: void AddChildNode( irr::scene::ISceneNode* pChildNode );
     protected: void RemoveChildNode( irr::scene::ISceneNode* pChildNode );
     protected: void RemoveAllChildNodes();
+    
+    //--------------------------------------------------------------------------
+    // Updates the entity by a given number of milliseconds
+    public: virtual void Update( S32 timeStepMS ) {}
 
     //--------------------------------------------------------------------------
     // Members
