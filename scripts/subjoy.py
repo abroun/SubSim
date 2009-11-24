@@ -16,10 +16,11 @@ if pos3d.subscribe( PLAYERC_OPEN_MODE ) != 0:
 
 print "Connected to Player!"
 
-while True:
-    pos3d.set_velocity( 0.1, 0.1, 1.0, # x, y, z
-                        0.0, 0.0, 0.05, # roll, pitch, yaw
-                        0 )   # State
+
+#while True:
+pos3d.set_velocity( 0.1, 0.1, 5.0, # x, y, z
+                    0.0, 0.0, -0.58, # roll, pitch, yaw
+                    0 )   # State
 
 # Clean up
 pos3d.unsubscribe()

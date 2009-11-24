@@ -37,4 +37,4 @@ IF ( CMAKE_LINK_FLAGS_${CMAKE_BUILD_TYPE} )
     ${CMAKE_LINK_FLAGS_${CMAKE_BUILD_TYPE}})
 ENDIF ( CMAKE_LINK_FLAGS_${CMAKE_BUILD_TYPE} )
 
-TARGET_LINK_LIBRARIES( subsim ${global_link_libs} simulator entities mathUtils )
+TARGET_LINK_LIBRARIES( subsim ${global_link_libs} simulator entities mathUtils rt )

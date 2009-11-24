@@ -8,7 +8,8 @@ INCLUDE_DIRECTORIES(
     ${global_include_dirs} )
 
 SET( srcFiles 
-    MathUtils.cpp )
+    MathUtils.cpp
+    HighPrecisionTime.cpp )
 
 ADD_LIBRARY( mathUtils ${srcFiles} )
 

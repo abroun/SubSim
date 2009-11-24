@@ -125,7 +125,7 @@ void Sub::DeInit()
 }
 
 //------------------------------------------------------------------------------
-void Sub::Update( S32 timeStepMS )
+void Sub::Update( F32 timeStep )
 {
     // For now we assume that the motion is linear and that forward motion
     // happens before changes in heading
@@ -133,9 +133,8 @@ void Sub::Update( S32 timeStepMS )
     // Update the position of the sub
     F32 oldYaw = GetYaw();
     Vector heading( -(F32)sin( oldYaw ), (F32)cos( oldYaw ), 0.0f );
-    Vector newPos = GetPosition() + (heading * mForwardSpeed * (F32)timeStepMS) / 1000.0f;
-    
-    F32 newYaw = oldYaw + (mYawSpeed * (F32)timeStepMS) / 1000.0f;
+    Vector newPos = GetPosition() + (heading * mForwardSpeed * timeStep);
+    F32 newYaw = oldYaw + (mYawSpeed * timeStep);
     
     SetPosition( newPos );
     SetYaw( newYaw );

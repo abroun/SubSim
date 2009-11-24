@@ -22,8 +22,8 @@ class Sub : public Entity
     public: void DeInit();
     
     //--------------------------------------------------------------------------
-    // Updates the entity by a given number of milliseconds
-    public: virtual void Update( S32 timeStepMS );
+    // Updates the entity by a given number of seconds
+    public: virtual void Update( F32 timeStep );
     
     //--------------------------------------------------------------------------
     //! Sets the desired forward speed of the submarine in metres per second

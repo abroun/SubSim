@@ -53,8 +53,8 @@ class Entity
     protected: void RemoveAllChildNodes();
     
     //--------------------------------------------------------------------------
-    // Updates the entity by a given number of milliseconds
-    public: virtual void Update( S32 timeStepMS ) {}
+    // Updates the entity by a given number of seconds
+    public: virtual void Update( F32 timeStep ) {}
 
     //--------------------------------------------------------------------------
     // Members
