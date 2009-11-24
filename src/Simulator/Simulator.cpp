@@ -54,6 +54,11 @@ struct SimulatorImpl
     
     S32 mLastFPS;
     bool mbIsRunning;
+    
+    // Render to texture test
+    irr::scene::ISceneNode* mpTestCube;
+    irr::video::ITexture* mpRenderTarget;
+    irr::scene::ICameraSceneNode* mpFixedCam;
 };
 
 //------------------------------------------------------------------------------
@@ -171,6 +176,34 @@ bool Simulator::Init()
         mpImpl->mTimeAccumulatorUS = 0;
         mpImpl->mLastTime = HighPrecisionTime::GetTime();
         
+        // Render to texture test
+        mpImpl->mpTestCube = pSceneMgr->addCubeSceneNode( 20 );
+        
+        irr::scene::ISceneNodeAnimator* anim = 
+            pSceneMgr->createRotationAnimator(irr::core::vector3df(0.3f, 0.3f,0));
+        mpImpl->mpTestCube->setPosition(irr::core::vector3df(0,0,10));
+        mpImpl->mpTestCube->setMaterialFlag(irr::video::EMF_LIGHTING, false); // disable dynamic lighting
+        mpImpl->mpTestCube->addAnimator(anim);
+        anim->drop();
+        
+        mpImpl->mpRenderTarget = NULL;
+        mpImpl->mpFixedCam = NULL;
+        
+        if ( pVideoDriver->queryFeature( irr::video::EVDF_RENDER_TO_TARGET ) )
+        {
+            mpImpl->mpRenderTarget = pVideoDriver->addRenderTargetTexture(
+                irr::core::dimension2d<U32>(256,256), "RTT1" );
+            mpImpl->mpTestCube->setMaterialTexture(0, mpImpl->mpRenderTarget); // set material of cube to render target
+                
+            // add fixed camera
+            mpImpl->mpFixedCam = pSceneMgr->addCameraSceneNode(
+                0, irr::core::vector3df(10,10,-80), irr::core::vector3df(0,0,0));
+        }
+        else
+        {
+            fprintf( stderr, "Error: Render to texture not available... :(\n" );
+        }
+        
         mpImpl->mbInitialised = true;
     }
     
@@ -263,8 +296,33 @@ void Simulator::UpdateFrameRender()
     irr::scene::ISceneManager* pSceneMgr = mpImpl->mpIrrDevice->getSceneManager();
     irr::gui::IGUIEnvironment* pGUIEnvironment = mpImpl->mpIrrDevice->getGUIEnvironment();
 
-    pVideoDriver->beginScene( true, true, irr::video::SColor( 255, 100, 101, 140 ) );
+    const irr::video::SColor CLEAR_COLOUR(  255, 100, 101, 140 );
+    pVideoDriver->beginScene( true, true, CLEAR_COLOUR );
 
+    // Draw to render target
+    if ( NULL != mpImpl->mpRenderTarget )
+    {
+        // draw scene into render target
+                        
+        // set render target texture
+        pVideoDriver->setRenderTarget(mpImpl->mpRenderTarget, true, true, irr::video::SColor(0,0,0,255));
+        
+        // make cube invisible and set fixed camera as active camera
+        mpImpl->mpTestCube->setVisible(false);
+        pSceneMgr->setActiveCamera(mpImpl->mpFixedCam);
+        
+        // draw whole scene into render buffer
+        pSceneMgr->drawAll();
+        // set back old render target
+        // The buffer might have been distorted, so clear it
+        pVideoDriver->setRenderTarget(0, true, true, CLEAR_COLOUR);
+        
+        // make the cube visible and set the user controlled camera as active one
+        mpImpl->mpTestCube->setVisible(true);
+        pSceneMgr->setActiveCamera(mpImpl->mpCamera);
+    }
+    
+    // Draw the rest of the scene normally
     pSceneMgr->drawAll();
     pGUIEnvironment->drawAll();
     
