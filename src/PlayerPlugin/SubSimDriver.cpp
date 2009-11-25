@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "SubSimDriver.h"
 #include "SimulationInterface.h"
+#include "CameraInterface.h"
 #include "Position3DInterface.h"
 
 //------------------------------------------------------------------------------
@@ -53,6 +54,8 @@ extern "C"
 //------------------------------------------------------------------------------
 // SubSimDriver
 //------------------------------------------------------------------------------
+static const double SDD_INTERFACE_UPDATES_PER_SECOND = 20.0;
+static const int SDD_NUM_MESSAGES_HANDLED_PER_UPDATE = 32;
 
 //------------------------------------------------------------------------------
 // Constructor.  Retrieve options from the configuration file and do any
@@ -65,11 +68,12 @@ SubSimDriver::SubSimDriver( ConfigFile* pConfigFile, int section )
 {
     if ( !mSim.Init() )
     {
-        fprintf( stderr, "Error: Unable load devices\n" );
+        fprintf( stderr, "Error: Unable to initialise simulation\n" );
     }
     else
     { 
         this->alwayson = true;
+        mLastInterfaceUpdateTime = mSim.GetSimTime();
         if ( LoadDevices( pConfigFile, section ) < 0 )
         {
             fprintf( stderr, "Error: Unable load devices\n" );
@@ -123,23 +127,23 @@ int SubSimDriver::ProcessMessage( QueuePointer& respQueue,
 // Main function for device thread
 void SubSimDriver::Update()
 {
-    SubSimInterface* pDeviceInterface;
-
-    static int count = 0;
+    Driver::ProcessMessages( SDD_NUM_MESSAGES_HANDLED_PER_UPDATE );
     
-    if ( count++ >= 0 )
+    // Check to see if we should update the interfaces
+    double simTime = mSim.GetSimTime();
+    if ( simTime - mLastInterfaceUpdateTime 
+        >= 1.0/SDD_INTERFACE_UPDATES_PER_SECOND )
     {
-        Driver::ProcessMessages();
-
         for ( int deviceIdx = 0; deviceIdx < mNumDevices; deviceIdx++ )
         {
             SubSimInterface* pDeviceInterface = mpDeviceList[ deviceIdx ];
             pDeviceInterface->Update();
         }
         
-        count = 0;
+        mLastInterfaceUpdateTime = simTime;
     }
     
+    // Check to see if the simulation is still running
     if ( mSim.IsRunning() )
     {
         mSim.Update();
@@ -201,12 +205,12 @@ int SubSimDriver::LoadDevices( ConfigFile* pConfigFile, int section )
                 pDeviceInterface = new SimulationInterface( playerAddr, this, pConfigFile, section );
                 break;
             }
-        /*case PLAYER_CAMERA_CODE:
+        case PLAYER_CAMERA_CODE:
             {
                 if ( !player_quiet_startup ) printf( " a camera interface.\n" );
                 pDeviceInterface = new CameraInterface( playerAddr, this, pConfigFile, section );
                 break;
-            }*/
+            }
         case PLAYER_POSITION3D_CODE:
             {
                 if ( !player_quiet_startup ) printf( " a position3d interface.\n" );
@@ -234,7 +238,6 @@ int SubSimDriver::LoadDevices( ConfigFile* pConfigFile, int section )
 
             // Store the interface in our device list
             mpDeviceList[ mNumDevices++ ] = pDeviceInterface;
-
         }
         else
         {

@@ -45,6 +45,12 @@ HighPrecisionTime HighPrecisionTime::GetDiff( const HighPrecisionTime& end,
     }
     return result;
 }
+
+//------------------------------------------------------------------------------
+double HighPrecisionTime::ConvertToSeconds( const HighPrecisionTime& t )
+{
+    return (double)t.mSeconds + (double)t.mNanoSeconds / 1e9;
+}
     
 //------------------------------------------------------------------------------
 S32 HighPrecisionTime::ConvertToMilliSeconds( const HighPrecisionTime& t )

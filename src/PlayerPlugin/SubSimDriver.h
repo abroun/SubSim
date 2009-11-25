@@ -52,6 +52,9 @@ class SubSimDriver : public Driver
     // Max device count
     protected: int mMaxNumDevices;
     
+    // Used to keep track of the rate at which we update the interfaces
+    protected: double mLastInterfaceUpdateTime;
+    
     public: Simulator mSim;
 };
 

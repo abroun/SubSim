@@ -48,6 +48,16 @@ class Simulator
     //--------------------------------------------------------------------------
     //! Sets the desired yaw speed of the submarine in radians per second
     public: void SetSubYawSpeed( F32 yawSpeed );
+    
+    //--------------------------------------------------------------------------
+    //! Gets the time in seconds that the simulator has been running for.
+    //! Can be used to timestamp data from interfaces
+    public: double GetSimTime() const;
+    
+    // Returns (0,0) if no image is available
+    public: void GetSubCameraImageDimensions( U32* pWidthOut, U32* pHeightOut ) const;
+    
+    public: void GetSubCameraImage( U8* pBufferInOut, U32 bufferSize ) const;
 
     //--------------------------------------------------------------------------
     // Members

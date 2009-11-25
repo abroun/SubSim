@@ -37,7 +37,7 @@ int Position3DInterface::ProcessMessage( QueuePointer& respQueue,
         printf( "Set vel = %2.3f, %2.3f, %2.3f\n",
             (F32)pCmd->vel.px, (F32)pCmd->vel.py, (F32)pCmd->vel.pz );
         
-        mpDriver->mSim.SetSubForwardSpeed( (F32)pCmd->vel.pz );
+        mpDriver->mSim.SetSubForwardSpeed( (F32)pCmd->vel.px );
         mpDriver->mSim.SetSubYawSpeed( (F32)pCmd->vel.pyaw );
 
         return 0;

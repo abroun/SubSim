@@ -49,16 +49,13 @@ struct SimulatorImpl
     Pool mPool;
     EntityPtrVector mEntityList;
     
+    // TODO: Tidy up the timing.
+    HighPrecisionTime mSimulatorStartTime;
     HighPrecisionTime mLastTime;
     S32 mTimeAccumulatorUS; // The number of microseconds that we need to deal with in the next update
     
     S32 mLastFPS;
     bool mbIsRunning;
-    
-    // Render to texture test
-    irr::scene::ISceneNode* mpTestCube;
-    irr::video::ITexture* mpRenderTarget;
-    irr::scene::ICameraSceneNode* mpFixedCam;
 };
 
 //------------------------------------------------------------------------------
@@ -110,7 +107,7 @@ bool Simulator::Init()
             L"Hello World!", irr::core::rect< irr::s32 >( 10, 10, 200, 40 ), true );
     
         // Setup sub
-        if ( !mpImpl->mSub.Init( pSceneMgr ) )
+        if ( !mpImpl->mSub.Init( pSceneMgr, pVideoDriver ) )
         {
             fprintf( stderr, "Error: Unable to initialise sub\n" );
             DeInit();
@@ -174,35 +171,8 @@ bool Simulator::Init()
         mpImpl->mbIsRunning = true;
         
         mpImpl->mTimeAccumulatorUS = 0;
-        mpImpl->mLastTime = HighPrecisionTime::GetTime();
-        
-        // Render to texture test
-        mpImpl->mpTestCube = pSceneMgr->addCubeSceneNode( 20 );
-        
-        irr::scene::ISceneNodeAnimator* anim = 
-            pSceneMgr->createRotationAnimator(irr::core::vector3df(0.3f, 0.3f,0));
-        mpImpl->mpTestCube->setPosition(irr::core::vector3df(0,0,10));
-        mpImpl->mpTestCube->setMaterialFlag(irr::video::EMF_LIGHTING, false); // disable dynamic lighting
-        mpImpl->mpTestCube->addAnimator(anim);
-        anim->drop();
-        
-        mpImpl->mpRenderTarget = NULL;
-        mpImpl->mpFixedCam = NULL;
-        
-        if ( pVideoDriver->queryFeature( irr::video::EVDF_RENDER_TO_TARGET ) )
-        {
-            mpImpl->mpRenderTarget = pVideoDriver->addRenderTargetTexture(
-                irr::core::dimension2d<U32>(256,256), "RTT1" );
-            mpImpl->mpTestCube->setMaterialTexture(0, mpImpl->mpRenderTarget); // set material of cube to render target
-                
-            // add fixed camera
-            mpImpl->mpFixedCam = pSceneMgr->addCameraSceneNode(
-                0, irr::core::vector3df(10,10,-80), irr::core::vector3df(0,0,0));
-        }
-        else
-        {
-            fprintf( stderr, "Error: Render to texture not available... :(\n" );
-        }
+        mpImpl->mSimulatorStartTime = HighPrecisionTime::GetTime();
+        mpImpl->mLastTime = mpImpl->mSimulatorStartTime;        
         
         mpImpl->mbInitialised = true;
     }
@@ -259,7 +229,7 @@ S32 Simulator::UpdateSimulator()
     HighPrecisionTime newTime = HighPrecisionTime::GetTime();
     HighPrecisionTime timeDiff = HighPrecisionTime::GetDiff( newTime,  mpImpl->mLastTime );
     S32 elapsedUS = HighPrecisionTime::ConvertToMicroSeconds( timeDiff );
-    printf( "Time = %i, %i, Elapsed US = %i\n", newTime.mSeconds, newTime.mNanoSeconds, elapsedUS );
+    //printf( "Time = %i, %i, Elapsed US = %i\n", newTime.mSeconds, newTime.mNanoSeconds, elapsedUS );
     
     // Add the elapsed time onto the accumulator and also cap the accumukator
     mpImpl->mTimeAccumulatorUS += elapsedUS;
@@ -299,27 +269,23 @@ void Simulator::UpdateFrameRender()
     const irr::video::SColor CLEAR_COLOUR(  255, 100, 101, 140 );
     pVideoDriver->beginScene( true, true, CLEAR_COLOUR );
 
-    // Draw to render target
-    if ( NULL != mpImpl->mpRenderTarget )
-    {
-        // draw scene into render target
-                        
-        // set render target texture
-        pVideoDriver->setRenderTarget(mpImpl->mpRenderTarget, true, true, irr::video::SColor(0,0,0,255));
+    // Render the view from the submarine's camera
+    irr::video::ITexture* pSubCameraRenderTarget = mpImpl->mSub.GetCameraRenderTarget();
+    if ( NULL != pSubCameraRenderTarget )
+    {                        
+        // Set render target texture
+        pVideoDriver->setRenderTarget( pSubCameraRenderTarget, 
+                                       true, true, CLEAR_COLOUR );
         
-        // make cube invisible and set fixed camera as active camera
-        mpImpl->mpTestCube->setVisible(false);
-        pSceneMgr->setActiveCamera(mpImpl->mpFixedCam);
+        // Set sub camera as active camera
+        pSceneMgr->setActiveCamera( mpImpl->mSub.GetCameraNode() );
         
-        // draw whole scene into render buffer
+        // Draw whole scene into render buffer
         pSceneMgr->drawAll();
-        // set back old render target
+        // Set back old render target
         // The buffer might have been distorted, so clear it
-        pVideoDriver->setRenderTarget(0, true, true, CLEAR_COLOUR);
-        
-        // make the cube visible and set the user controlled camera as active one
-        mpImpl->mpTestCube->setVisible(true);
-        pSceneMgr->setActiveCamera(mpImpl->mpCamera);
+        pVideoDriver->setRenderTarget( 0, true, true, CLEAR_COLOUR );
+        pSceneMgr->setActiveCamera( mpImpl->mpCamera );
     }
     
     // Draw the rest of the scene normally
@@ -380,5 +346,114 @@ void Simulator::SetSubYawSpeed( F32 yawSpeed )
     if ( mpImpl->mbInitialised )
     {
         mpImpl->mSub.SetYawSpeed( yawSpeed );
+    }
+}
+
+//--------------------------------------------------------------------------
+double Simulator::GetSimTime() const
+{
+    return HighPrecisionTime::ConvertToSeconds( 
+        HighPrecisionTime::GetDiff( 
+            mpImpl->mLastTime, mpImpl->mSimulatorStartTime ) );
+}
+
+//--------------------------------------------------------------------------
+void Simulator::GetSubCameraImageDimensions( U32* pWidthOut, U32* pHeightOut ) const
+{
+    *pWidthOut = 0;
+    *pHeightOut = 0;
+    
+    if ( mpImpl->mbInitialised )
+    {
+        irr::video::ITexture* pSubCameraRenderTarget = mpImpl->mSub.GetCameraRenderTarget();
+        if ( NULL != pSubCameraRenderTarget )
+        {                        
+            irr::core::dimension2d<U32> imageSize =
+                pSubCameraRenderTarget->getSize();
+            
+            *pWidthOut = imageSize.Width;
+            *pHeightOut = imageSize.Height;
+        }
+    }
+}
+    
+//--------------------------------------------------------------------------
+void Simulator::GetSubCameraImage( U8* pBufferInOut, U32 bufferSize ) const
+{
+    if ( mpImpl->mbInitialised )
+    {
+        irr::video::ITexture* pSubCameraRenderTarget = mpImpl->mSub.GetCameraRenderTarget();
+        if ( NULL != pSubCameraRenderTarget )
+        {
+            irr::core::dimension2d<U32> imageSize =
+                pSubCameraRenderTarget->getSize();
+                
+            U32 requiredBufferSize = imageSize.Width*imageSize.Height*3;
+            if ( bufferSize < requiredBufferSize )
+            {
+                fprintf( stderr, "Warning: Supplied buffer is too small\n ");
+                return;
+            }
+            
+            U8* pImageData = (U8*)pSubCameraRenderTarget->lock( true );
+            if ( NULL == pImageData )
+            {
+                fprintf( stderr, "Warning: Unable to lock camera texture for reading\n ");
+                return;
+            }
+            
+            U32 imagePitch = pSubCameraRenderTarget->getPitch();
+            switch ( pSubCameraRenderTarget->getColorFormat() )
+            {
+                case irr::video::ECF_A1R5G5B5:
+                {
+                    for ( U32 rowIdx = 0; rowIdx < imageSize.Height; rowIdx++ )
+                    {
+                        U16* pSrcPixel = (U16*)(pImageData + imagePitch*rowIdx);
+                        U8* pDstPixel = pBufferInOut + 3*imageSize.Width*rowIdx;
+                        U8* pLastPixel = pDstPixel + 3*imageSize.Width;
+                        
+                        while ( pDstPixel < pLastPixel )
+                        {
+                            *pDstPixel++ = (U8)( ( *pSrcPixel & 0x00007C00 ) >> 10 ); // R
+                            *pDstPixel++ = (U8)( ( *pSrcPixel & 0x000003E0 ) >> 5 );  // G
+                            *pDstPixel++ = (U8)( ( *pSrcPixel & 0x0000001F ) );       // B
+                            pSrcPixel++;
+                        }
+                    }
+                    
+                    break;
+                }
+                case irr::video::ECF_A8R8G8B8:
+                {
+                    for ( U32 rowIdx = 0; rowIdx < imageSize.Height; rowIdx++ )
+                    {
+                        U32* pSrcPixel = (U32*)(pImageData + imagePitch*rowIdx);
+                        U8* pDstPixel = pBufferInOut + 3*imageSize.Width*rowIdx;
+                        U8* pLastPixel = pDstPixel + 3*imageSize.Width;
+                        
+                        while ( pDstPixel < pLastPixel )
+                        {
+                            irr::video::SColor sourceColour( *pSrcPixel );
+                            
+                            //U8* pSrcPixelData = (U8*)pSrcPixel;
+                            *pDstPixel++ = sourceColour.getRed(); // pSrcPixelData[ 1 ]; // R
+                            *pDstPixel++ = sourceColour.getGreen(); // pSrcPixelData[ 2 ]; // G
+                            *pDstPixel++ = sourceColour.getBlue(); // pSrcPixelData[ 3 ]; // B
+                            pSrcPixel++;
+                        }
+                    }
+                    
+                    break;
+                }
+                default:
+                {
+                    fprintf( stderr, "Warning: Unhandled colour format for camera texture, 0x%X\n",
+                             pSubCameraRenderTarget->getColorFormat() );
+                }
+            }
+            
+            pSubCameraRenderTarget->unlock();
+        }
     }
 }

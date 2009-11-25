@@ -13,7 +13,9 @@ Sub::Sub()
     mpConeMesh( NULL ),
     mpBodyMesh( NULL ),
     mpConeMeshNode( NULL ),
-    mpBodyMeshNode( NULL )
+    mpBodyMeshNode( NULL ),
+    mpCameraRenderTarget( NULL ),
+    mpCameraNode( NULL )
 {
 }
 
@@ -24,7 +26,8 @@ Sub::~Sub()
 }
 
 //------------------------------------------------------------------------------
-bool Sub::Init( irr::scene::ISceneManager* pSceneManager )
+bool Sub::Init( irr::scene::ISceneManager* pSceneManager,
+                 irr::video::IVideoDriver* pVideoDriver )
 {
     if ( !mbInitialised )
     {
@@ -83,6 +86,29 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager )
         AddChildNode( mpConeMeshNode );
         AddChildNode( mpBodyMeshNode );
         
+        // Add a camera to the nose of the submarine
+        if ( pVideoDriver->queryFeature( irr::video::EVDF_RENDER_TO_TARGET ) )
+        {
+            mpCameraRenderTarget = pVideoDriver->addRenderTargetTexture(
+                irr::core::dimension2d<U32>(256,256), "RTT1" );
+                
+            mpCameraNode = pSceneManager->addCameraSceneNode(
+                0, irr::core::vector3df( 0.0f, 0.0f, 5.0f ), 
+                irr::core::vector3df( 0.0f, 0.0f, 6.0f ) );
+            
+            mpCameraNode->bindTargetAndRotation( true );
+            mpCameraNode->setPosition( irr::core::vector3df( 0.0f, 0.0f, 5.0f ) );
+            mpCameraNode->setRotation( irr::core::vector3df( 0.0f, 0.0f, 0.0f ) );
+                
+            // Put the camera node under the control of SubSim
+            AddChildNode( mpCameraNode );
+        }
+        else
+        {
+            fprintf( stderr, "Warning: Render to texture not available. "
+                "So the submarine will have no camera\n" );
+        }
+        
         mForwardSpeed = 0.0f;
         mYawSpeed = 0.0f;
 
@@ -95,24 +121,19 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager )
 //------------------------------------------------------------------------------
 void Sub::DeInit()
 {
+    mpCameraRenderTarget = NULL;
+    mpCameraNode = NULL;
+    
     RemoveAllChildNodes();
     
-    if ( NULL != mpConeMeshNode )
-    {
-        mpConeMeshNode = NULL;
-    }
-
+    mpConeMeshNode = NULL;
     if ( NULL != mpConeMesh )
     {
         mpConeMesh->drop();
         mpConeMesh = NULL;
     }
     
-    if ( NULL != mpBodyMeshNode )
-    {
-        mpBodyMeshNode = NULL;
-    }
-
+    mpBodyMeshNode = NULL;
     if ( NULL != mpBodyMesh )
     {
         mpBodyMesh->drop();
@@ -138,5 +159,10 @@ void Sub::Update( F32 timeStep )
     
     SetPosition( newPos );
     SetYaw( newYaw );
+    
+    Vector newHeading( -(F32)sin( newYaw ), (F32)cos( newYaw ), 0.0f );
+    Vector camTarget = newPos + 10.0f*newHeading;
+    irr::core::vector3df irrCamTarget = MathUtils::TransformVector_SubToIrr( camTarget );
+    mpCameraNode->setTarget( irrCamTarget );
 }
 

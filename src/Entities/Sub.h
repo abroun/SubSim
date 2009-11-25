@@ -18,7 +18,8 @@ class Sub : public Entity
     public: ~Sub();
 
     //--------------------------------------------------------------------------
-    public: bool Init( irr::scene::ISceneManager* pSceneManager );
+    public: bool Init( irr::scene::ISceneManager* pSceneManager, 
+                        irr::video::IVideoDriver* pVideoDriver );
     public: void DeInit();
     
     //--------------------------------------------------------------------------
@@ -34,6 +35,14 @@ class Sub : public Entity
     public: void SetYawSpeed( F32 yawSpeed ) { mYawSpeed = yawSpeed; }
 
     //--------------------------------------------------------------------------
+    //! Gets the render target that the simulator will use to render the view
+    //! from the submarines camera
+    public: irr::video::ITexture* GetCameraRenderTarget() const { return mpCameraRenderTarget; }
+
+    //--------------------------------------------------------------------------
+    public: irr::scene::ICameraSceneNode* GetCameraNode() const { return mpCameraNode; }
+
+    //--------------------------------------------------------------------------
     // Members
     private: bool mbInitialised;
     private: irr::scene::IMesh* mpConeMesh;
@@ -42,6 +51,8 @@ class Sub : public Entity
     private: irr::scene::IMeshSceneNode* mpBodyMeshNode;
     private: F32 mForwardSpeed;
     private: F32 mYawSpeed;
+    private: irr::video::ITexture* mpCameraRenderTarget;
+    private: irr::scene::ICameraSceneNode* mpCameraNode;
 };
 
 #endif // SUB_H

@@ -11,7 +11,8 @@ SET( srcFiles
     SubSimDriver.cpp
     SubSimInterface.cpp
     SimulationInterface.cpp
-    Position3DInterface.cpp )
+    Position3DInterface.cpp
+    CameraInterface.cpp )
 
 LINK_DIRECTORIES( ${global_link_dirs} )
 ADD_LIBRARY( subsimplugin SHARED ${srcFiles} )

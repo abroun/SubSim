@@ -1,10 +1,12 @@
 
 - Implement the position3d interface to control the Submarine with Player
-- Put a camera on the nose of the Submarine
+
 - Implement the camera interface to look through the camera
 - Try to understand how time is handled in Player and if necessary get the simulator to handle time
 - Create a simple python script to make the submarine wander... :)
 - Look at hooking the simulator up to PyRobot
+
+- Create unit tests for the HighPrecisionTime class
 
 - Talk to the sensor and motion groups about the types of interfaces they will be providing
 - Write an article about the simulator on the Sub google group
@@ -47,4 +49,6 @@ Done
 
 - Start work on the interface with Player
     - Get the simulation to load as a plug-in - 23/11/09
+
+- Put a camera on the nose of the Submarine - 24/11/09
 

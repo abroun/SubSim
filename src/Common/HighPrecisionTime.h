@@ -27,6 +27,15 @@ class HighPrecisionTime
     // Works out end - start
     public: static HighPrecisionTime GetDiff( const HighPrecisionTime& end, 
                                               const HighPrecisionTime& start );
+                                              
+    //--------------------------------------------------------------------------
+    // Works out t1 + t2
+    public: static HighPrecisionTime GetSum( const HighPrecisionTime& t1, 
+                                              const HighPrecisionTime& t2 );
+    
+    //--------------------------------------------------------------------------
+    // Converts a time to seconds.
+    public: static double ConvertToSeconds( const HighPrecisionTime& t );
     
     //--------------------------------------------------------------------------
     // Converts a time to milliseconds. This routine is mainly meant to be used
