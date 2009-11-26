@@ -1,7 +1,5 @@
 
-- Implement the position3d interface to control the Submarine with Player
 
-- Implement the camera interface to look through the camera
 - Try to understand how time is handled in Player and if necessary get the simulator to handle time
 - Create a simple python script to make the submarine wander... :)
 - Look at hooking the simulator up to PyRobot
@@ -50,5 +48,7 @@ Done
 - Start work on the interface with Player
     - Get the simulation to load as a plug-in - 23/11/09
 
+- Implement the position3d interface to control the Submarine with Player - 23/11/09
 - Put a camera on the nose of the Submarine - 24/11/09
+- Implement the camera interface to look through the camera - 25/11/09
 

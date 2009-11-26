@@ -18,8 +18,8 @@ print "Connected to Player!"
 
 
 #while True:
-pos3d.set_velocity( 0.1, 0.1, 5.0, # x, y, z
-                    0.0, 0.0, -0.58, # roll, pitch, yaw
+pos3d.set_velocity( 0.0, 0.0, 0.0, # x, y, z
+                    0.0, 0.0, 0, # roll, pitch, yaw
                     0 )   # State
 
 # Clean up

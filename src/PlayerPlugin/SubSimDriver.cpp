@@ -54,7 +54,7 @@ extern "C"
 //------------------------------------------------------------------------------
 // SubSimDriver
 //------------------------------------------------------------------------------
-static const double SDD_INTERFACE_UPDATES_PER_SECOND = 20.0;
+static const double SDD_INTERFACE_UPDATES_PER_SECOND = 30.0;
 static const int SDD_NUM_MESSAGES_HANDLED_PER_UPDATE = 32;
 
 //------------------------------------------------------------------------------
