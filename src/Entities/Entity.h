@@ -64,8 +64,8 @@ class Entity
     private: irr::scene::IDummyTransformationSceneNode* mpTransformNode;
     
     // Translation and rotation in SubSim coordinates
-    private: Vector mTranslation;
-    private: Vector mRotation;
+    protected: Vector mTranslation;
+    protected: Vector mRotation;
 };
 
 #endif // ENTITY_H

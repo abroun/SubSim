@@ -1,0 +1,17 @@
+#!/bin/sh
+
+pyropid=$1
+shift
+if [ "$1" = "-g" ]
+then
+    world="-g $2"
+else
+    world="$1"
+fi
+export PATH=$PATH:/home/abroun/dev/personal/SubSim/build
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/abroun/dev/personal/SubSim/build
+#stage -p $(( 16000 + $UID )) $world &
+player $world &
+while ps --noheaders $pyropid; do sleep 1; done > /dev/null
+# then kill sim
+kill 0

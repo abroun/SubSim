@@ -35,8 +35,6 @@ SET( IRRLICHT_LIBRARY_PATH "/usr/local/lib" CACHE INTERNAL "Irrlicht library pat
 
 SET( PLAYER_VERSION 3.0.0 CACHE INTERNAL "Player version requirement" FORCE )
 
-SET( ODE_VERSION 0.11.1 CACHE INTERNAL "ODE version requirement" FORCE )
-
 IF ( PKG_CONFIG_FOUND )
 
     pkg_check_modules( IRRLICHT Irrlicht>=${IRRLICHT_VERSION} )
@@ -65,19 +63,6 @@ IF ( PKG_CONFIG_FOUND )
                                 ${PLAYER_LDFLAGS} )
     ENDIF ( NOT PLAYER_FOUND )
 
-    pkg_check_modules( ODE ode>=${ODE_VERSION} )
-    IF ( NOT ODE_FOUND )
-        MESSAGE (SEND_ERROR "\nError: ODE version >=${ODE_VERSION} and development files not found.")
-    ELSE ( NOT ODE_FOUND )
-
-        SET( ODE_LIBRARY_PATH ${ODE_LIBRARY_DIRS} CACHE INTERNAL "ODE library path" )
-        APPEND_LIBRARY_VARS_TO_CACHED_LISTS( ${ODE_INCLUDE_DIRS}
-                                ${ODE_LIBRARY_DIRS}
-                                ${ODE_LINK_LIBS}
-                                ${ODE_LIBRARIES}
-                                ${ODE_LDFLAGS} )
-    ENDIF ( NOT ODE_FOUND )
-
 ELSE ( PKG_CONFIG_FOUND )
 
   SET( BUILD_SUBSIM OFF CACHE INTERNAL "Build SubSim" FORCE )
@@ -105,6 +90,7 @@ INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR} 
     ${PROJECT_BINARY_DIR}
     /home/abroun/dev/extra/cxxtest
+    /home/abroun/dev/install/include
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/src
     ${global_include_dirs} )

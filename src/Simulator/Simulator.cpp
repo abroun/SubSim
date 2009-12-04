@@ -20,7 +20,7 @@
 #include "Entities/Buoy.h"
 #include "Entities/Pool.h"
 
-#include <ode/ode.h>
+#include <btBulletDynamicsCommon.h>
 
 //------------------------------------------------------------------------------
 // Constants and Typdefs
@@ -59,7 +59,12 @@ struct SimulatorImpl
     S32 mLastFPS;
     bool mbIsRunning;
     
-    dWorldID mPhysicsWorld;
+    // Physics stuff
+    btDefaultCollisionConfiguration* mpCollisionConf;
+    btCollisionDispatcher* mpCollisionDispatcher;
+    btBroadphaseInterface* mpOverlappingPairCache;
+    btSequentialImpulseConstraintSolver* mpPhysicsSolver;
+    btDiscreteDynamicsWorld* mpPhysicsWorld;  
 };
 
 //------------------------------------------------------------------------------
@@ -72,6 +77,12 @@ Simulator::Simulator()
     mpImpl->mpIrrDevice = NULL;    
     mpImpl->mpText = NULL;
     mpImpl->mpCamera = NULL;
+    
+    mpImpl->mpCollisionConf = NULL;
+    mpImpl->mpCollisionDispatcher = NULL;
+    mpImpl->mpOverlappingPairCache = NULL;
+    mpImpl->mpPhysicsSolver = NULL;
+    mpImpl->mpPhysicsWorld = NULL;
     
     mpImpl->mbIsRunning = false;
 }
@@ -110,6 +121,17 @@ bool Simulator::Init()
         mpImpl->mpText = pGUIEnvironment->addStaticText( 
             L"Hello World!", irr::core::rect< irr::s32 >( 10, 10, 200, 40 ), true );
     
+        // Setup physics for the world
+        mpImpl->mpCollisionConf = new btDefaultCollisionConfiguration();
+        mpImpl->mpCollisionDispatcher = new btCollisionDispatcher( mpImpl->mpCollisionConf );
+        mpImpl->mpOverlappingPairCache = new btDbvtBroadphase();
+        mpImpl->mpPhysicsSolver = new btSequentialImpulseConstraintSolver();
+        mpImpl->mpPhysicsWorld = new btDiscreteDynamicsWorld(
+            mpImpl->mpCollisionDispatcher, mpImpl->mpOverlappingPairCache,
+            mpImpl->mpPhysicsSolver, mpImpl->mpCollisionConf );
+        
+        mpImpl->mpPhysicsWorld->setGravity( btVector3( 0.0f, 0.0f, 0.0f ) );
+            
         // Setup sub
         if ( !mpImpl->mSub.Init( pSceneMgr, pVideoDriver ) )
         {
@@ -139,7 +161,7 @@ bool Simulator::Init()
         mpImpl->mGate.SetPosition( Vector( 0.0f, 15.0f, 0.0f ) );
         mpImpl->mEntityList.push_back( &mpImpl->mGate );
     
-        if ( !mpImpl->mBuoy.Init( pSceneMgr ) )
+        if ( !mpImpl->mBuoy.Init( pSceneMgr, mpImpl->mpPhysicsWorld ) )
         {
             fprintf( stderr, "Error: Unable to initialise buoy\n" );
             DeInit();
@@ -178,8 +200,6 @@ bool Simulator::Init()
         mpImpl->mSimulatorStartTime = HighPrecisionTime::GetTime();
         mpImpl->mLastTime = mpImpl->mSimulatorStartTime;      
         
-        mpImpl->mPhysicsWorld = dWorldCreate();
-        
         mpImpl->mbInitialised = true;
     }
     
@@ -189,14 +209,6 @@ bool Simulator::Init()
 //------------------------------------------------------------------------------
 void Simulator::DeInit()
 {
-    if ( NULL != mpImpl->mpIrrDevice )
-    {
-        mpImpl->mpIrrDevice->drop(); 
-        mpImpl->mpIrrDevice = NULL; 
-    }
-    
-    mpImpl->mpText = NULL;
-    
     mpImpl->mEntityList.clear();
     mpImpl->mSub.DeInit();
     mpImpl->mAxes.DeInit();
@@ -205,6 +217,44 @@ void Simulator::DeInit()
     mpImpl->mPool.DeInit();
     
     mpImpl->mpCamera = NULL;
+    
+    if ( NULL == mpImpl->mpPhysicsWorld )
+    {
+        delete mpImpl->mpPhysicsWorld;
+        mpImpl->mpPhysicsWorld = NULL;
+    }
+    
+    if ( NULL == mpImpl->mpPhysicsSolver )
+    {
+        delete mpImpl->mpPhysicsSolver;
+        mpImpl->mpPhysicsSolver = NULL;
+    }
+    
+    if ( NULL == mpImpl->mpOverlappingPairCache )
+    {
+        delete mpImpl->mpOverlappingPairCache;
+        mpImpl->mpOverlappingPairCache = NULL;
+    }
+    
+    if ( NULL == mpImpl->mpCollisionDispatcher )
+    {
+        delete mpImpl->mpCollisionDispatcher;
+        mpImpl->mpCollisionDispatcher = NULL;
+    }
+    
+    if ( NULL == mpImpl->mpCollisionConf )
+    {
+        delete mpImpl->mpCollisionConf;
+        mpImpl->mpCollisionConf = NULL;
+    }
+    
+    mpImpl->mpText = NULL;
+    
+    if ( NULL != mpImpl->mpIrrDevice )
+    {
+        mpImpl->mpIrrDevice->drop(); 
+        mpImpl->mpIrrDevice = NULL; 
+    }
     
     mpImpl->mbInitialised = false;
 }

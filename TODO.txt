@@ -1,5 +1,8 @@
-- Integrate ODE with SubSim
+
 - Give entities a physical representation
+    - Put a compound collision shape and rigid body on the entity class
+    - Add pyhsics to the sub and check that it pushes the Buoy, or at least registers the impact
+
 
 - Make the simulation more closely resemble the challenge
     - Get everything to a more appropriate scale, and position gates and obstacles correctly
@@ -55,3 +58,5 @@ Done
 - Implement the camera interface to look through the camera - 25/11/09
 
 - Talk to the sensor and motion groups about the types of interfaces they will be providing - 25/11/09
+- Integrate Bullet Physics with SubSim - 4/12/09
+- Gave the Buoy a rigid body, although it's not really possible to confirm that it's worked... - 4/12/09

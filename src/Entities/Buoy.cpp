@@ -5,12 +5,21 @@
 
 //------------------------------------------------------------------------------
 #include "Buoy.h"
+//#include <LinearMath/btTransform.h>
+
+//------------------------------------------------------------------------------
+const F32 Buoy::RADIUS = 1.0f;
+const F32 Buoy::MASS = 1.0f;
 
 //------------------------------------------------------------------------------
 Buoy::Buoy()
     : mbInitialised( false ),
     mpMesh( NULL ),
-    mpMeshNode( NULL )
+    mpMeshNode( NULL ),
+    mpPhysicsWorld( NULL ),
+    mpCollisionShape( NULL ),
+    mpMotionState( NULL ),
+    mpPhysicsBody( NULL )
 {
 }
 
@@ -21,7 +30,8 @@ Buoy::~Buoy()
 }
 
 //------------------------------------------------------------------------------
-bool Buoy::Init( irr::scene::ISceneManager* pSceneManager )
+bool Buoy::Init( irr::scene::ISceneManager* pSceneManager,
+                 btDiscreteDynamicsWorld* pPhysicsWorld )
 {
     if ( !mbInitialised )
     {
@@ -34,7 +44,7 @@ bool Buoy::Init( irr::scene::ISceneManager* pSceneManager )
         // Create a sphere for the buoy
         const irr::scene::IGeometryCreator* pCreator = pSceneManager->getGeometryCreator();
 
-        mpMesh = pCreator->createSphereMesh( 1 );
+        mpMesh = pCreator->createSphereMesh( RADIUS );
         if ( NULL == mpMesh )
         {
             fprintf( stderr, "Error: Unable to create mesh" );
@@ -63,6 +73,30 @@ bool Buoy::Init( irr::scene::ISceneManager* pSceneManager )
         
         // Put the node under the control of SubSim
         AddChildNode( mpMeshNode );
+        
+        // Setup physics representation
+        mpPhysicsWorld = pPhysicsWorld;
+        mpCollisionShape = new btSphereShape( RADIUS );
+        
+        btTransform initialTransform;
+        initialTransform.setIdentity();
+
+        // A rigid body is dynamic if and only if mass is non zero, 
+        // otherwise static
+        bool bIsDynamic = ( 0.0f != MASS );
+        btVector3 localInertia( 0.0f, 0.0f, 0.0f );
+        
+        if ( bIsDynamic )
+        {
+            mpCollisionShape->calculateLocalInertia( MASS, localInertia );
+        }
+        
+        mpMotionState = new btDefaultMotionState( initialTransform );
+        mpPhysicsBody = new btRigidBody( 
+            btRigidBody::btRigidBodyConstructionInfo( 
+                MASS, mpMotionState, mpCollisionShape, localInertia ) );
+        
+        mpPhysicsWorld->addRigidBody( mpPhysicsBody );
 
         mbInitialised = true;
     }
@@ -72,7 +106,28 @@ bool Buoy::Init( irr::scene::ISceneManager* pSceneManager )
 
 //------------------------------------------------------------------------------
 void Buoy::DeInit()
-{
+{ 
+    if ( NULL != mpPhysicsBody )
+    {
+        mpPhysicsWorld->removeCollisionObject( mpPhysicsBody );
+        delete mpPhysicsBody;
+        mpPhysicsBody = NULL;
+    }
+    
+    if ( NULL != mpMotionState )
+    {
+        delete mpMotionState;
+        mpMotionState = NULL;
+    }
+    
+    if ( NULL != mpCollisionShape )
+    {
+        delete mpCollisionShape;
+        mpCollisionShape = NULL;
+    }
+    
+    mpPhysicsWorld = NULL;
+    
     RemoveAllChildNodes();
     
     if ( NULL != mpMeshNode )
@@ -85,9 +140,22 @@ void Buoy::DeInit()
         mpMesh->drop();
         mpMesh = NULL;
     }
+
     
     Entity::DeInit();
 
     mbInitialised = false;
+}
+
+//------------------------------------------------------------------------------
+void Buoy::SetPosition( const Vector& pos )
+{
+    if ( mbInitialised )
+    {
+        mpMotionState->m_graphicsWorldTrans.setOrigin( 
+            btVector3( pos.mX, pos.mY, pos.mZ ) );
+        
+        Entity::SetPosition( pos );
+    }
 }
 

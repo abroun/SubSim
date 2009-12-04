@@ -20,5 +20,13 @@ SET_TARGET_PROPERTIES( subsimplugin PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJEC
 # delete the "lib" prefix from the plugin
 SET_TARGET_PROPERTIES( subsimplugin PROPERTIES PREFIX "" )
 
-TARGET_LINK_LIBRARIES( subsimplugin simulator entities mathUtils ${global_link_libs} rt ode )
+TARGET_LINK_LIBRARIES( subsimplugin
+    simulator 
+    entities 
+    mathUtils 
+    ${global_link_libs} 
+    rt 
+    BulletDynamics
+    BulletCollision
+    LinearMath )    # LinearMath is also from Bullet
 
