@@ -1,16 +1,17 @@
+- Integrate ODE with SubSim
+- Give entities a physical representation
+
+- Make the simulation more closely resemble the challenge
+    - Get everything to a more appropriate scale, and position gates and obstacles correctly
+    - Create 3D models for entities in the simulation (see if you can find somebody artistic to do this)
 
 
-- Try to understand how time is handled in Player and if necessary get the simulator to handle time
 - Create a simple python script to make the submarine wander... :)
 - Look at hooking the simulator up to PyRobot
 
 - Create unit tests for the HighPrecisionTime class
 
-- Talk to the sensor and motion groups about the types of interfaces they will be providing
 - Write an article about the simulator on the Sub google group
-- Make the simulation more closely ressemble the challenge
-    - Get everything to a more appropriate scale, and position gates and obstacles correctly
-    - Create 3D models for entities in the simulation (see if you can find somebody artistic to do this)
 
 - Draw 3D axes as a GUI element on screen - Drawn, but not as GUI
 
@@ -48,7 +49,9 @@ Done
 - Start work on the interface with Player
     - Get the simulation to load as a plug-in - 23/11/09
 
+- Try to understand how time is handled in Player and if necessary get the simulator to handle time 23/11/09
 - Implement the position3d interface to control the Submarine with Player - 23/11/09
 - Put a camera on the nose of the Submarine - 24/11/09
 - Implement the camera interface to look through the camera - 25/11/09
 
+- Talk to the sensor and motion groups about the types of interfaces they will be providing - 25/11/09

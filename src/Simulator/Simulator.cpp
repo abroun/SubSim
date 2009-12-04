@@ -20,6 +20,8 @@
 #include "Entities/Buoy.h"
 #include "Entities/Pool.h"
 
+#include <ode/ode.h>
+
 //------------------------------------------------------------------------------
 // Constants and Typdefs
 //------------------------------------------------------------------------------
@@ -56,6 +58,8 @@ struct SimulatorImpl
     
     S32 mLastFPS;
     bool mbIsRunning;
+    
+    dWorldID mPhysicsWorld;
 };
 
 //------------------------------------------------------------------------------
@@ -172,7 +176,9 @@ bool Simulator::Init()
         
         mpImpl->mTimeAccumulatorUS = 0;
         mpImpl->mSimulatorStartTime = HighPrecisionTime::GetTime();
-        mpImpl->mLastTime = mpImpl->mSimulatorStartTime;        
+        mpImpl->mLastTime = mpImpl->mSimulatorStartTime;      
+        
+        mpImpl->mPhysicsWorld = dWorldCreate();
         
         mpImpl->mbInitialised = true;
     }
