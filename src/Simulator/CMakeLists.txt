@@ -8,6 +8,7 @@ INCLUDE_DIRECTORIES(
     ${global_include_dirs} )
 
 SET( srcFiles 
-    Simulator.cpp )
+    Simulator.cpp
+    CameraSceneNodeAnimator.cpp)
 
 ADD_LIBRARY( simulator ${srcFiles} )

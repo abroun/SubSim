@@ -9,9 +9,9 @@
 
 //------------------------------------------------------------------------------
 const irr::video::SColor Gate::COLOUR( 255, 192, 192, 192 );
-const F32 Gate::HEIGHT = 10.0f;
-const F32 Gate::WIDTH = 16.0f;
-const F32 Gate::STRUT_RADIUS = 0.25f;
+const F32 Gate::HEIGHT = 2.5f;
+const F32 Gate::WIDTH = 3.0f;
+const F32 Gate::STRUT_RADIUS = 0.05f;
 
 //------------------------------------------------------------------------------
 Gate::Gate()

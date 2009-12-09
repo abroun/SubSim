@@ -32,6 +32,9 @@ class SubSimDriver : public Driver
     public: virtual int ProcessMessage( QueuePointer& respQueue, 
                                         player_msghdr* pHeader, 
                                         void* pData );
+                                        
+    public: virtual int Subscribe( QueuePointer& respQueue, player_devaddr_t addr );
+    public: virtual int Unsubscribe( QueuePointer& respQueue, player_devaddr_t addr );
 
     // The server thread calls this method frequently. We use it 
     // to check  for new commands and configs

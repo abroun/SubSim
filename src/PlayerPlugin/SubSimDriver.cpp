@@ -55,7 +55,7 @@ extern "C"
 // SubSimDriver
 //------------------------------------------------------------------------------
 static const double SDD_INTERFACE_UPDATES_PER_SECOND = 30.0;
-static const int SDD_NUM_MESSAGES_HANDLED_PER_UPDATE = 32;
+static const int SDD_NUM_MESSAGES_HANDLED_PER_UPDATE = -1;
 
 //------------------------------------------------------------------------------
 // Constructor.  Retrieve options from the configuration file and do any
@@ -105,7 +105,7 @@ int SubSimDriver::Shutdown()
 // Process all messages for this driver.
 int SubSimDriver::ProcessMessage( QueuePointer& respQueue,
                                 player_msghdr* pHeader, void* pData )
-{
+{   
     // Find the right device interface to handle this config
     SubSimInterface* pDeviceInterface = LookupDevice( pHeader->addr );
 
@@ -121,6 +121,46 @@ int SubSimDriver::ProcessMessage( QueuePointer& respQueue,
             pHeader->addr.index );
         return -1;
     }
+}
+
+//------------------------------------------------------------------------------
+// Subscribe to a device using a message queue
+int SubSimDriver::Subscribe( QueuePointer& respQueue, player_devaddr_t addr )
+{
+    if( addr.interf == PLAYER_SIMULATION_CODE )
+        return 0; // ok
+
+    SubSimInterface* pDeviceInterface = this->LookupDevice( addr );
+
+    if( pDeviceInterface )
+    {
+        pDeviceInterface->Subscribe();
+        pDeviceInterface->Subscribe( respQueue );
+        return Driver::Subscribe( addr );
+    }
+
+    fprintf( stderr, "Error: Unable to find device\n" );
+    return 1; // error
+}
+
+//------------------------------------------------------------------------------
+// Unsubscribe to a device using a message queue
+int SubSimDriver::Unsubscribe( QueuePointer& respQueue, player_devaddr_t addr )
+{
+    if( addr.interf == PLAYER_SIMULATION_CODE )
+        return 0; // ok
+
+    SubSimInterface* pDeviceInterface = this->LookupDevice( addr );
+
+    if( pDeviceInterface )
+    {
+        pDeviceInterface->Unsubscribe();
+        pDeviceInterface->Unsubscribe( respQueue );
+        return Driver::Unsubscribe( addr );
+    }
+
+    fprintf( stderr, "Error: Unable to find device\n" );
+    return 1; // error
 }
 
 //------------------------------------------------------------------------------

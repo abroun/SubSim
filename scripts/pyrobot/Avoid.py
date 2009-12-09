@@ -20,14 +20,13 @@ class Avoid(Brain):
          return(0.5, 0.0) 
       
    def step(self):  
-      front = min([s.distance() for s in self.robot.range["front"]])
-      left = min([s.distance() for s in self.robot.range["left-front"]])
-      right = min([s.distance() for s in self.robot.range["right-front"]])
+      front = 10.0 #min([s.distance() for s in self.robot.range["front"]])
+      left = 10.0 #min([s.distance() for s in self.robot.range["left-front"]])
+      right = 10.0 #min([s.distance() for s in self.robot.range["right-front"]])
       translation, rotate = self.determineMove(front, left, right)  
       self.robot.move(translation, rotate)
 
 def INIT(engine):  
-   assert (engine.robot.requires("range-sensor") and
-           engine.robot.requires("continuous-movement"))
+   assert engine.robot.requires("continuous-movement")
    return Avoid('Avoid', engine)  
 

@@ -53,6 +53,10 @@ class Sub : public Entity
     private: F32 mYawSpeed;
     private: irr::video::ITexture* mpCameraRenderTarget;
     private: irr::scene::ICameraSceneNode* mpCameraNode;
+    
+    private: static const F32 RADIUS;
+    private: static const F32 NOSE_LENGTH;
+    private: static const F32 BODY_LENGTH;
 };
 
 #endif // SUB_H

@@ -7,6 +7,10 @@
 #include "Sub.h"
 #include "Common/MathUtils.h"
 
+const F32 Sub::RADIUS = 0.1f;
+const F32 Sub::NOSE_LENGTH = 0.2f;
+const F32 Sub::BODY_LENGTH = 0.4f;
+
 //------------------------------------------------------------------------------
 Sub::Sub()
     : mbInitialised( false ),
@@ -40,7 +44,7 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager,
         // Create a cone and cylinder for the sub
         const irr::scene::IGeometryCreator* pCreator = pSceneManager->getGeometryCreator();
 
-        mpConeMesh = pCreator->createConeMesh( 2, 6, 16, irr::video::SColor( 255, 255, 255, 0 ) );
+        mpConeMesh = pCreator->createConeMesh( RADIUS, NOSE_LENGTH, 16, irr::video::SColor( 255, 255, 255, 0 ) );
         if ( NULL == mpConeMesh )
         {
             fprintf( stderr, "Error: Unable to create cone mesh" );
@@ -48,7 +52,7 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager,
             return false;
         }
         
-        mpBodyMesh = pCreator->createCylinderMesh( 2, 3, 16, irr::video::SColor( 255, 255, 192, 0 ) );
+        mpBodyMesh = pCreator->createCylinderMesh( RADIUS, BODY_LENGTH, 16, irr::video::SColor( 255, 255, 192, 0 ) );
         if ( NULL == mpBodyMesh )
         {
             fprintf( stderr, "Error: Unable to create body mesh" );
@@ -79,7 +83,7 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager,
         
         // Correctly position the sub model
         mpConeMeshNode->setRotation( irr::core::vector3df( 90.0f, 0.0f, 0.0f ) );
-        mpConeMeshNode->setPosition( irr::core::vector3df( 0.0f, 0.0f, 3.0f ) );
+        mpConeMeshNode->setPosition( irr::core::vector3df( 0.0f, 0.0f, BODY_LENGTH ) );
         mpBodyMeshNode->setRotation( irr::core::vector3df( 90.0f, 0.0f, 0.0f ) );
         
         // Put the nodes under the control of SubSim

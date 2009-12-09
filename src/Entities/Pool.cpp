@@ -9,9 +9,9 @@
 
 //------------------------------------------------------------------------------
 const irr::video::SColor Pool::WALL_COLOUR( 255, 135, 151, 177 );
-const F32 Pool::HEIGHT = 100.0f;
-const F32 Pool::WIDTH = 200.0f;
-const F32 Pool::LENGTH = 400.0f;
+const F32 Pool::HEIGHT = 6.0f;
+const F32 Pool::WIDTH = 61.0f;
+const F32 Pool::LENGTH = 122.0f;
 const F32 Pool::WALL_THICKNESS = 0.1f;
 
 //------------------------------------------------------------------------------

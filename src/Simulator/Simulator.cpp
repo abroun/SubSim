@@ -19,6 +19,8 @@
 #include "Entities/Gate.h"
 #include "Entities/Buoy.h"
 #include "Entities/Pool.h"
+#include "Entities/FloorTarget.h"
+#include "CameraSceneNodeAnimator.h"
 
 #include <btBulletDynamicsCommon.h>
 
@@ -47,8 +49,11 @@ struct SimulatorImpl
     Sub mSub;
     CoordinateSystemAxes mAxes;
     Gate mGate;
+    Gate mGate1;
+    Gate mGate2;
     Buoy mBuoy;
     Pool mPool;
+    FloorTarget mFloorTarget;
     EntityPtrVector mEntityList;
     
     // TODO: Tidy up the timing.
@@ -140,7 +145,7 @@ bool Simulator::Init()
             return false;
         }
         mpImpl->mSub.SetYaw( MathUtils::DegToRad( 45.0f ) );
-        mpImpl->mSub.SetPosition( Vector( -4.0f, 0.0f, 0.0f ) );
+        mpImpl->mSub.SetPosition( Vector( 0.0f, 0.0f, -1.0f ) );
         mpImpl->mEntityList.push_back( &mpImpl->mSub );
 
         // Create axes to show coordinate system
@@ -150,6 +155,7 @@ bool Simulator::Init()
             DeInit();
             return false;
         }
+        mpImpl->mAxes.SetPosition( Vector( -10.0f, 0.0f, 0.0f ) );
         mpImpl->mEntityList.push_back( &mpImpl->mAxes );
         
         if ( !mpImpl->mGate.Init( pSceneMgr ) )
@@ -158,8 +164,35 @@ bool Simulator::Init()
             DeInit();
             return false;
         }
-        mpImpl->mGate.SetPosition( Vector( 0.0f, 15.0f, 0.0f ) );
+        mpImpl->mGate.SetPosition( Vector( 0.0f, 4.0f, -2.25f ) );
+        
+        if ( !mpImpl->mGate1.Init( pSceneMgr ) )
+        {
+            fprintf( stderr, "Error: Unable to initialise gate\n" );
+            DeInit();
+            return false;
+        }
+        mpImpl->mGate1.SetPosition( Vector( 0.0f, 14.0f, -2.25f ) );
+        
+        if ( !mpImpl->mGate2.Init( pSceneMgr ) )
+        {
+            fprintf( stderr, "Error: Unable to initialise gate\n" );
+            DeInit();
+            return false;
+        }
+        mpImpl->mGate2.SetPosition( Vector( 0.0f, 24.0f, -2.25f ) );
+        
         mpImpl->mEntityList.push_back( &mpImpl->mGate );
+        mpImpl->mEntityList.push_back( &mpImpl->mGate1 );
+        mpImpl->mEntityList.push_back( &mpImpl->mGate2 );
+        
+        if ( !mpImpl->mFloorTarget.Init( pSceneMgr ) )
+        {
+            fprintf( stderr, "Error: Unable to initialise floor target\n" );
+            DeInit();
+            return false;
+        }
+        mpImpl->mFloorTarget.SetPosition( Vector( 0.0f, 0.0f, -5.8f ) );
     
         if ( !mpImpl->mBuoy.Init( pSceneMgr, mpImpl->mpPhysicsWorld ) )
         {
@@ -167,7 +200,7 @@ bool Simulator::Init()
             DeInit();
             return false;
         }
-        mpImpl->mBuoy.SetPosition( Vector( 0.0f, 5.0f, 0.0f ) );
+        mpImpl->mBuoy.SetPosition( Vector( 10.0f, -5.0f, 0.0f ) );
         mpImpl->mEntityList.push_back( &mpImpl->mBuoy );
     
         if ( !mpImpl->mPool.Init( pSceneMgr ) )
@@ -176,22 +209,30 @@ bool Simulator::Init()
             DeInit();
             return false;
         }
-        mpImpl->mPool.SetPosition( Vector( 0.0f, -15.0f, 0.0f ) );
+        mpImpl->mPool.SetPosition( Vector( 0.0f, 15.0f, -2.5f ) );
         mpImpl->mEntityList.push_back( &mpImpl->mPool );
     
         // Create some fog to represent underwater visibility
         pVideoDriver->setFog( irr::video::SColor( 0,0,25,220 ), 
                             irr::video::EFT_FOG_EXP, 50, 3000, 0.005f, true, false );
+                 
+                            //  -750.0f, 200.0f, 300.0f ); 
                             
         // Create camera to view scene
-        mpImpl->mpCamera = pSceneMgr->addCameraSceneNodeMaya( 0, -750.0f, 200.0f, 300.0f ); 
+        mpImpl->mpCamera = pSceneMgr->addCameraSceneNode( 0,
+            irr::core::vector3df( 10.0f, 0, 0 ), irr::core::vector3df( 0, 0, 0 ) );
         if ( NULL == mpImpl->mpCamera )
         {
             fprintf( stderr, "Error: Unable to initialise main camera\n" );
             DeInit();
             return false;
         }
-        mpImpl->mpCamera->setTarget( irr::core::vector3df( 0, 0, 0 ) );
+        
+        irr::scene::ISceneNodeAnimator* anm = new irr::scene::CameraSceneNodeAnimator(
+            mpImpl->mpIrrDevice->getCursorControl(), 
+            irr::core::vector3df( 10.0f, 0, 0 ), -750.0f, 200.0f, 300.0f );
+
+        mpImpl->mpCamera->addAnimator(anm);
         
         mpImpl->mLastFPS = -1;
         mpImpl->mbIsRunning = true;

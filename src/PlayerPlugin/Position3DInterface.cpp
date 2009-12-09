@@ -34,8 +34,8 @@ int Position3DInterface::ProcessMessage( QueuePointer& respQueue,
     {
         player_position3d_cmd_vel_t* pCmd = (player_position3d_cmd_vel_t*)pData;
         
-        printf( "Set vel = %2.3f, %2.3f, %2.3f\n",
-            (F32)pCmd->vel.px, (F32)pCmd->vel.py, (F32)pCmd->vel.pz );
+        //printf( "Set vel = %2.3f, %2.3f, %2.3f\n",
+        //    (F32)pCmd->vel.px, (F32)pCmd->vel.py, (F32)pCmd->vel.pz );
         
         mpDriver->mSim.SetSubForwardSpeed( (F32)pCmd->vel.px );
         mpDriver->mSim.SetSubYawSpeed( (F32)pCmd->vel.pyaw );
@@ -49,7 +49,7 @@ int Position3DInterface::ProcessMessage( QueuePointer& respQueue,
     {
         printf( "Ignoring motor request" );
         mpDriver->Publish( mDeviceAddress, respQueue, 
-                         PLAYER_MSGTYPE_RESP_ACK, 
+                         PLAYER_MSGTYPE_RESP_NACK, 
                          PLAYER_POSITION3D_REQ_MOTOR_POWER );
         return 0;
     }

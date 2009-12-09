@@ -13,7 +13,8 @@ SET( srcFiles
     CoordinateSystemAxes.cpp
     Buoy.cpp
     Gate.cpp 
-    Pool.cpp )
+    Pool.cpp
+    FloorTarget.cpp )
 
 ADD_LIBRARY( entities ${srcFiles} )
 

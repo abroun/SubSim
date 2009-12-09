@@ -29,6 +29,11 @@ class SubSimInterface
     public: virtual int ProcessMessage( QueuePointer &respQueue,
                                      player_msghdr_t* pHeader, void* pData ) = 0;
 
+    public: virtual void Subscribe() {};
+    public: virtual void Unsubscribe() {};
+    public: virtual void Subscribe( QueuePointer& respQueue ) {}; 
+    public: virtual void Unsubscribe( QueuePointer& respQueue ) {};
+                                     
     // Update this interface, publish new info.
     public: virtual void Update() = 0;
 
