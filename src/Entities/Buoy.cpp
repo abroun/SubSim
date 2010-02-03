@@ -58,7 +58,7 @@ bool Buoy::Init( irr::scene::ISceneManager* pSceneManager,
         irr::video::S3DVertex* pVertices = (irr::video::S3DVertex*)pMeshBuffer->getVertices();
         for ( S32 vertexIdx = 0; vertexIdx < numVertices; vertexIdx++ )
         {
-            pVertices[ vertexIdx ].Color.set( 255, 228, 66, 1 );
+            pVertices[ vertexIdx ].Color.set( 255, 194, 92, 48 );
         }   
         
         mpMeshNode = pSceneManager->addMeshSceneNode( mpMesh );

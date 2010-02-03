@@ -200,7 +200,7 @@ bool Simulator::Init()
             DeInit();
             return false;
         }
-        mpImpl->mBuoy.SetPosition( Vector( 10.0f, -5.0f, 0.0f ) );
+        mpImpl->mBuoy.SetPosition( Vector( 10.0f, -5.0f, -1.0f ) );
         mpImpl->mEntityList.push_back( &mpImpl->mBuoy );
     
         if ( !mpImpl->mPool.Init( pSceneMgr ) )
