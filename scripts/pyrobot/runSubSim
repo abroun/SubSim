@@ -1,0 +1,1 @@
+pyrobot -s Simulator/SubSimSimulator -w ../../playerConfigs/simple.cfg -r Robot/Player6665.py -b Brain/SubBrain.py

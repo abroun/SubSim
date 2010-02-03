@@ -8,10 +8,6 @@
     - Get everything to a more appropriate scale, and position gates and obstacles correctly
     - Create 3D models for entities in the simulation (see if you can find somebody artistic to do this)
 
-
-- Create a simple python script to make the submarine wander... :)
-- Look at hooking the simulator up to PyRobot
-
 - Create unit tests for the HighPrecisionTime class
 
 - Write an article about the simulator on the Sub google group
@@ -21,6 +17,15 @@
 - Create a replacement debug camera class to give more control over the cameras initial position and also to let the camera be moved ithe the keyboard
 
 - Create a test harness that will start up the simulator along with a control program and rate the control program on how well it does at completing the course
+
+Plan for the RobBoard control System
+====================================
+
+- Use RoBoard howto to get stripped down Ubuntu running on an SD card
+- Install OpenCV, Player and if possible the RoBoard control drivers
+- Write a very simple reactive control program that tracks an orange blob (the buoy) using a USB webcam
+- Get the control program to start up when Linux boots up
+- Put this in the sub...
 
 Coordinate system
 =================
@@ -60,3 +65,6 @@ Done
 - Talk to the sensor and motion groups about the types of interfaces they will be providing - 25/11/09
 - Integrate Bullet Physics with SubSim - 4/12/09
 - Gave the Buoy a rigid body, although it's not really possible to confirm that it's worked... - 4/12/09
+- Create a simple python script to make the submarine wander... :) - 6/12/09
+- Look at hooking the simulator up to PyRobot - 6/12/09
+
