@@ -1,7 +1,7 @@
 
 - Give entities a physical representation
     - Put a compound collision shape and rigid body on the entity class
-    - Add pyhsics to the sub and check that it pushes the Buoy, or at least registers the impact
+    - Add physics to the sub and check that it pushes the Buoy, or at least registers the impact
 
 
 - Make the simulation more closely resemble the challenge
