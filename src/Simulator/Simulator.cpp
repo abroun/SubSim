@@ -101,8 +101,14 @@ Simulator::~Simulator()
 }
 
 //------------------------------------------------------------------------------
-bool Simulator::Init()
+bool Simulator::Init( const char* worldFilename )
 {
+    // Open up world file
+    // Sequence Start
+    // Identify element type
+    // Read in entity attributes
+    // Create entity
+    
     if ( !mpImpl->mbInitialised )
     {
         mpImpl->mpIrrDevice = irr::createDevice( 
@@ -413,6 +419,11 @@ void Simulator::UpdateFPSCounter( S32 numUpdates )
         mpImpl->mpText->setText( str.c_str() );
         mpImpl->mLastFPS = fps;
     }
+}
+
+//------------------------------------------------------------------------------
+bool BuildWorld( const char* worldFilename )
+{
 }
 
 //------------------------------------------------------------------------------

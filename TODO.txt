@@ -1,4 +1,7 @@
 
+- Integrate YAML support into the simulator
+- Use a YAML config file to layout the world
+
 - Give entities a physical representation
     - Put a compound collision shape and rigid body on the entity class
     - Add physics to the sub and check that it pushes the Buoy, or at least registers the impact
@@ -17,6 +20,8 @@
 - Create a replacement debug camera class to give more control over the cameras initial position and also to let the camera be moved ithe the keyboard
 
 - Create a test harness that will start up the simulator along with a control program and rate the control program on how well it does at completing the course
+
+- Make SubSim into a Debian package - this will require an Irrlicht and Bullet package as well
 
 Plan for the RobBoard control System
 ====================================

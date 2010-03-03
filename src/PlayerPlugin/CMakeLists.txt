@@ -28,5 +28,6 @@ TARGET_LINK_LIBRARIES( subsimplugin
     rt 
     BulletDynamics
     BulletCollision
-    LinearMath )    # LinearMath is also from Bullet
+    LinearMath    # LinearMath is also from Bullet
+    yaml )
 

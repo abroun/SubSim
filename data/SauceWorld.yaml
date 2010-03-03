@@ -1,0 +1,7 @@
+---
+Sub: 
+    pos: !vector [ 0.0, 0.0, -1.0 ]
+    yaw: 45.0
+Buoy:
+    pos: !vector [  10.0, -5.0, -1.0 ]
+    
