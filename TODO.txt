@@ -1,5 +1,11 @@
 
 - Integrate YAML support into the simulator
+    - Open the file
+    - Read through each entry.
+    - If an entity type is recognised then parse the the expected parameters for the model
+        - Complain if the correct parameters aren't found
+        - Create the entity with the parameters
+
 - Use a YAML config file to layout the world
 
 - Give entities a physical representation

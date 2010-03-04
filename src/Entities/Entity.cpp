@@ -4,8 +4,53 @@
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+#include <strings.h>
 #include "Entity.h"
 #include "Common/MathUtils.h"
+
+//------------------------------------------------------------------------------
+const char* Entity::TYPE_NAMES[ eT_NumTypes ] =
+{
+    "Sub",
+    "Buoy",
+    "CoordinateSystemAxes",
+    "FloorTarget",
+    "Gate",
+    "Pool",
+};
+
+//------------------------------------------------------------------------------
+Entity::eType Entity::GetTypeFromString( const char* pTypeString )
+{
+    eType result = eT_Invalid;
+    
+    if ( NULL != pTypeString )
+    {
+        for ( int typeIdx = 0; typeIdx < eT_NumTypes; typeIdx++ )
+        {
+            if ( strcasecmp( TYPE_NAMES[ typeIdx ], pTypeString ) == 0 )
+            {
+                // Type found
+                result = (eType)typeIdx;
+                break;
+            }
+        }
+    }
+    
+    return result;
+}
+
+//------------------------------------------------------------------------------
+const char* Entity::ConvertTypeToString( eType type )
+{
+    const char* pResult = NULL;
+    if ( type >= 0 && type < eT_NumTypes )
+    {
+        pResult = TYPE_NAMES[ type ];
+    }
+    
+    return pResult;
+}
 
 //------------------------------------------------------------------------------
 Entity::Entity()

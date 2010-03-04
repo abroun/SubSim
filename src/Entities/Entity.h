@@ -16,6 +16,29 @@
 class Entity
 {
     //--------------------------------------------------------------------------
+    public: enum eType
+    {
+        eT_Invalid = -1,
+        eT_Sub = 0,
+        eT_Buoy,
+        eT_CoordinateSystemAxes,
+        eT_FloorTarget,
+        eT_Gate,
+        eT_Pool,
+        
+        eT_NumTypes
+    };
+    
+    //--------------------------------------------------------------------------
+    public: static const char* TYPE_NAMES[ eT_NumTypes ];
+    
+    //--------------------------------------------------------------------------
+    // Returns eT_InvalidType if the type cannot be found
+    public: static eType GetTypeFromString( const char* pTypeString );
+    // Returns NULL if the given type is invalid
+    public: static const char* ConvertTypeToString( eType type );
+    
+    //--------------------------------------------------------------------------
     public: Entity();
     public: virtual ~Entity();
 

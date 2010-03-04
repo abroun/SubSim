@@ -20,6 +20,7 @@
 #include "Entities/Buoy.h"
 #include "Entities/Pool.h"
 #include "Entities/FloorTarget.h"
+#include "Entities/YamlEntityParser.h"
 #include "CameraSceneNodeAnimator.h"
 
 #include <btBulletDynamicsCommon.h>
@@ -111,6 +112,8 @@ bool Simulator::Init( const char* worldFilename )
     
     if ( !mpImpl->mbInitialised )
     {
+        YamlEntityParser::ParseYamlFile( worldFilename );
+        
         mpImpl->mpIrrDevice = irr::createDevice( 
             irr::video::EDT_OPENGL, 
             irr::core::dimension2d<irr::u32>( 640, 480 ), 

@@ -10,7 +10,7 @@ int main()
 {   
     Simulator sim;
     
-    if ( !sim.Init() )
+    if ( !sim.Init( "../data/SauceWorld.yaml" ) )
     {
         fprintf( stderr, "Error: Unable to initialise simulator\n" );
         return -1;
