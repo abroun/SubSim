@@ -10,6 +10,9 @@
 #include <time.h>
 #include <vector>
 #include <irrlicht/irrlicht.h>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
 
 #include "Common.h"
 #include "Common/MathUtils.h"
@@ -111,9 +114,7 @@ bool Simulator::Init( const char* worldFilename )
     // Create entity
     
     if ( !mpImpl->mbInitialised )
-    {
-        YamlEntityParser::ParseYamlFile( worldFilename );
-        
+    { 
         mpImpl->mpIrrDevice = irr::createDevice( 
             irr::video::EDT_OPENGL, 
             irr::core::dimension2d<irr::u32>( 640, 480 ), 
@@ -145,7 +146,14 @@ bool Simulator::Init( const char* worldFilename )
             mpImpl->mpPhysicsSolver, mpImpl->mpCollisionConf );
         
         mpImpl->mpPhysicsWorld->setGravity( btVector3( 0.0f, 0.0f, 0.0f ) );
-            
+     
+        if ( !BuildWorld( worldFilename ) )
+        {
+            fprintf( stderr, "Error: Unable to build world\n" );
+            DeInit();
+            return false;
+        }
+        
         // Setup sub
         if ( !mpImpl->mSub.Init( pSceneMgr, pVideoDriver ) )
         {
@@ -425,8 +433,50 @@ void Simulator::UpdateFPSCounter( S32 numUpdates )
 }
 
 //------------------------------------------------------------------------------
-bool BuildWorld( const char* worldFilename )
+bool Simulator::BuildWorld( const char* worldFilename )
 {
+    xercesc::XMLPlatformUtils::Initialize();
+
+    
+    
+    XercesDOMParser* parser = new XercesDOMParser();
+        parser->setValidationScheme(XercesDOMParser::Val_Always);
+        parser->setDoNamespaces(true);    // optional
+
+        xercesc::ErrorHandler* errHandler = (xercesc::ErrorHandler*) new xercesc::HandlerBase();
+        parser->setErrorHandler(errHandler);
+
+
+        try {
+            parser->parse(worldFilename);
+        }
+        catch (const xercesc::XMLException& toCatch) {
+            char* message = xercesc::XMLString::transcode(toCatch.getMessage());
+            cout << "Exception message is: \n"
+                 << message << "\n";
+            xercesc::XMLString::release(&message);
+            return -1;
+        }
+        catch (const xercesc::DOMException& toCatch) {
+            char* message = xercesc::XMLString::transcode(toCatch.msg);
+            cout << "Exception message is: \n"
+                 << message << "\n";
+            xercesc::XMLString::release(&message);
+            return -1;
+        }
+        catch (...) {
+            cout << "Unexpected Exception \n" ;
+            return -1;
+        }
+
+        delete parser;
+        delete errHandler;
+        
+    printf( "Opened file...\n" );
+    
+    xercesc::XMLPlatformUtils::Terminate();
+    
+    return true;
 }
 
 //------------------------------------------------------------------------------
