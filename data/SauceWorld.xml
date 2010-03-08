@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<world>
+    <entity type="Sub">
+        <pos>
+            <x>0.0</x>
+            <y>0.0</y>
+            <z>-1.0</z>
+        </pos>
+        <yaw>45.0</yaw>
+    </entity>
+    <entity type="Buoy">
+        <pos>
+            <x>10.0</x>
+            <y>-5.0</y>
+            <z>-1.0</z>
+        </pos>
+        <yaw>45.0</yaw>
+    </entity>
+</world>
