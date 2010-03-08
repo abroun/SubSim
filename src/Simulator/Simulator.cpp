@@ -11,12 +11,6 @@
 #include <vector>
 #include <irrlicht/irrlicht.h>
 
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/sax/HandlerBase.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-
 #include "Common.h"
 #include "Common/MathUtils.h"
 #include "Common/HighPrecisionTime.h"
@@ -26,7 +20,7 @@
 #include "Entities/Buoy.h"
 #include "Entities/Pool.h"
 #include "Entities/FloorTarget.h"
-#include "Entities/YamlEntityParser.h"
+#include "Entities/XmlEntityParser.h"
 #include "CameraSceneNodeAnimator.h"
 
 #include <btBulletDynamicsCommon.h>
@@ -150,7 +144,8 @@ bool Simulator::Init( const char* worldFilename )
         
         mpImpl->mpPhysicsWorld->setGravity( btVector3( 0.0f, 0.0f, 0.0f ) );
      
-        if ( !BuildWorld( worldFilename ) )
+        EntityPtrVector entityList;
+        if ( !XmlEntityParser::BuildEntitiesFromXMLWorldFile( worldFilename, &entityList ) )
         {
             fprintf( stderr, "Error: Unable to build world\n" );
             DeInit();
@@ -433,57 +428,6 @@ void Simulator::UpdateFPSCounter( S32 numUpdates )
         mpImpl->mpText->setText( str.c_str() );
         mpImpl->mLastFPS = fps;
     }
-}
-
-//------------------------------------------------------------------------------
-bool Simulator::BuildWorld( const char* worldFilename )
-{
-    bool bSuccessful = true;
-    
-    xercesc::XMLPlatformUtils::Initialize();
-    
-    xercesc::XercesDOMParser* pParser = new xercesc::XercesDOMParser();
-    pParser->setValidationScheme( xercesc::XercesDOMParser::Val_Always );
-    pParser->setDoNamespaces( true );    // optional
-
-    xercesc::ErrorHandler* pErrHandler = 
-        (xercesc::ErrorHandler*)new xercesc::HandlerBase();
-    pParser->setErrorHandler( pErrHandler );
-
-
-    try 
-    {
-        pParser->parse( worldFilename );
-        
-        
-        printf( "Opened file...\n" );
-    }
-    catch ( const xercesc::XMLException& toCatch ) 
-    {
-        char* message = xercesc::XMLString::transcode( toCatch.getMessage() );
-        fprintf( stderr, "Error: XML Exception message is: %s\n", message );
-        xercesc::XMLString::release( &message );
-        bSuccessful = false;
-    }
-    catch ( const xercesc::DOMException& toCatch ) 
-    {
-        char* message = xercesc::XMLString::transcode( toCatch.msg );
-        fprintf( stderr, "Error: DOM Exception message is: %s\n", message );
-        xercesc::XMLString::release( &message );
-        bSuccessful = false;
-    }
-    catch (...) 
-    {
-        fprintf( stderr, "Error: Unexpected Exception\n" );
-        bSuccessful = false;
-    }
-        
-    delete pParser;
-    delete pErrHandler;
-    
-    xercesc::XMLPlatformUtils::Terminate();
-    
-    return bSuccessful;
 }
 
 //------------------------------------------------------------------------------

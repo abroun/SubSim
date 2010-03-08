@@ -15,7 +15,7 @@ SET( srcFiles
     Gate.cpp 
     Pool.cpp
     FloorTarget.cpp
-    YamlEntityParser.cpp )
+    XmlEntityParser.cpp )
 
 ADD_LIBRARY( entities ${srcFiles} )
 

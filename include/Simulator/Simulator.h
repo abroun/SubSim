@@ -32,7 +32,6 @@ class Simulator
     private: S32 UpdateSimulator();
     private: void UpdateFrameRender();
     private: void UpdateFPSCounter( S32 numUpdates );
-    private: bool BuildWorld( const char* worldFilename );
     
     //--------------------------------------------------------------------------
     // Returns true whilst the simulation is up and running
