@@ -47,14 +47,14 @@ struct SimulatorImpl
     irr::gui::IGUIStaticText* mpText;
     irr::scene::ICameraSceneNode* mpCamera;
     
-    Sub mSub;
-    CoordinateSystemAxes mAxes;
+    Sub* mpSub;
+    /*CoordinateSystemAxes mAxes;
     Gate mGate;
     Gate mGate1;
     Gate mGate2;
     Buoy mBuoy;
     Pool mPool;
-    FloorTarget mFloorTarget;
+    FloorTarget mFloorTarget;*/
     EntityPtrVector mEntityList;
     
     // TODO: Tidy up the timing.
@@ -83,6 +83,7 @@ Simulator::Simulator()
     mpImpl->mpIrrDevice = NULL;    
     mpImpl->mpText = NULL;
     mpImpl->mpCamera = NULL;
+    mpImpl->mpSub = NULL;
     
     mpImpl->mpCollisionConf = NULL;
     mpImpl->mpCollisionDispatcher = NULL;
@@ -144,89 +145,35 @@ bool Simulator::Init( const char* worldFilename )
         
         mpImpl->mpPhysicsWorld->setGravity( btVector3( 0.0f, 0.0f, 0.0f ) );
      
-        EntityPtrVector entityList;
-        if ( !XmlEntityParser::BuildEntitiesFromXMLWorldFile( worldFilename, &entityList ) )
+        // Populate the world
+        if ( !XmlEntityParser::BuildEntitiesFromXMLWorldFile( 
+            worldFilename, pSceneMgr, pVideoDriver, mpImpl->mpPhysicsWorld, &mpImpl->mEntityList ) )
         {
             fprintf( stderr, "Error: Unable to build world\n" );
             DeInit();
             return false;
         }
         
-        // Setup sub
-        if ( !mpImpl->mSub.Init( pSceneMgr, pVideoDriver ) )
+        // Find the submarine
+        mpImpl->mpSub = NULL;
+        for ( EntityPtrVector::iterator entityIter = mpImpl->mEntityList.begin();
+            mpImpl->mEntityList.end() != entityIter; ++entityIter )
         {
-            fprintf( stderr, "Error: Unable to initialise sub\n" );
-            DeInit();
-            return false;
+            Entity* pEntity = *entityIter;
+            if ( pEntity->GetType() == Entity::eT_Sub )
+            {
+                mpImpl->mpSub = static_cast<Sub*>(pEntity);
+                break;
+            }
         }
-        mpImpl->mSub.SetYaw( MathUtils::DegToRad( 45.0f ) );
-        mpImpl->mSub.SetPosition( Vector( 0.0f, 0.0f, -1.0f ) );
-        mpImpl->mEntityList.push_back( &mpImpl->mSub );
-
-        // Create axes to show coordinate system
-        if ( !mpImpl->mAxes.Init( pSceneMgr ) )
-        {
-            fprintf( stderr, "Error: Unable to initialise coordinate system axes\n" );
-            DeInit();
-            return false;
-        }
-        mpImpl->mAxes.SetPosition( Vector( -10.0f, 0.0f, 0.0f ) );
-        mpImpl->mEntityList.push_back( &mpImpl->mAxes );
         
-        if ( !mpImpl->mGate.Init( pSceneMgr ) )
+        if ( NULL == mpImpl->mpSub )
         {
-            fprintf( stderr, "Error: Unable to initialise gate\n" );
+            fprintf( stderr, "Error: The world does not contain a submarine\n" );
             DeInit();
             return false;
         }
-        mpImpl->mGate.SetPosition( Vector( 0.0f, 4.0f, -2.25f ) );
         
-        if ( !mpImpl->mGate1.Init( pSceneMgr ) )
-        {
-            fprintf( stderr, "Error: Unable to initialise gate\n" );
-            DeInit();
-            return false;
-        }
-        mpImpl->mGate1.SetPosition( Vector( 0.0f, 14.0f, -2.25f ) );
-        
-        if ( !mpImpl->mGate2.Init( pSceneMgr ) )
-        {
-            fprintf( stderr, "Error: Unable to initialise gate\n" );
-            DeInit();
-            return false;
-        }
-        mpImpl->mGate2.SetPosition( Vector( 0.0f, 24.0f, -2.25f ) );
-        
-        mpImpl->mEntityList.push_back( &mpImpl->mGate );
-        mpImpl->mEntityList.push_back( &mpImpl->mGate1 );
-        mpImpl->mEntityList.push_back( &mpImpl->mGate2 );
-        
-        if ( !mpImpl->mFloorTarget.Init( pSceneMgr ) )
-        {
-            fprintf( stderr, "Error: Unable to initialise floor target\n" );
-            DeInit();
-            return false;
-        }
-        mpImpl->mFloorTarget.SetPosition( Vector( 0.0f, 0.0f, -5.8f ) );
-    
-        if ( !mpImpl->mBuoy.Init( pSceneMgr, mpImpl->mpPhysicsWorld ) )
-        {
-            fprintf( stderr, "Error: Unable to initialise buoy\n" );
-            DeInit();
-            return false;
-        }
-        mpImpl->mBuoy.SetPosition( Vector( 10.0f, -5.0f, -1.0f ) );
-        mpImpl->mEntityList.push_back( &mpImpl->mBuoy );
-    
-        if ( !mpImpl->mPool.Init( pSceneMgr ) )
-        {
-            fprintf( stderr, "Error: Unable to initialise pool\n" );
-            DeInit();
-            return false;
-        }
-        mpImpl->mPool.SetPosition( Vector( 0.0f, 15.0f, -2.5f ) );
-        mpImpl->mEntityList.push_back( &mpImpl->mPool );
-    
         // Create some fog to represent underwater visibility
         pVideoDriver->setFog( irr::video::SColor( 0,0,25,220 ), 
                             irr::video::EFT_FOG_EXP, 50, 3000, 0.005f, true, false );
@@ -265,12 +212,19 @@ bool Simulator::Init( const char* worldFilename )
 //------------------------------------------------------------------------------
 void Simulator::DeInit()
 {
+    mpImpl->mpSub = NULL;
+    
+    for ( EntityPtrVector::iterator entityIter = mpImpl->mEntityList.begin();
+            mpImpl->mEntityList.end() != entityIter; ++entityIter )
+    {
+        Entity* pEntity = (*entityIter);
+        if ( NULL != pEntity )
+        {
+            pEntity->DeInit();
+            delete pEntity;
+        }
+    }
     mpImpl->mEntityList.clear();
-    mpImpl->mSub.DeInit();
-    mpImpl->mAxes.DeInit();
-    mpImpl->mGate.DeInit();
-    mpImpl->mBuoy.DeInit();
-    mpImpl->mPool.DeInit();
     
     mpImpl->mpCamera = NULL;
     
@@ -382,7 +336,7 @@ void Simulator::UpdateFrameRender()
     pVideoDriver->beginScene( true, true, CLEAR_COLOUR );
 
     // Render the view from the submarine's camera
-    irr::video::ITexture* pSubCameraRenderTarget = mpImpl->mSub.GetCameraRenderTarget();
+    irr::video::ITexture* pSubCameraRenderTarget = mpImpl->mpSub->GetCameraRenderTarget();
     if ( NULL != pSubCameraRenderTarget )
     {                        
         // Set render target texture
@@ -390,7 +344,7 @@ void Simulator::UpdateFrameRender()
                                        true, true, CLEAR_COLOUR );
         
         // Set sub camera as active camera
-        pSceneMgr->setActiveCamera( mpImpl->mSub.GetCameraNode() );
+        pSceneMgr->setActiveCamera( mpImpl->mpSub->GetCameraNode() );
         
         // Draw whole scene into render buffer
         pSceneMgr->drawAll();
@@ -448,7 +402,7 @@ void Simulator::SetSubForwardSpeed( F32 forwardSpeed )
 {
     if ( mpImpl->mbInitialised )
     {
-        mpImpl->mSub.SetForwardSpeed( forwardSpeed );
+        mpImpl->mpSub->SetForwardSpeed( forwardSpeed );
     }
 }
     
@@ -457,7 +411,7 @@ void Simulator::SetSubYawSpeed( F32 yawSpeed )
 {
     if ( mpImpl->mbInitialised )
     {
-        mpImpl->mSub.SetYawSpeed( yawSpeed );
+        mpImpl->mpSub->SetYawSpeed( yawSpeed );
     }
 }
 
@@ -477,7 +431,7 @@ void Simulator::GetSubCameraImageDimensions( U32* pWidthOut, U32* pHeightOut ) c
     
     if ( mpImpl->mbInitialised )
     {
-        irr::video::ITexture* pSubCameraRenderTarget = mpImpl->mSub.GetCameraRenderTarget();
+        irr::video::ITexture* pSubCameraRenderTarget = mpImpl->mpSub->GetCameraRenderTarget();
         if ( NULL != pSubCameraRenderTarget )
         {                        
             irr::core::dimension2d<U32> imageSize =
@@ -494,7 +448,7 @@ void Simulator::GetSubCameraImage( U8* pBufferInOut, U32 bufferSize ) const
 {
     if ( mpImpl->mbInitialised )
     {
-        irr::video::ITexture* pSubCameraRenderTarget = mpImpl->mSub.GetCameraRenderTarget();
+        irr::video::ITexture* pSubCameraRenderTarget = mpImpl->mpSub->GetCameraRenderTarget();
         if ( NULL != pSubCameraRenderTarget )
         {
             irr::core::dimension2d<U32> imageSize =

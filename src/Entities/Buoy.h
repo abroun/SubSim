@@ -17,7 +17,8 @@ class Buoy : public Entity
     //--------------------------------------------------------------------------
     public: Buoy();
     public: ~Buoy();
-
+    public: virtual eType GetType() const { return eT_Buoy; }
+    
     //--------------------------------------------------------------------------
     public: bool Init( irr::scene::ISceneManager* pSceneManager,
                         btDiscreteDynamicsWorld* pPhysicsWorld );

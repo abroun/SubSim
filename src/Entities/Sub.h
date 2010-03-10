@@ -16,6 +16,7 @@ class Sub : public Entity
     //--------------------------------------------------------------------------
     public: Sub();
     public: ~Sub();
+    public: virtual eType GetType() const { return eT_Sub; }
 
     //--------------------------------------------------------------------------
     public: bool Init( irr::scene::ISceneManager* pSceneManager, 
@@ -53,6 +54,7 @@ class Sub : public Entity
     private: F32 mYawSpeed;
     private: irr::video::ITexture* mpCameraRenderTarget;
     private: irr::scene::ICameraSceneNode* mpCameraNode;
+    private: char mRenderTargetName[ 16 ];
     
     private: static const F32 RADIUS;
     private: static const F32 NOSE_LENGTH;

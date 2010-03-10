@@ -93,8 +93,10 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager,
         // Add a camera to the nose of the submarine
         if ( pVideoDriver->queryFeature( irr::video::EVDF_RENDER_TO_TARGET ) )
         {
+            snprintf( mRenderTargetName, sizeof( mRenderTargetName ), "RTT_%x", *(int*)this );
+            mRenderTargetName[ sizeof( mRenderTargetName ) ] = '\0';
             mpCameraRenderTarget = pVideoDriver->addRenderTargetTexture(
-                irr::core::dimension2d<U32>(256,256), "RTT1" );
+                irr::core::dimension2d<U32>(256,256), mRenderTargetName );
                 
             mpCameraNode = pSceneManager->addCameraSceneNode(
                 0, irr::core::vector3df( 0.0f, 0.0f, 5.0f ), 

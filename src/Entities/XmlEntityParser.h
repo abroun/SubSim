@@ -15,10 +15,17 @@
 #include "Entity.h"
 
 //------------------------------------------------------------------------------
+class btDiscreteDynamicsWorld;
+
+//------------------------------------------------------------------------------
 class XmlEntityParser
 {
     public: static bool BuildEntitiesFromXMLWorldFile( 
-        const char* worldFilename, std::vector<Entity*>* pEntityListOut );
+        const char* worldFilename, 
+        irr::scene::ISceneManager* pSceneManager, 
+        irr::video::IVideoDriver* pVideoDriver,
+        btDiscreteDynamicsWorld* pPhysicsWorld,
+        std::vector<Entity*>* pEntityListOut );
 };
 
 #endif // XML_ENTITY_PARSER_H

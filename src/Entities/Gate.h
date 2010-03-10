@@ -16,6 +16,7 @@ class Gate : public Entity
     //--------------------------------------------------------------------------
     public: Gate();
     public: ~Gate();
+    public: virtual eType GetType() const { return eT_Gate; }
 
     //--------------------------------------------------------------------------
     public: bool Init( irr::scene::ISceneManager* pSceneManager );

@@ -41,6 +41,7 @@ class Entity
     //--------------------------------------------------------------------------
     public: Entity();
     public: virtual ~Entity();
+    public: virtual eType GetType() const = 0;
 
     //--------------------------------------------------------------------------
     public: virtual bool Init( irr::scene::ISceneManager* pSceneManager );

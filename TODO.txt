@@ -1,12 +1,4 @@
-
-- Integrate YAML support into the simulator
-    - Open the file
-    - Read through each entry.
-    - If an entity type is recognised then parse the the expected parameters for the model
-        - Complain if the correct parameters aren't found
-        - Create the entity with the parameters
-
-- Use a YAML config file to layout the world
+- Expose the world configuration file as a command line option and also an option in the player config file
 
 - Give entities a physical representation
     - Put a compound collision shape and rigid body on the entity class
@@ -79,3 +71,11 @@ Done
 - Create a simple python script to make the submarine wander... :) - 6/12/09
 - Look at hooking the simulator up to PyRobot - 6/12/09
 
+- Integrate XML support into the simulator - 8/3/2010
+    - Open the file
+    - Read through each entry.
+    - If an entity type is recognised then parse the the expected parameters for the model
+        - Complain if the correct parameters aren't found
+        - Create the entity with the parameters
+
+- Use a XML config file to layout the world - 10/3/2010

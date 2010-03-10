@@ -16,6 +16,7 @@ class FloorTarget : public Entity
     //--------------------------------------------------------------------------
     public: FloorTarget();
     public: ~FloorTarget();
+    public: virtual eType GetType() const { return eT_FloorTarget; }
 
     //--------------------------------------------------------------------------
     public: bool Init( irr::scene::ISceneManager* pSceneManager );

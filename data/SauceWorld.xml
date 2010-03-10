@@ -14,6 +14,47 @@
             <y>-5.0</y>
             <z>-1.0</z>
         </pos>
-        <yaw>45.0</yaw>
+    </entity>
+    <entity type="Gate">
+        <pos>
+            <x>0.0</x>
+            <y>4.0</y>
+            <z>-2.25</z>
+        </pos>
+    </entity>
+    <entity type="Gate">
+        <pos>
+            <x>0.0</x>
+            <y>14.0</y>
+            <z>-2.25</z>
+        </pos>
+    </entity>
+    <entity type="Gate">
+        <pos>
+            <x>0.0</x>
+            <y>24.0</y>
+            <z>-2.25</z>
+        </pos>
+    </entity>
+    <entity type="FloorTarget">
+        <pos>
+            <x>0.0</x>
+            <y>0.0</y>
+            <z>-5.8</z>
+        </pos>
+    </entity>
+    <entity type="Pool">
+        <pos>
+            <x>0.0</x>
+            <y>15.0</y>
+            <z>-2.5</z>
+        </pos>
+    </entity>
+    <entity type="CoordinateSystemAxes">
+        <pos>
+            <x>-10.0</x>
+            <y>0.0</y>
+            <z>0.0</z>
+        </pos>
     </entity>
 </world>

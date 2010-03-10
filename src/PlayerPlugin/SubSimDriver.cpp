@@ -66,7 +66,7 @@ SubSimDriver::SubSimDriver( ConfigFile* pConfigFile, int section )
     mNumDevices( 0 ),
     mMaxNumDevices( 0 )
 {
-    if ( !mSim.Init() )
+    if ( !mSim.Init( "../data/SauceWorld.xml" ) )
     {
         fprintf( stderr, "Error: Unable to initialise simulation\n" );
     }

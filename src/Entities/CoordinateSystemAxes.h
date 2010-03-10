@@ -17,6 +17,7 @@ class CoordinateSystemAxes : public Entity
     //--------------------------------------------------------------------------
     public: CoordinateSystemAxes();
     public: ~CoordinateSystemAxes();
+    public: virtual eType GetType() const { return eT_CoordinateSystemAxes; }
 
     //--------------------------------------------------------------------------
     public: bool Init( irr::scene::ISceneManager* pSceneManager );

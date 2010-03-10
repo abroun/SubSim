@@ -16,6 +16,7 @@ class Pool : public Entity
     //--------------------------------------------------------------------------
     public: Pool();
     public: ~Pool();
+    public: virtual eType GetType() const { return eT_Pool; }
 
     //--------------------------------------------------------------------------
     public: bool Init( irr::scene::ISceneManager* pSceneManager );
