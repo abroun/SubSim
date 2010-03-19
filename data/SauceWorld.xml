@@ -6,7 +6,7 @@
             <y>0.0</y>
             <z>-1.0</z>
         </pos>
-        <yaw>45.0</yaw>
+        <yaw>0.0</yaw>
     </entity>
     <entity type="Buoy">
         <pos>
@@ -18,37 +18,42 @@
     <entity type="Gate">
         <pos>
             <x>0.0</x>
-            <y>4.0</y>
+            <y>7.5</y>
             <z>-2.25</z>
         </pos>
     </entity>
     <entity type="Gate">
         <pos>
             <x>0.0</x>
-            <y>14.0</y>
+            <y>-7.5</y>
             <z>-2.25</z>
         </pos>
     </entity>
-    <entity type="Gate">
-        <pos>
-            <x>0.0</x>
-            <y>24.0</y>
-            <z>-2.25</z>
-        </pos>
-    </entity>
-    <entity type="FloorTarget">
+    <entity type="HarbourFloor">
         <pos>
             <x>0.0</x>
             <y>0.0</y>
-            <z>-5.8</z>
+            <z>-5.5</z>
         </pos>
     </entity>
-    <entity type="Pool">
+    <entity type="Pipe">
         <pos>
             <x>0.0</x>
-            <y>15.0</y>
+            <y>0.0</y>
+            <z>-5.25</z>
+        </pos>
+    </entity>
+    <entity type="SurveyWall">
+        <pos>
+            <x>25.0</x>
+            <y>-10.0</y>
             <z>-2.5</z>
         </pos>
+        <rotation>
+            <x>0.0</x>
+            <y>0.0</y>
+            <z>45.0</z>
+        </rotation>
     </entity>
     <entity type="CoordinateSystemAxes">
         <pos>

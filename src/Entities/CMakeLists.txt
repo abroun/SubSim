@@ -15,6 +15,9 @@ SET( srcFiles
     Gate.cpp 
     Pool.cpp
     FloorTarget.cpp
+    HarbourFloor.cpp
+    Pipe.cpp
+    SurveyWall.cpp
     XmlEntityParser.cpp )
 
 ADD_LIBRARY( entities ${srcFiles} )

@@ -1,8 +1,10 @@
+- Setup the world to match the layout of the SAUC-E arena
+    - Add in the harbour floor, pipe and survey wall - 19/3/2010
+    - Add in a start area and 'pinger' which isn't visible to the submarine's camera
 
 - Give entities a physical representation
     - Put a compound collision shape and rigid body on the entity class
     - Add physics to the sub and check that it pushes the Buoy, or at least registers the impact
-
 
 - Make the simulation more closely resemble the challenge
     - Get everything to a more appropriate scale, and position gates and obstacles correctly

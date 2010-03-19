@@ -25,6 +25,9 @@ class Entity
         eT_FloorTarget,
         eT_Gate,
         eT_Pool,
+        eT_HarbourFloor,
+        eT_Pipe,
+        eT_SurveyWall,
         
         eT_NumTypes
     };

@@ -22,6 +22,9 @@
 #include "Entities/Buoy.h"
 #include "Entities/Pool.h"
 #include "Entities/FloorTarget.h"
+#include "Entities/Pipe.h"
+#include "Entities/SurveyWall.h"
+#include "Entities/HarbourFloor.h"
 
 //------------------------------------------------------------------------------
 // Helper Routine Prototypes
@@ -32,8 +35,13 @@ static CoordinateSystemAxes* XEP_BuildCoordinateSystemAxes( xercesc::DOMNode* pE
 static FloorTarget* XEP_BuildFloorTarget( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager );
 static Gate* XEP_BuildGate( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager );
 static Pool* XEP_BuildPool( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager );
+static HarbourFloor* XEP_BuildHarbourFloor( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager );
+static Pipe* XEP_BuildPipe( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager );
+static SurveyWall* XEP_BuildSurveyWall( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager );
+
+static void XEP_ParseAndSetRotation( xercesc::DOMNode* pNode, Entity* pEntity, bool bPrintErrors = false, bool bOptional = true );
 static bool XEP_GetPosVectorElement( xercesc::DOMNode* pNode, Vector* pPosOut, bool bPrintErrors = false );
-static bool XEP_GetVectorElement( xercesc::DOMNode* pNode, XMLCh* pTag, Vector* pVectorOut, bool bPrintErrors = false );
+static bool XEP_GetVectorElement( xercesc::DOMNode* pNode, XMLCh* pTag, Vector* pVectorOut, bool bPrintErrors = false, bool bOptional = false );
 static bool XEP_GetFloatElement( xercesc::DOMNode* pNode, XMLCh* pTag, F32* pFloatOut, bool bPrintErrors = false );
 
 
@@ -121,6 +129,21 @@ bool XmlEntityParser::BuildEntitiesFromXMLWorldFile( const char* worldFilename,
                 case Entity::eT_Pool:
                 {
                     pNewEntity = XEP_BuildPool( pEntityNode, pSceneManager );
+                    break;
+                }
+                case Entity::eT_HarbourFloor:
+                {
+                    pNewEntity = XEP_BuildHarbourFloor( pEntityNode, pSceneManager );
+                    break;
+                }
+                case Entity::eT_Pipe:
+                {
+                    pNewEntity = XEP_BuildPipe( pEntityNode, pSceneManager );
+                    break;
+                }
+                case Entity::eT_SurveyWall:
+                {
+                    pNewEntity = XEP_BuildSurveyWall( pEntityNode, pSceneManager );
                     break;
                 }
                 default:
@@ -335,6 +358,108 @@ Pool* XEP_BuildPool( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* p
 }
 
 //------------------------------------------------------------------------------
+HarbourFloor* XEP_BuildHarbourFloor( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager )
+{
+    const bool PRINT_ERRORS = true;
+    HarbourFloor* pHarbourFloor = NULL;
+    
+    Vector pos;
+    
+    if ( XEP_GetPosVectorElement( pEntityNode, &pos, PRINT_ERRORS ) )
+    {
+        pHarbourFloor = new HarbourFloor();
+        if ( !pHarbourFloor->Init( pSceneManager ) )
+        {
+            fprintf( stderr, "Error: Unable to initialise harbour floor\n" );
+            delete pHarbourFloor;
+            pHarbourFloor = NULL;
+        }
+        else
+        {
+            pHarbourFloor->SetPosition( pos );
+        }
+    }
+    
+    return pHarbourFloor;
+}
+
+//------------------------------------------------------------------------------
+Pipe* XEP_BuildPipe( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager )
+{
+    const bool PRINT_ERRORS = true;
+    Pipe* pPipe = NULL;
+    
+    Vector pos;
+    
+    if ( XEP_GetPosVectorElement( pEntityNode, &pos, PRINT_ERRORS ) )
+    {
+        pPipe = new Pipe();
+        if ( !pPipe->Init( pSceneManager ) )
+        {
+            fprintf( stderr, "Error: Unable to initialise pipe\n" );
+            delete pPipe;
+            pPipe = NULL;
+        }
+        else
+        {
+            pPipe->SetPosition( pos );
+        }
+    }
+    
+    return pPipe;
+}
+
+//------------------------------------------------------------------------------
+SurveyWall* XEP_BuildSurveyWall( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager )
+{
+    const bool PRINT_ERRORS = true;
+    SurveyWall* pSurveyWall = NULL;
+    
+    Vector pos;
+    
+    if ( XEP_GetPosVectorElement( pEntityNode, &pos, PRINT_ERRORS ) )
+    {
+        pSurveyWall = new SurveyWall();
+        if ( !pSurveyWall->Init( pSceneManager ) )
+        {
+            fprintf( stderr, "Error: Unable to initialise survey wall\n" );
+            delete pSurveyWall;
+            pSurveyWall = NULL;
+        }
+        else
+        {
+            pSurveyWall->SetPosition( pos );
+            XEP_ParseAndSetRotation( pEntityNode, pSurveyWall, PRINT_ERRORS );
+        }
+    }
+    
+    return pSurveyWall;
+}
+
+//------------------------------------------------------------------------------
+void XEP_ParseAndSetRotation( xercesc::DOMNode* pNode, Entity* pEntity, bool bPrintErrors, bool bOptional )
+{
+    bool bRotationFound = false;
+    Vector rotationDegrees;
+    
+    XMLCh* pRotationTag = xercesc::XMLString::transcode( "rotation" );
+    bRotationFound = XEP_GetVectorElement( pNode, pRotationTag, &rotationDegrees, bPrintErrors, bOptional );
+    xercesc::XMLString::release( &pRotationTag );
+    
+    if ( bRotationFound )
+    {
+        pEntity->SetRotation( Vector( 
+            MathUtils::DegToRad( rotationDegrees.mX ),
+            MathUtils::DegToRad( rotationDegrees.mY ),
+            MathUtils::DegToRad( rotationDegrees.mZ ) ) );
+    }
+    else if ( !bRotationFound && !bOptional && bPrintErrors )
+    {
+        fprintf( stderr, "Error: Unable to parse rotation element\n" );
+    }
+}
+
+//------------------------------------------------------------------------------
 bool XEP_GetPosVectorElement( xercesc::DOMNode* pNode, Vector* pPosOut, bool bPrintErrors )
 {
     bool bFound = false;
@@ -352,7 +477,7 @@ bool XEP_GetPosVectorElement( xercesc::DOMNode* pNode, Vector* pPosOut, bool bPr
 }
 
 //------------------------------------------------------------------------------
-bool XEP_GetVectorElement( xercesc::DOMNode* pNode, XMLCh* pTag, Vector* pVectorOut, bool bPrintErrors )
+bool XEP_GetVectorElement( xercesc::DOMNode* pNode, XMLCh* pTag, Vector* pVectorOut, bool bPrintErrors, bool bOptional )
 {
     bool bFound = false;
     
@@ -385,7 +510,7 @@ bool XEP_GetVectorElement( xercesc::DOMNode* pNode, XMLCh* pTag, Vector* pVector
     xercesc::XMLString::release( &pYTag );
     xercesc::XMLString::release( &pXTag );
     
-    if ( !bFound && bPrintErrors )
+    if ( !bFound && !bOptional && bPrintErrors )
     {
         char* pNarrowTag = xercesc::XMLString::transcode( pTag );
         fprintf( stderr, "Error: Unable to parse vector called %s\n", pNarrowTag );
