@@ -48,13 +48,6 @@ struct SimulatorImpl
     irr::scene::ICameraSceneNode* mpCamera;
     
     Sub* mpSub;
-    /*CoordinateSystemAxes mAxes;
-    Gate mGate;
-    Gate mGate1;
-    Gate mGate2;
-    Buoy mBuoy;
-    Pool mPool;
-    FloorTarget mFloorTarget;*/
     EntityPtrVector mEntityList;
     
     // TODO: Tidy up the timing.
@@ -105,12 +98,6 @@ Simulator::~Simulator()
 //------------------------------------------------------------------------------
 bool Simulator::Init( const char* worldFilename )
 {
-    // Open up world file
-    // Sequence Start
-    // Identify element type
-    // Read in entity attributes
-    // Create entity
-    
     if ( !mpImpl->mbInitialised )
     { 
         mpImpl->mpIrrDevice = irr::createDevice( 
@@ -146,12 +133,15 @@ bool Simulator::Init( const char* worldFilename )
         mpImpl->mpPhysicsWorld->setGravity( btVector3( 0.0f, 0.0f, 0.0f ) );
      
         // Populate the world
-        if ( !XmlEntityParser::BuildEntitiesFromXMLWorldFile( 
-            worldFilename, pSceneMgr, pVideoDriver, mpImpl->mpPhysicsWorld, &mpImpl->mEntityList ) )
+        if ( NULL != worldFilename )
         {
-            fprintf( stderr, "Error: Unable to build world\n" );
-            DeInit();
-            return false;
+            if ( !XmlEntityParser::BuildEntitiesFromXMLWorldFile( 
+                worldFilename, pSceneMgr, pVideoDriver, mpImpl->mpPhysicsWorld, &mpImpl->mEntityList ) )
+            {
+                fprintf( stderr, "Error: Unable to build world\n" );
+                DeInit();
+                return false;
+            }
         }
         
         // Find the submarine

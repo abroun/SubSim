@@ -9,7 +9,9 @@ INCLUDE_DIRECTORIES(
 
 SET( srcFiles 
     MathUtils.cpp
-    HighPrecisionTime.cpp )
+    HighPrecisionTime.cpp 
+    CommandLineParser.cpp
+    Utils.cpp )
 
-ADD_LIBRARY( mathUtils ${srcFiles} )
+ADD_LIBRARY( common ${srcFiles} )
 

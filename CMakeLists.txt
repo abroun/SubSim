@@ -81,7 +81,8 @@ SET(CXXTESTGEN /home/abroun/dev/extra/cxxtest/cxxtestgen.py)
 
 ADD_CXXTEST( unitTests 
             ${PROJECT_SOURCE_DIR}/unitTests/VectorTests.h
-            ${PROJECT_SOURCE_DIR}/unitTests/MathUtilsTests.h )
+            ${PROJECT_SOURCE_DIR}/unitTests/MathUtilsTests.h 
+            ${PROJECT_SOURCE_DIR}/unitTests/CommandLineParserTests.h )
 
 #-------------------------------------------------------------------------------
 # Include the source files

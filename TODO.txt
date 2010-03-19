@@ -1,4 +1,3 @@
-- Expose the world configuration file as a command line option and also an option in the player config file
 
 - Give entities a physical representation
     - Put a compound collision shape and rigid body on the entity class
@@ -79,3 +78,4 @@ Done
         - Create the entity with the parameters
 
 - Use a XML config file to layout the world - 10/3/2010
+- Expose the world configuration file as a command line option and also an option in the player config file - 19/3/2010

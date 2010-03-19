@@ -23,7 +23,7 @@ SET_TARGET_PROPERTIES( subsimplugin PROPERTIES PREFIX "" )
 TARGET_LINK_LIBRARIES( subsimplugin
     simulator 
     entities 
-    mathUtils 
+    common 
     ${global_link_libs} 
     rt 
     BulletDynamics

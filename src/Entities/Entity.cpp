@@ -4,9 +4,9 @@
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-#include <strings.h>
 #include "Entity.h"
 #include "Common/MathUtils.h"
+#include "Common/Utils.h"
 
 //------------------------------------------------------------------------------
 const char* Entity::TYPE_NAMES[ eT_NumTypes ] =
@@ -28,7 +28,7 @@ Entity::eType Entity::GetTypeFromString( const char* pTypeString )
     {
         for ( int typeIdx = 0; typeIdx < eT_NumTypes; typeIdx++ )
         {
-            if ( strcasecmp( TYPE_NAMES[ typeIdx ], pTypeString ) == 0 )
+            if ( Utils::stricmp( TYPE_NAMES[ typeIdx ], pTypeString ) == 0 )
             {
                 // Type found
                 result = (eType)typeIdx;

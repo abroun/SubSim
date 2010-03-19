@@ -41,7 +41,7 @@ TARGET_LINK_LIBRARIES( subsim
     ${global_link_libs} 
     simulator 
     entities 
-    mathUtils 
+    common 
     rt
     BulletDynamics
     BulletCollision
