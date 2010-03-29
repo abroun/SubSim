@@ -21,7 +21,7 @@ class Buoy : public Entity
     
     //--------------------------------------------------------------------------
     public: bool Init( irr::scene::ISceneManager* pSceneManager,
-                        btDiscreteDynamicsWorld* pPhysicsWorld );
+                        btDiscreteDynamicsWorld* pPhysicsWorld, F32 radius = DEFAULT_RADIUS );
     public: void DeInit();
     
     //--------------------------------------------------------------------------
@@ -38,7 +38,7 @@ class Buoy : public Entity
     private: btDefaultMotionState* mpMotionState;
     private: btRigidBody* mpPhysicsBody;
     
-    private: static const F32 RADIUS;
+    public: static const F32 DEFAULT_RADIUS;
     private: static const F32 MASS;
 };
 

@@ -9,8 +9,8 @@
 
 //------------------------------------------------------------------------------
 const irr::video::SColor Gate::COLOUR( 255, 192, 192, 192 );
-const F32 Gate::HEIGHT = 2.5f;
-const F32 Gate::WIDTH = 3.0f;
+const F32 Gate::DEFAULT_HEIGHT = 2.5f;
+const F32 Gate::DEFAULT_WIDTH = 3.0f;
 const F32 Gate::STRUT_RADIUS = 0.05f;
 
 //------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ Gate::~Gate()
 }
 
 //------------------------------------------------------------------------------
-bool Gate::Init( irr::scene::ISceneManager* pSceneManager )
+bool Gate::Init( irr::scene::ISceneManager* pSceneManager, F32 width, F32 height )
 {
     if ( !mbInitialised )
     {
@@ -47,10 +47,10 @@ bool Gate::Init( irr::scene::ISceneManager* pSceneManager )
         // Create cylinders to represent the gate
         const irr::scene::IGeometryCreator* pCreator = pSceneManager->getGeometryCreator();
         
-        mpTopMesh = pCreator->createCylinderMesh( STRUT_RADIUS, WIDTH, 16, COLOUR );
-        mpBottomMesh = pCreator->createCylinderMesh( STRUT_RADIUS, WIDTH, 16, COLOUR );
-        mpLeftMesh = pCreator->createCylinderMesh( STRUT_RADIUS, HEIGHT, 16, COLOUR );
-        mpRightMesh = pCreator->createCylinderMesh( STRUT_RADIUS, HEIGHT, 16, COLOUR );
+        mpTopMesh = pCreator->createCylinderMesh( STRUT_RADIUS, width, 16, COLOUR );
+        mpBottomMesh = pCreator->createCylinderMesh( STRUT_RADIUS, width, 16, COLOUR );
+        mpLeftMesh = pCreator->createCylinderMesh( STRUT_RADIUS, height, 16, COLOUR );
+        mpRightMesh = pCreator->createCylinderMesh( STRUT_RADIUS, height, 16, COLOUR );
         if ( NULL == mpTopMesh || NULL == mpBottomMesh 
             || NULL == mpLeftMesh || NULL == mpRightMesh )
         {
@@ -79,12 +79,12 @@ bool Gate::Init( irr::scene::ISceneManager* pSceneManager )
         
         // Position the struts that make up the gate
         mpTopMeshNode->setRotation( irr::core::vector3df( 0.0f, 0.0f, 90.0f ) );
-        mpTopMeshNode->setPosition( irr::core::vector3df( WIDTH / 2.0f, HEIGHT, 0.0f ) );
+        mpTopMeshNode->setPosition( irr::core::vector3df( width / 2.0f, height, 0.0f ) );
         mpBottomMeshNode->setRotation( irr::core::vector3df( 0.0f, 0.0f, 90.0f ) );
-        mpBottomMeshNode->setPosition( irr::core::vector3df( WIDTH / 2.0f, 0.0f, 0.0f ) );
+        mpBottomMeshNode->setPosition( irr::core::vector3df( width / 2.0f, 0.0f, 0.0f ) );
         
-        mpLeftMeshNode->setPosition( irr::core::vector3df( -WIDTH / 2.0f, 0.0f, 0.0f ) );
-        mpRightMeshNode->setPosition( irr::core::vector3df( WIDTH / 2.0f, 0.0f, 0.0f ) );
+        mpLeftMeshNode->setPosition( irr::core::vector3df( -width / 2.0f, 0.0f, 0.0f ) );
+        mpRightMeshNode->setPosition( irr::core::vector3df( width / 2.0f, 0.0f, 0.0f ) );
         
         // Put the nodes under the control of SubSim
         AddChildNode( mpTopMeshNode );

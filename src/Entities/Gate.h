@@ -19,7 +19,8 @@ class Gate : public Entity
     public: virtual eType GetType() const { return eT_Gate; }
 
     //--------------------------------------------------------------------------
-    public: bool Init( irr::scene::ISceneManager* pSceneManager );
+    public: bool Init( irr::scene::ISceneManager* pSceneManager, 
+        F32 width = DEFAULT_WIDTH, F32 height = DEFAULT_HEIGHT );
     public: void DeInit();
 
     //--------------------------------------------------------------------------
@@ -35,8 +36,8 @@ class Gate : public Entity
     private: irr::scene::IMeshSceneNode* mpRightMeshNode;
     
     private: static const irr::video::SColor COLOUR;
-    private: static const F32 HEIGHT;
-    private: static const F32 WIDTH;
+    public: static const F32 DEFAULT_HEIGHT;
+    public: static const F32 DEFAULT_WIDTH;
     private: static const F32 STRUT_RADIUS;
 };
 

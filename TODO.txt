@@ -1,3 +1,7 @@
+- Work to support the recording of a test sequence
+    - Implement the Simulation interface for SubSim so that the ground truth values for object positions and bearings can be obtained
+    - Give entities in SubSim a name
+
 - Setup the world to match the layout of the SAUC-E arena
     - Add in the harbour floor, pipe and survey wall - 19/3/2010
     - Add in a start area and 'pinger' which isn't visible to the submarine's camera
@@ -81,3 +85,7 @@ Done
 
 - Use a XML config file to layout the world - 10/3/2010
 - Expose the world configuration file as a command line option and also an option in the player config file - 19/3/2010
+
+- Work to support the recording of a test sequence
+    - Construct world for BRL tank - 29/3/2010
+    - Reduce the simulated subs FOV to 44 degrees to match a webcam - 29/3/2010

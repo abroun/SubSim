@@ -14,6 +14,7 @@ SET( srcFiles
     Buoy.cpp
     Gate.cpp 
     Pool.cpp
+    CircularPool.cpp
     FloorTarget.cpp
     HarbourFloor.cpp
     Pipe.cpp

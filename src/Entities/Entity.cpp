@@ -17,6 +17,7 @@ const char* Entity::TYPE_NAMES[ eT_NumTypes ] =
     "FloorTarget",
     "Gate",
     "Pool",
+    "CircularPool",
     "HarbourFloor",
     "Pipe",
     "SurveyWall"

@@ -8,7 +8,7 @@
 //#include <LinearMath/btTransform.h>
 
 //------------------------------------------------------------------------------
-const F32 Buoy::RADIUS = 0.3f;
+const F32 Buoy::DEFAULT_RADIUS = 0.3f;
 const F32 Buoy::MASS = 1.0f;
 
 //------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ Buoy::~Buoy()
 
 //------------------------------------------------------------------------------
 bool Buoy::Init( irr::scene::ISceneManager* pSceneManager,
-                 btDiscreteDynamicsWorld* pPhysicsWorld )
+                 btDiscreteDynamicsWorld* pPhysicsWorld, F32 radius )
 {
     if ( !mbInitialised )
     {
@@ -44,7 +44,7 @@ bool Buoy::Init( irr::scene::ISceneManager* pSceneManager,
         // Create a sphere for the buoy
         const irr::scene::IGeometryCreator* pCreator = pSceneManager->getGeometryCreator();
 
-        mpMesh = pCreator->createSphereMesh( RADIUS );
+        mpMesh = pCreator->createSphereMesh( radius );
         if ( NULL == mpMesh )
         {
             fprintf( stderr, "Error: Unable to create mesh" );
@@ -76,7 +76,7 @@ bool Buoy::Init( irr::scene::ISceneManager* pSceneManager,
         
         // Setup physics representation
         mpPhysicsWorld = pPhysicsWorld;
-        mpCollisionShape = new btSphereShape( RADIUS );
+        mpCollisionShape = new btSphereShape( radius );
         
         btTransform initialTransform;
         initialTransform.setIdentity();

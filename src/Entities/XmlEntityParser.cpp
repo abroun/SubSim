@@ -21,6 +21,7 @@
 #include "Entities/Gate.h"
 #include "Entities/Buoy.h"
 #include "Entities/Pool.h"
+#include "Entities/CircularPool.h"
 #include "Entities/FloorTarget.h"
 #include "Entities/Pipe.h"
 #include "Entities/SurveyWall.h"
@@ -35,6 +36,7 @@ static CoordinateSystemAxes* XEP_BuildCoordinateSystemAxes( xercesc::DOMNode* pE
 static FloorTarget* XEP_BuildFloorTarget( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager );
 static Gate* XEP_BuildGate( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager );
 static Pool* XEP_BuildPool( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager );
+static CircularPool* XEP_BuildCircularPool( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager );
 static HarbourFloor* XEP_BuildHarbourFloor( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager );
 static Pipe* XEP_BuildPipe( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager );
 static SurveyWall* XEP_BuildSurveyWall( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager );
@@ -42,7 +44,7 @@ static SurveyWall* XEP_BuildSurveyWall( xercesc::DOMNode* pEntityNode, irr::scen
 static void XEP_ParseAndSetRotation( xercesc::DOMNode* pNode, Entity* pEntity, bool bPrintErrors = false, bool bOptional = true );
 static bool XEP_GetPosVectorElement( xercesc::DOMNode* pNode, Vector* pPosOut, bool bPrintErrors = false );
 static bool XEP_GetVectorElement( xercesc::DOMNode* pNode, XMLCh* pTag, Vector* pVectorOut, bool bPrintErrors = false, bool bOptional = false );
-static bool XEP_GetFloatElement( xercesc::DOMNode* pNode, XMLCh* pTag, F32* pFloatOut, bool bPrintErrors = false );
+static bool XEP_GetFloatElement( xercesc::DOMNode* pNode, XMLCh* pTag, F32* pFloatOut, bool bPrintErrors = false, bool bOptional = false );
 
 
 //------------------------------------------------------------------------------
@@ -129,6 +131,11 @@ bool XmlEntityParser::BuildEntitiesFromXMLWorldFile( const char* worldFilename,
                 case Entity::eT_Pool:
                 {
                     pNewEntity = XEP_BuildPool( pEntityNode, pSceneManager );
+                    break;
+                }
+                case Entity::eT_CircularPool:
+                {
+                    pNewEntity = XEP_BuildCircularPool( pEntityNode, pSceneManager );
                     break;
                 }
                 case Entity::eT_HarbourFloor:
@@ -237,8 +244,15 @@ Buoy* XEP_BuildBuoy( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* p
     
     if ( XEP_GetPosVectorElement( pEntityNode, &pos, PRINT_ERRORS ) )
     {
+        const bool OPTIONAL = true;
+        F32 radius = Buoy::DEFAULT_RADIUS;
+        
+        XMLCh* pRadiusTag = xercesc::XMLString::transcode( "radius" );
+        XEP_GetFloatElement( pEntityNode, pRadiusTag, &radius, PRINT_ERRORS, OPTIONAL );
+        xercesc::XMLString::release( &pRadiusTag );
+        
         pBuoy = new Buoy();
-        if ( !pBuoy->Init( pSceneManager, pPhysicsWorld ) )
+        if ( !pBuoy->Init( pSceneManager, pPhysicsWorld, radius ) )
         {
             fprintf( stderr, "Error: Unable to initialise buoy\n" );
             delete pBuoy;
@@ -315,8 +329,19 @@ Gate* XEP_BuildGate( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* p
     
     if ( XEP_GetPosVectorElement( pEntityNode, &pos, PRINT_ERRORS ) )
     {
+        const bool OPTIONAL = true;
+        F32 width = Gate::DEFAULT_WIDTH;
+        F32 height = Gate::DEFAULT_HEIGHT;
+        
+        XMLCh* pWidthTag = xercesc::XMLString::transcode( "width" );
+        XEP_GetFloatElement( pEntityNode, pWidthTag, &width, PRINT_ERRORS, OPTIONAL );
+        xercesc::XMLString::release( &pWidthTag );
+        XMLCh* pHeightTag = xercesc::XMLString::transcode( "height" );
+        XEP_GetFloatElement( pEntityNode, pHeightTag, &height, PRINT_ERRORS, OPTIONAL );
+        xercesc::XMLString::release( &pHeightTag );
+        
         pGate = new Gate();
-        if ( !pGate->Init( pSceneManager ) )
+        if ( !pGate->Init( pSceneManager, width, height ) )
         {
             fprintf( stderr, "Error: Unable to initialise gate\n" );
             delete pGate;
@@ -325,6 +350,7 @@ Gate* XEP_BuildGate( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* p
         else
         {
             pGate->SetPosition( pos );
+            XEP_ParseAndSetRotation( pEntityNode, pGate, PRINT_ERRORS );
         }
     }    
     
@@ -355,6 +381,39 @@ Pool* XEP_BuildPool( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* p
     }
     
     return pPool;
+}
+
+//------------------------------------------------------------------------------
+CircularPool* XEP_BuildCircularPool( xercesc::DOMNode* pEntityNode, irr::scene::ISceneManager* pSceneManager )
+{
+    const bool PRINT_ERRORS = true;
+    CircularPool* pCircularPool = NULL;
+    
+    Vector pos;
+    
+    if ( XEP_GetPosVectorElement( pEntityNode, &pos, PRINT_ERRORS ) )
+    {
+        const bool OPTIONAL = true;
+        F32 radius = CircularPool::DEFAULT_RADIUS;
+        
+        XMLCh* pRadiusTag = xercesc::XMLString::transcode( "radius" );
+        XEP_GetFloatElement( pEntityNode, pRadiusTag, &radius, PRINT_ERRORS, OPTIONAL );
+        xercesc::XMLString::release( &pRadiusTag );
+        
+        pCircularPool = new CircularPool();
+        if ( !pCircularPool->Init( pSceneManager, radius ) )
+        {
+            fprintf( stderr, "Error: Unable to initialise circular pool\n" );
+            delete pCircularPool;
+            pCircularPool = NULL;
+        }
+        else
+        {
+            pCircularPool->SetPosition( pos );
+        }
+    }
+    
+    return pCircularPool;
 }
 
 //------------------------------------------------------------------------------
@@ -521,7 +580,7 @@ bool XEP_GetVectorElement( xercesc::DOMNode* pNode, XMLCh* pTag, Vector* pVector
 }
 
 //------------------------------------------------------------------------------
-bool XEP_GetFloatElement( xercesc::DOMNode* pNode, XMLCh* pTag, F32* pFloatOut, bool bPrintErrors )
+bool XEP_GetFloatElement( xercesc::DOMNode* pNode, XMLCh* pTag, F32* pFloatOut, bool bPrintErrors, bool bOptional )
 {
     bool bFound = false;
     
@@ -542,7 +601,7 @@ bool XEP_GetFloatElement( xercesc::DOMNode* pNode, XMLCh* pTag, F32* pFloatOut, 
         }
     }
     
-    if ( !bFound && bPrintErrors )
+    if ( !bFound && !bOptional && bPrintErrors )
     {
         char* pNarrowTag = xercesc::XMLString::transcode( pTag );
         fprintf( stderr, "Error: Unable to parse float called %s\n", pNarrowTag );

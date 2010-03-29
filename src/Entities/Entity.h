@@ -25,6 +25,7 @@ class Entity
         eT_FloorTarget,
         eT_Gate,
         eT_Pool,
+        eT_CircularPool,    // TODO: Combine the Pool and CircularPool in some way
         eT_HarbourFloor,
         eT_Pipe,
         eT_SurveyWall,

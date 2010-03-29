@@ -83,8 +83,9 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager,
         
         // Correctly position the sub model
         mpConeMeshNode->setRotation( irr::core::vector3df( 90.0f, 0.0f, 0.0f ) );
-        mpConeMeshNode->setPosition( irr::core::vector3df( 0.0f, 0.0f, BODY_LENGTH ) );
+        mpConeMeshNode->setPosition( irr::core::vector3df( 0.0f, 0.0f, BODY_LENGTH / 2.0f ) );
         mpBodyMeshNode->setRotation( irr::core::vector3df( 90.0f, 0.0f, 0.0f ) );
+        mpBodyMeshNode->setPosition( irr::core::vector3df( 0.0f, 0.0f, -BODY_LENGTH / 2.0f ) );
         
         // Put the nodes under the control of SubSim
         AddChildNode( mpConeMeshNode );
@@ -96,15 +97,18 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager,
             snprintf( mRenderTargetName, sizeof( mRenderTargetName ), "RTT_%x", *(int*)this );
             mRenderTargetName[ sizeof( mRenderTargetName ) ] = '\0';
             mpCameraRenderTarget = pVideoDriver->addRenderTargetTexture(
-                irr::core::dimension2d<U32>(256,256), mRenderTargetName );
+                irr::core::dimension2d<U32>(320,240), mRenderTargetName );
                 
             mpCameraNode = pSceneManager->addCameraSceneNode(
-                0, irr::core::vector3df( 0.0f, 0.0f, 5.0f ), 
-                irr::core::vector3df( 0.0f, 0.0f, 6.0f ) );
+                0, irr::core::vector3df( 0.0f, 0.0f, 0.0f ), 
+                irr::core::vector3df( 0.0f, 0.0f, 1.0f ) );
             
             mpCameraNode->bindTargetAndRotation( true );
-            mpCameraNode->setPosition( irr::core::vector3df( 0.0f, 0.0f, 5.0f ) );
+            mpCameraNode->setPosition( irr::core::vector3df( 0.0f, 0.0f, BODY_LENGTH / 2.0f ) );
             mpCameraNode->setRotation( irr::core::vector3df( 0.0f, 0.0f, 0.0f ) );
+            mpCameraNode->setAspectRatio( 4.0f/3.0f );
+            mpCameraNode->setFOV( MathUtils::DegToRad( 44.0f )*3.0f/4.0f );
+            mpCameraNode->setNearValue( 0.1f );
                 
             // Put the camera node under the control of SubSim
             AddChildNode( mpCameraNode );
