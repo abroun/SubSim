@@ -162,7 +162,7 @@ void Entity::SetName( const char* name )
     }
     
     strncpy( mName, name, nameLength );
-    mName[ MAX_NAME_LENGTH ] = '\0';
+    mName[ nameLength ] = '\0';
 }
 
 //------------------------------------------------------------------------------

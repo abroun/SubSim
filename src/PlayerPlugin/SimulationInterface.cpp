@@ -129,6 +129,37 @@ int SimulationInterface::ProcessMessage( QueuePointer& respQueue,
         
         return 0;
     }
+    // Get a 2d pose
+    else if ( Message::MatchMessage( pHeader, PLAYER_MSGTYPE_REQ,
+        PLAYER_SIMULATION_REQ_GET_POSE2D, this->mDeviceAddress ) )
+    {
+        player_simulation_pose2d_req_t* pRequest =
+            (player_simulation_pose2d_req_t*)(pData);
+
+        Vector entityPos;
+        Vector entityRotation;
+        bool bEntityFound = mpDriver->mSim.GetEntityPose( 
+            pRequest->name, &entityPos, &entityRotation );
+        if ( bEntityFound )
+        {
+            pRequest->pose.px = entityPos.mX;
+            pRequest->pose.py = entityPos.mY;
+            pRequest->pose.pa = entityRotation.mZ;
+            
+            mpDriver->Publish( mDeviceAddress, respQueue, 
+                PLAYER_MSGTYPE_RESP_ACK, PLAYER_SIMULATION_REQ_GET_POSE2D,
+                pRequest, sizeof( player_simulation_pose2d_req_t ), NULL );
+        }
+        else
+        {
+            printf( "Can't find entity called %s\n", pRequest->name );
+            
+            mpDriver->Publish( mDeviceAddress, respQueue, 
+                PLAYER_MSGTYPE_RESP_NACK, PLAYER_SIMULATION_REQ_GET_POSE2D );
+        }
+        
+        return 0;
+    }
 /*
   /// Get a 2D pose
   else if (Message::MatchMessage(hdr, PLAYER_MSGTYPE_REQ,

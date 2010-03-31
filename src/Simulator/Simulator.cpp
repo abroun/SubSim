@@ -49,6 +49,7 @@ static Entity* FindEntityByName( const char* entityName, EntityPtrVector entityL
         entityList.end() != entityIter; ++entityIter )
     {
         Entity* pEntity = *entityIter;
+        
         if ( Utils::stricmp( pEntity->GetName(), entityName ) == 0 )
         {
             // Found the entity
