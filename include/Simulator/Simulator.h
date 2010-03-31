@@ -9,6 +9,7 @@
 
 //------------------------------------------------------------------------------
 #include "Common.h"
+#include "Vector.h"
 
 //------------------------------------------------------------------------------
 struct SimulatorImpl;
@@ -48,6 +49,11 @@ class Simulator
     //--------------------------------------------------------------------------
     //! Sets the desired yaw speed of the submarine in radians per second
     public: void SetSubYawSpeed( F32 yawSpeed );
+    
+    //--------------------------------------------------------------------------
+    //! Routines to get information about an entity. Returns false if the
+    //! entity can't be found and true otherwise
+    public: bool GetEntityPose( const char* entityName, Vector* pPosOut, Vector* pRotationOut ) const;
     
     //--------------------------------------------------------------------------
     //! Gets the time in seconds that the simulator has been running for.

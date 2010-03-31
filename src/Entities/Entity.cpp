@@ -23,6 +23,8 @@ const char* Entity::TYPE_NAMES[ eT_NumTypes ] =
     "SurveyWall"
 };
 
+S32 Entity::mEntityCount = 0;
+
 //------------------------------------------------------------------------------
 Entity::eType Entity::GetTypeFromString( const char* pTypeString )
 {
@@ -62,6 +64,9 @@ Entity::Entity()
     mpSceneManager( NULL ),
     mpTransformNode( NULL )
 {
+    snprintf( mName, MAX_NAME_LENGTH, "Entity_%i", mEntityCount );
+    mName[ MAX_NAME_LENGTH ] = '\0';
+    mEntityCount++;
 }
 
 //------------------------------------------------------------------------------
@@ -143,6 +148,21 @@ void Entity::SetRotation( const Vector& rotation )
 const Vector& Entity::GetRotation() const
 {
     return mRotation;
+}
+
+//------------------------------------------------------------------------------
+void Entity::SetName( const char* name )
+{
+    S32 nameLength = strlen( name );
+    
+    if ( nameLength > MAX_NAME_LENGTH )
+    {
+        fprintf( stderr, "Warning: Entity name %s is too long. Truncating...\n", name );
+        nameLength = MAX_NAME_LENGTH;
+    }
+    
+    strncpy( mName, name, nameLength );
+    mName[ MAX_NAME_LENGTH ] = '\0';
 }
 
 //------------------------------------------------------------------------------

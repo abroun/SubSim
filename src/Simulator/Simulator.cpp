@@ -14,6 +14,7 @@
 #include "Common.h"
 #include "Common/MathUtils.h"
 #include "Common/HighPrecisionTime.h"
+#include "Common/Utils.h"
 #include "Entities/Sub.h"
 #include "Entities/CoordinateSystemAxes.h"
 #include "Entities/Gate.h"
@@ -36,6 +37,28 @@ static S32 SIM_MAX_NUM_CATCHUP_FRAMES = 30; // If the simulator gets more than
                                             // will start dropping frames
 
 typedef std::vector<Entity*> EntityPtrVector;
+
+//------------------------------------------------------------------------------
+// Helper Routines
+//------------------------------------------------------------------------------
+static Entity* FindEntityByName( const char* entityName, EntityPtrVector entityList )
+{
+    Entity* pResult = NULL;
+    
+    for ( EntityPtrVector::iterator entityIter = entityList.begin();
+        entityList.end() != entityIter; ++entityIter )
+    {
+        Entity* pEntity = *entityIter;
+        if ( Utils::stricmp( pEntity->GetName(), entityName ) == 0 )
+        {
+            // Found the entity
+            pResult = pEntity;
+            break;
+        }
+    }
+    
+    return pResult;
+}
 
 //------------------------------------------------------------------------------
 // SimulatorImpl
@@ -403,7 +426,22 @@ void Simulator::SetSubYawSpeed( F32 yawSpeed )
     {
         mpImpl->mpSub->SetYawSpeed( yawSpeed );
     }
-}
+}   
+
+//--------------------------------------------------------------------------
+bool Simulator::GetEntityPose( const char* entityName, Vector* pPosOut, Vector* pRotationOut ) const
+{
+    bool bEntityFound = false;
+    Entity* pEntity = FindEntityByName( entityName, mpImpl->mEntityList );
+    if ( NULL != pEntity )
+    {
+        *pPosOut = pEntity->GetPosition();
+        *pRotationOut = pEntity->GetRotation();
+        bEntityFound = true;
+    }
+    
+    return bEntityFound;
+} 
 
 //--------------------------------------------------------------------------
 double Simulator::GetSimTime() const

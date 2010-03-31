@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <world>
-    <entity type="Sub">
+    <entity type="Sub" name="Sub">
         <pos>
             <x>0.0</x>
             <y>-1.3</y>
@@ -8,7 +8,7 @@
         </pos>
         <yaw>0.0</yaw>
     </entity>
-    <entity type="Buoy">
+    <entity type="Buoy" name="Buoy">
         <pos>
             <x>0.9</x>
             <y>-0.9</y>
@@ -16,7 +16,7 @@
         </pos>
         <radius>0.1</radius>
     </entity>
-    <entity type="Gate">
+    <entity type="Gate" name="Gate">
         <pos>
             <x>-1.0</x>
             <y>-0.2</y>

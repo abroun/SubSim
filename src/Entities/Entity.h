@@ -59,6 +59,10 @@ class Entity
     // Rotations are given in radians
     public: virtual void SetRotation( const Vector& rotation );
     public: virtual const Vector& GetRotation() const;
+    
+    //--------------------------------------------------------------------------
+    public: void SetName( const char* name );
+    public: const char* GetName() const { return mName; }
 
     //--------------------------------------------------------------------------
     // Accessor for the Yaw of the entity (rotation around the vertical z-axis)
@@ -94,6 +98,10 @@ class Entity
     // Translation and rotation in SubSim coordinates
     protected: Vector mTranslation;
     protected: Vector mRotation;
+    
+    public: static const S32 MAX_NAME_LENGTH = 31;
+    private: char mName[ MAX_NAME_LENGTH + 1 ];
+    private: static S32 mEntityCount;
 };
 
 #endif // ENTITY_H

@@ -95,27 +95,41 @@ int SimulationInterface::ProcessMessage( QueuePointer& respQueue,
                           PLAYER_MSGTYPE_RESP_ACK, 
                           PLAYER_SIMULATION_REQ_SET_POSE2D);
   }
+*/
+    // Get a 3d pose
+    if ( Message::MatchMessage( pHeader, PLAYER_MSGTYPE_REQ,
+        PLAYER_SIMULATION_REQ_GET_POSE3D, this->mDeviceAddress ) )
+    {
+        player_simulation_pose3d_req_t* pRequest =
+            (player_simulation_pose3d_req_t*)(pData);
 
-  /// Get a 3d pose
-  else if (Message::MatchMessage(hdr, PLAYER_MSGTYPE_REQ,
-                                 PLAYER_SIMULATION_REQ_GET_POSE3D, 
-                                 this->device_addr))
-  {
-    gazebo::SimulationRequestData *gzReq = NULL;
-    player_simulation_pose3d_req_t *req =
-      (player_simulation_pose3d_req_t*)(data);
+        Vector entityPos;
+        Vector entityRotation;
+        bool bEntityFound = mpDriver->mSim.GetEntityPose( 
+            pRequest->name, &entityPos, &entityRotation );
+        if ( bEntityFound )
+        {
+            pRequest->pose.px = entityPos.mX;
+            pRequest->pose.py = entityPos.mY;
+            pRequest->pose.pz = entityPos.mZ;
 
-    this->iface->Lock(1);
-
-    gzReq = &(this->iface->data->requests[this->iface->data->requestCount++]);
-
-    gzReq->type = gazebo::SimulationRequestData::GET_POSE3D;
-
-    strcpy((char*)gzReq->modelName, req->name);
-
-    this->iface->Unlock();
-  }
-
+            pRequest->pose.ppitch = entityRotation.mX;
+            pRequest->pose.proll = entityRotation.mY;
+            pRequest->pose.pyaw = entityRotation.mZ;
+            
+            mpDriver->Publish( mDeviceAddress, respQueue, 
+                PLAYER_MSGTYPE_RESP_ACK, PLAYER_SIMULATION_REQ_GET_POSE3D,
+                pRequest, sizeof( player_simulation_pose3d_req_t ), NULL );
+        }
+        else
+        {
+            mpDriver->Publish( mDeviceAddress, respQueue, 
+                PLAYER_MSGTYPE_RESP_NACK, PLAYER_SIMULATION_REQ_GET_POSE3D );
+        }
+        
+        return 0;
+    }
+/*
   /// Get a 2D pose
   else if (Message::MatchMessage(hdr, PLAYER_MSGTYPE_REQ,
                                  PLAYER_SIMULATION_REQ_GET_POSE2D, 

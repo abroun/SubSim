@@ -70,10 +70,13 @@ bool XmlEntityParser::BuildEntitiesFromXMLWorldFile( const char* worldFilename,
 
     XMLCh* pEntityTag = xercesc::XMLString::transcode( "entity" );
     XMLCh* pTypeAttributeTag = xercesc::XMLString::transcode( "type" );
+    XMLCh* pNameAttributeTag = xercesc::XMLString::transcode( "name" );
 
     try 
     {
         pParser->parse( worldFilename );
+        
+        printf( "Parsed...\n" );
         
         xercesc::DOMDocument* pDoc = pParser->getDocument();
         xercesc::DOMNodeList* pNodeList = pDoc->getElementsByTagName( pEntityTag );
@@ -165,7 +168,19 @@ bool XmlEntityParser::BuildEntitiesFromXMLWorldFile( const char* worldFilename,
             }
             else
             {
-                //printf( "Built a %s\n", Entity::ConvertTypeToString( pNewEntity->GetType() ) );
+                // Get and set the name of the new entity if it has one                
+                if ( NULL != pAttributes )
+                {
+                    xercesc::DOMNode* pNameAttribute = pAttributes->getNamedItem( pNameAttributeTag );
+                    if ( NULL != pNameAttribute )
+                    {
+                        char* pName = xercesc::XMLString::transcode( pNameAttribute->getTextContent() );
+                        pNewEntity->SetName( pName );
+                        xercesc::XMLString::release( &pName );
+                    }
+                }
+                
+                printf( "Built a %s\n", Entity::ConvertTypeToString( pNewEntity->GetType() ) );
                 pEntityListOut->push_back( pNewEntity );
             }
         }
@@ -191,12 +206,15 @@ bool XmlEntityParser::BuildEntitiesFromXMLWorldFile( const char* worldFilename,
         bSuccessful = false;
     }
         
+    xercesc::XMLString::release( &pNameAttributeTag );
     xercesc::XMLString::release( &pTypeAttributeTag );
     xercesc::XMLString::release( &pEntityTag );
-    delete pParser;
-    delete pErrHandler;
     
-    xercesc::XMLPlatformUtils::Terminate();
+    // TODO: Fix crash here...
+    //delete pParser;
+    //delete pErrHandler;
+    
+    //xercesc::XMLPlatformUtils::Terminate();
     
     return bSuccessful;
 }

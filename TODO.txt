@@ -1,6 +1,6 @@
 - Work to support the recording of a test sequence
     - Implement the Simulation interface for SubSim so that the ground truth values for object positions and bearings can be obtained
-    - Give entities in SubSim a name
+    
 
 - Setup the world to match the layout of the SAUC-E arena
     - Add in the harbour floor, pipe and survey wall - 19/3/2010
@@ -89,3 +89,4 @@ Done
 - Work to support the recording of a test sequence
     - Construct world for BRL tank - 29/3/2010
     - Reduce the simulated subs FOV to 44 degrees to match a webcam - 29/3/2010
+    - Give entities in SubSim a name - 29/3/2010
