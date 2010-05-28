@@ -61,7 +61,7 @@ ENABLE_TESTING()
 # Use Python interpreter
 FIND_PACKAGE(PythonInterp)
 
-SET(CXXTESTGEN /home/abroun/dev/extra/cxxtest/cxxtestgen.py)
+SET(CXXTESTGEN ${PROJECT_SOURCE_DIR}/3rdParty/cxxtest/cxxtestgen.py)
 
 ADD_CXXTEST( unitTests 
             ${PROJECT_SOURCE_DIR}/unitTests/VectorTests.h
