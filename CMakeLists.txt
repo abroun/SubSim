@@ -74,8 +74,8 @@ ADD_CXXTEST( unitTests
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR} 
     ${PROJECT_BINARY_DIR}
-    /home/abroun/dev/extra/cxxtest
-    /home/abroun/dev/install/include
+    ${PROJECT_SOURCE_DIR}/3rdParty/cxxtest
+    ${PROJECT_SOURCE_DIR}/../../install/include
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/src
     /usr/include/irrlicht
