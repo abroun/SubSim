@@ -29,5 +29,8 @@ TARGET_LINK_LIBRARIES( subsimplugin
     BulletDynamics
     BulletCollision
     LinearMath    # LinearMath is also from Bullet
-    xerces-c-3.0 )
+    xerces-c-3.1
+    Irrlicht )
 
+INSTALL( TARGETS subsimplugin
+        LIBRARY DESTINATION lib )

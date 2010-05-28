@@ -30,25 +30,9 @@ STRING( TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE )
 
 #-------------------------------------------------------------------------------
 # Look for libraries we depend on
-SET( IRRLICHT_VERSION 1.6 CACHE INTERNAL "Irrlicht version requirement" FORCE )
-SET( IRRLICHT_LIBRARY_PATH "/usr/local/lib" CACHE INTERNAL "Irrlicht library path" )
-
 SET( PLAYER_VERSION 3.0.0 CACHE INTERNAL "Player version requirement" FORCE )
 
 IF ( PKG_CONFIG_FOUND )
-
-    pkg_check_modules( IRRLICHT Irrlicht>=${IRRLICHT_VERSION} )
-    IF ( NOT IRRLICHT_FOUND )
-        MESSAGE (SEND_ERROR "\nError: Irrlicht version >=${IRRLICHT_VERSION} and development files not found.")
-    ELSE ( NOT IRRLICHT_FOUND )
-
-        SET( IRRLICHT_LIBRARY_PATH ${IRRLICHT_LIBRARY_DIRS} CACHE INTERNAL "Irrlicht library path" )
-        APPEND_LIBRARY_VARS_TO_CACHED_LISTS( ${IRRLICHT_INCLUDE_DIRS}
-                                ${IRRLICHT_LIBRARY_DIRS}
-                                ${IRRLICHT_LINK_LIBS}
-                                ${IRRLICHT_LIBRARIES}
-                                ${IRRLICHT_LDFLAGS} )
-    ENDIF ( NOT IRRLICHT_FOUND )
 
     pkg_check_modules( PLAYER playercore>=${PLAYER_VERSION} )
     IF ( NOT PLAYER_FOUND )
@@ -94,6 +78,7 @@ INCLUDE_DIRECTORIES(
     /home/abroun/dev/install/include
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/src
+    /usr/include/irrlicht
     ${global_include_dirs} )
 
 ADD_SUBDIRECTORY( src )
