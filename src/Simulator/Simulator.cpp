@@ -6,6 +6,7 @@
 //------------------------------------------------------------------------------
 #include "Simulator/Simulator.h"
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include <vector>
@@ -159,8 +160,35 @@ bool Simulator::Init( const char* worldFilename )
         // Populate the world
         if ( NULL != worldFilename )
         {
-            if ( !XmlEntityParser::BuildEntitiesFromXMLWorldFile( 
-                worldFilename, pSceneMgr, pVideoDriver, mpImpl->mpPhysicsWorld, &mpImpl->mEntityList ) )
+            char* modifiedFilename = NULL;
+            if ( worldFilename[ 0 ] == '~' );
+            {
+                const char* homeDirName = getenv( "HOME" );
+                if ( NULL == homeDirName )
+                {
+                    fprintf( stderr, "Error: Unable to find home dir\n" );
+                    DeInit();
+                    return false;
+                }
+                
+                U32 newStringLength = strlen( homeDirName ) 
+                    + strlen( worldFilename ) - 1;
+                modifiedFilename = new char[ newStringLength + 1 ];
+                strcpy( modifiedFilename, homeDirName );
+                strcat( modifiedFilename, &worldFilename[ 1 ] );
+                modifiedFilename[ newStringLength ] = '\0';
+            }
+            
+            bool bWorldBuilt = 
+                XmlEntityParser::BuildEntitiesFromXMLWorldFile( 
+                ( NULL != modifiedFilename ? modifiedFilename : worldFilename ), 
+                pSceneMgr, pVideoDriver, mpImpl->mpPhysicsWorld, &mpImpl->mEntityList );
+            if ( NULL != modifiedFilename )
+            {
+                delete [] modifiedFilename;
+                modifiedFilename = NULL;
+            }
+            if ( !bWorldBuilt )
             {
                 fprintf( stderr, "Error: Unable to build world\n" );
                 DeInit();
@@ -193,7 +221,7 @@ bool Simulator::Init( const char* worldFilename )
                             irr::video::EFT_FOG_EXP, 50, 3000, 0.005f, true, false );
                  
                             //  -750.0f, 200.0f, 300.0f ); 
-                            
+        
         // Create camera to view scene
         mpImpl->mpCamera = pSceneMgr->addCameraSceneNode( 0,
             irr::core::vector3df( 10.0f, 0, 0 ), irr::core::vector3df( 0, 0, 0 ) );

@@ -41,6 +41,8 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager,
             return false;
         }
         
+        printf( "Created base entity\n" );
+        
         // Create a cone and cylinder for the sub
         const irr::scene::IGeometryCreator* pCreator = pSceneManager->getGeometryCreator();
 
@@ -92,7 +94,7 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager,
         AddChildNode( mpBodyMeshNode );
         
         // Add a camera to the nose of the submarine
-        if ( pVideoDriver->queryFeature( irr::video::EVDF_RENDER_TO_TARGET ) )
+        /*if ( pVideoDriver->queryFeature( irr::video::EVDF_RENDER_TO_TARGET ) )
         {
             snprintf( mRenderTargetName, sizeof( mRenderTargetName ), "RTT_%x", *(int*)this );
             mRenderTargetName[ sizeof( mRenderTargetName ) ] = '\0';
@@ -113,7 +115,7 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager,
             // Put the camera node under the control of SubSim
             AddChildNode( mpCameraNode );
         }
-        else
+        else*/
         {
             fprintf( stderr, "Warning: Render to texture not available. "
                 "So the submarine will have no camera\n" );
@@ -170,9 +172,12 @@ void Sub::Update( F32 timeStep )
     SetPosition( newPos );
     SetYaw( newYaw );
     
-    Vector newHeading( -(F32)sin( newYaw ), (F32)cos( newYaw ), 0.0f );
-    Vector camTarget = newPos + 10.0f*newHeading;
-    irr::core::vector3df irrCamTarget = MathUtils::TransformVector_SubToIrr( camTarget );
-    mpCameraNode->setTarget( irrCamTarget );
+    if ( NULL != mpCameraNode )
+    {
+        Vector newHeading( -(F32)sin( newYaw ), (F32)cos( newYaw ), 0.0f );
+        Vector camTarget = newPos + 10.0f*newHeading;
+        irr::core::vector3df irrCamTarget = MathUtils::TransformVector_SubToIrr( camTarget );
+        mpCameraNode->setTarget( irrCamTarget );
+    }
 }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <world>
-    <entity type="Sub">
+    <entity type="Sub" name="Sub">
         <pos>
             <x>0.0</x>
             <y>0.0</y>
