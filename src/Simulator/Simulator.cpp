@@ -447,7 +447,16 @@ void Simulator::SetSubForwardSpeed( F32 forwardSpeed )
         mpImpl->mpSub->SetForwardSpeed( forwardSpeed );
     }
 }
-    
+
+//--------------------------------------------------------------------------
+void Simulator::SetSubDepthSpeed( F32 depthSpeed )
+{
+    if ( mpImpl->mbInitialised )
+    {
+        mpImpl->mpSub->SetDepthSpeed( depthSpeed );
+    }
+}
+
 //--------------------------------------------------------------------------
 void Simulator::SetSubYawSpeed( F32 yawSpeed )
 {

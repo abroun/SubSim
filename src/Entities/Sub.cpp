@@ -122,6 +122,7 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager,
         }
         
         mForwardSpeed = 0.0f;
+        mDepthSpeed = 0.0f;
         mYawSpeed = 0.0f;
 
         mbInitialised = true;
@@ -164,9 +165,15 @@ void Sub::Update( F32 timeStep )
     // happens before changes in heading
     
     // Update the position of the sub
+    // forward is y, positive z is up
+    //    y
+    //    |_ x
+    //   /
+    //  z
     F32 oldYaw = GetYaw();
     Vector heading( -(F32)sin( oldYaw ), (F32)cos( oldYaw ), 0.0f );
-    Vector newPos = GetPosition() + (heading * mForwardSpeed * timeStep);
+    Vector newPos = GetPosition() + (heading * mForwardSpeed * timeStep) + Vector( 0.0f, 0.0f, mDepthSpeed*timeStep ) ;
+    
     F32 newYaw = oldYaw + (mYawSpeed * timeStep);
     
     SetPosition( newPos );

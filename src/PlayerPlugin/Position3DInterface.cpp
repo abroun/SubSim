@@ -38,8 +38,9 @@ int Position3DInterface::ProcessMessage( QueuePointer& respQueue,
         //    (F32)pCmd->vel.px, (F32)pCmd->vel.py, (F32)pCmd->vel.pz );
         
         mpDriver->mSim.SetSubForwardSpeed( (F32)pCmd->vel.px );
+        mpDriver->mSim.SetSubDepthSpeed( (F32)pCmd->vel.pz );
         mpDriver->mSim.SetSubYawSpeed( (F32)pCmd->vel.pyaw );
-
+                
         return 0;
     }
     // Request to enable motor power

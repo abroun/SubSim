@@ -32,6 +32,10 @@ class Sub : public Entity
     public: void SetForwardSpeed( F32 forwardSpeed ) { mForwardSpeed = forwardSpeed; }
     
     //--------------------------------------------------------------------------
+    //! Sets the desired depth speed of the submarine in metres per second
+    public: void SetDepthSpeed( F32 depthSpeed ) { mDepthSpeed = depthSpeed; }
+    
+    //--------------------------------------------------------------------------
     //! Sets the desired yaw speed of the submarine in radians per second
     public: void SetYawSpeed( F32 yawSpeed ) { mYawSpeed = yawSpeed; }
 
@@ -51,6 +55,7 @@ class Sub : public Entity
     private: irr::scene::IMeshSceneNode* mpConeMeshNode;
     private: irr::scene::IMeshSceneNode* mpBodyMeshNode;
     private: F32 mForwardSpeed;
+    private: F32 mDepthSpeed;
     private: F32 mYawSpeed;
     private: irr::video::ITexture* mpCameraRenderTarget;
     private: irr::scene::ICameraSceneNode* mpCameraNode;

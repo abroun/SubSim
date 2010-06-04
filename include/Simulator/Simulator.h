@@ -47,9 +47,13 @@ class Simulator
     public: void SetSubForwardSpeed( F32 forwardSpeed );
     
     //--------------------------------------------------------------------------
+    //! Sets the desired depth speed of the submarine in metres per second
+    public: void SetSubDepthSpeed( F32 depthSpeed );
+    
+    //--------------------------------------------------------------------------
     //! Sets the desired yaw speed of the submarine in radians per second
     public: void SetSubYawSpeed( F32 yawSpeed );
-    
+        
     //--------------------------------------------------------------------------
     //! Routines to get information about an entity. Returns false if the
     //! entity can't be found and true otherwise
