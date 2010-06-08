@@ -74,8 +74,8 @@ bool XmlEntityParser::BuildEntitiesFromXMLWorldFile( const char* worldFilename,
 
     try 
     {
+        printf( "Parsing %s\n", worldFilename );
         pParser->parse( worldFilename );
-        
         printf( "Parsed...\n" );
         
         xercesc::DOMDocument* pDoc = pParser->getDocument();
@@ -197,6 +197,13 @@ bool XmlEntityParser::BuildEntitiesFromXMLWorldFile( const char* worldFilename,
     {
         char* message = xercesc::XMLString::transcode( toCatch.msg );
         fprintf( stderr, "Error: DOM Exception message is: %s\n", message );
+        xercesc::XMLString::release( &message );
+        bSuccessful = false;
+    }
+    catch ( const xercesc::SAXParseException& toCatch ) 
+    {
+        char* message = xercesc::XMLString::transcode( toCatch.getMessage() );
+        fprintf( stderr, "Error: SAX PArse Exception message is: %s\n", message );
         xercesc::XMLString::release( &message );
         bSuccessful = false;
     }

@@ -161,7 +161,7 @@ bool Simulator::Init( const char* worldFilename )
         if ( NULL != worldFilename )
         {
             char* modifiedFilename = NULL;
-            if ( worldFilename[ 0 ] == '~' );
+            if ( worldFilename[ 0 ] == '~' )
             {
                 const char* homeDirName = getenv( "HOME" );
                 if ( NULL == homeDirName )
