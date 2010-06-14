@@ -10,6 +10,8 @@
 #include "CameraInterface.h"
 #include "Position3DInterface.h"
 #include "CompassInterface.h"
+#include "PresSensorInterface.h"
+
 
 //------------------------------------------------------------------------------
 // A factory creation function, declared outside of the class so that it
@@ -262,6 +264,12 @@ int SubSimDriver::LoadDevices( ConfigFile* pConfigFile, int section )
             {
                 if ( !player_quiet_startup ) printf( " an imu interface.\n" );
                 pDeviceInterface = new CompassInterface( playerAddr, this, pConfigFile, section );
+                break;
+            }
+        case PLAYER_IMU_CODE:
+            {
+                if ( !player_quiet_startup ) printf( " an imu interface.\n" );
+                pDeviceInterface = new PresSensorInterface( playerAddr, this, pConfigFile, section );
                 break;
             }
         default:
