@@ -179,6 +179,11 @@ void Sub::Update( F32 timeStep )
     SetPosition( newPos );
     SetYaw( newYaw );
     
+    // pitch angle
+    Vector newRotation = mRotation;
+    newRotation.mX = MathUtils::DegToRad( 0.0f );
+    SetRotation( newRotation );
+    
     if ( NULL != mpCameraNode )
     {
         Vector newHeading( -(F32)sin( newYaw ), (F32)cos( newYaw ), 0.0f );

@@ -1,29 +1,29 @@
 //------------------------------------------------------------------------------
-// File: CompassInterface.cpp
-// Desc: An interface that returns the heading of the simulated submarine
+// File: PresSensorInterface.cpp
+// Desc: An interface that returns the depth of the simulated submarine
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-#include "CompassInterface.h"
+#include "DepthSensorInterface.h"
 
 #include <stdio.h>
 #include "SubSimDriver.h"
 
 //------------------------------------------------------------------------------
-CompassInterface::CompassInterface( player_devaddr_t addr, 
+DepthSensorInterface::DepthSensorInterface( player_devaddr_t addr, 
     SubSimDriver* pDriver, ConfigFile* pConfigFile, int section )
     : SubSimInterface( addr, pDriver, pConfigFile, section )
 {
 }
 
 //------------------------------------------------------------------------------
-CompassInterface::~CompassInterface()
+DepthSensorInterface::~DepthSensorInterface()
 {
 }
 
 //------------------------------------------------------------------------------
 // Handle all messages.
-int CompassInterface::ProcessMessage( QueuePointer& respQueue,
+int DepthSensorInterface::ProcessMessage( QueuePointer& respQueue,
                                         player_msghdr_t* pHeader, void* pData )
 {
     
@@ -34,25 +34,19 @@ int CompassInterface::ProcessMessage( QueuePointer& respQueue,
 
 //------------------------------------------------------------------------------
 // Update this interface and publish new info.
-void CompassInterface::Update()
+void DepthSensorInterface::Update()
 {
     // Publish the current heading of the submarine
-    player_imu_data_state_t data;
+    player_position1d_data data;
 
     Vector subPos;
     Vector subRotation;
     mpDriver->mSim.GetEntityPose( "Sub", &subPos, &subRotation );
     
-    data.pose.px = 0.0;
-    data.pose.py = 0.0;
-    data.pose.pz = 0.0;
-
-    data.pose.proll = subRotation.mY;
-    data.pose.ppitch = subRotation.mX;
-    data.pose.pyaw = subRotation.mZ;
+    data.pos = subPos.mZ;
 
     mpDriver->Publish( this->mDeviceAddress,
-                       PLAYER_MSGTYPE_DATA, PLAYER_IMU_DATA_STATE,
+                       PLAYER_MSGTYPE_DATA, PLAYER_POSITION1D_DATA_STATE,
                        (void*)&data, sizeof( data ) );
 }
 

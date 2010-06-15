@@ -10,7 +10,7 @@
 #include "CameraInterface.h"
 #include "Position3DInterface.h"
 #include "CompassInterface.h"
-#include "PresSensorInterface.h"
+#include "DepthSensorInterface.h"
 
 
 //------------------------------------------------------------------------------
@@ -266,10 +266,10 @@ int SubSimDriver::LoadDevices( ConfigFile* pConfigFile, int section )
                 pDeviceInterface = new CompassInterface( playerAddr, this, pConfigFile, section );
                 break;
             }
-        case PLAYER_IMU_CODE:
+        case PLAYER_POSITION1D_CODE:
             {
-                if ( !player_quiet_startup ) printf( " an imu interface.\n" );
-                pDeviceInterface = new PresSensorInterface( playerAddr, this, pConfigFile, section );
+                if ( !player_quiet_startup ) printf( " depth interface.\n" );
+                pDeviceInterface = new DepthSensorInterface( playerAddr, this, pConfigFile, section );
                 break;
             }
         default:

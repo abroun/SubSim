@@ -13,7 +13,8 @@ SET( srcFiles
     SimulationInterface.cpp
     Position3DInterface.cpp
     CameraInterface.cpp
-    CompassInterface.cpp )
+    CompassInterface.cpp
+    DepthSensorInterface.cpp )
 
 LINK_DIRECTORIES( ${global_link_dirs} )
 ADD_LIBRARY( subsimplugin SHARED ${srcFiles} )
