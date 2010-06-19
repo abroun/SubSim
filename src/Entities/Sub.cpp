@@ -124,6 +124,7 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager,
         mForwardSpeed = 0.0f;
         mDepthSpeed = 0.0f;
         mYawSpeed = 0.0f;
+        mPitchSpeed = 0.0f;
 
         mbInitialised = true;
     }
@@ -171,22 +172,26 @@ void Sub::Update( F32 timeStep )
     //   /
     //  z
     F32 oldYaw = GetYaw();
-    Vector heading( -(F32)sin( oldYaw ), (F32)cos( oldYaw ), 0.0f );
+    F32 oldPitch = GetPitch();
+    Vector heading( -(F32)sin( oldYaw ), (F32)cos( oldYaw ), (F32)sin( oldPitch ) );
     Vector newPos = GetPosition() + (heading * mForwardSpeed * timeStep) + Vector( 0.0f, 0.0f, mDepthSpeed*timeStep ) ;
     
     F32 newYaw = oldYaw + (mYawSpeed * timeStep);
+    F32 newPitch = oldPitch + (mPitchSpeed * timeStep);
     
     SetPosition( newPos );
+    SetRotation( mRotation );
     SetYaw( newYaw );
+    SetPitch( newPitch );
     
     // pitch angle
-    Vector newRotation = mRotation;
-    newRotation.mX = MathUtils::DegToRad( 0.0f );
-    SetRotation( newRotation );
+    // Vector newRotation = mRotation;
+    // newRotation.mX = MathUtils::DegToRad( 120.0f );
+    
     
     if ( NULL != mpCameraNode )
     {
-        Vector newHeading( -(F32)sin( newYaw ), (F32)cos( newYaw ), 0.0f );
+        Vector newHeading( -(F32)sin( newYaw ), (F32)cos( newYaw ), (F32)sin( newPitch ) );
         Vector camTarget = newPos + 10.0f*newHeading;
         irr::core::vector3df irrCamTarget = MathUtils::TransformVector_SubToIrr( camTarget );
         mpCameraNode->setTarget( irrCamTarget );

@@ -40,6 +40,7 @@ int Position3DInterface::ProcessMessage( QueuePointer& respQueue,
         mpDriver->mSim.SetSubForwardSpeed( (F32)pCmd->vel.px );
         mpDriver->mSim.SetSubDepthSpeed( (F32)pCmd->vel.pz );
         mpDriver->mSim.SetSubYawSpeed( (F32)pCmd->vel.pyaw );
+        mpDriver->mSim.SetSubPitchSpeed( (F32)pCmd->vel.ppitch );
                 
         return 0;
     }

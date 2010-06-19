@@ -182,6 +182,22 @@ F32 Entity::GetYaw() const
 }
 
 //------------------------------------------------------------------------------
+void Entity::SetPitch( F32 pitchAngle )
+{
+    if ( mbInitialised )
+    {
+        mRotation.mX = pitchAngle;
+        UpdateTransform();
+    }
+}
+
+//------------------------------------------------------------------------------
+F32 Entity::GetPitch() const
+{
+    return mRotation.mX;
+}
+
+//------------------------------------------------------------------------------
 void Entity::UpdateTransform()
 {
     irr::core::vector3df irrRotation = MathUtils::TransformRotation_SubToIrr( mRotation );

@@ -69,6 +69,12 @@ class Entity
     // in radians
     public: void SetYaw( F32 yawAngle );
     public: F32 GetYaw() const;
+
+    //--------------------------------------------------------------------------
+    // Accessor for the Pitch of the entity (rotation around the vertical z-axis)
+    // in radians
+    public: void SetPitch( F32 pitchAngle );
+    public: F32 GetPitch() const;
     
     //--------------------------------------------------------------------------
     // Helper routine for working with the entity's transform
