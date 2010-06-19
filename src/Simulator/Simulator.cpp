@@ -467,6 +467,15 @@ void Simulator::SetSubYawSpeed( F32 yawSpeed )
 }   
 
 //--------------------------------------------------------------------------
+void Simulator::SetSubPitchSpeed( F32 pitchSpeed )
+{
+    if ( mpImpl->mbInitialised )
+    {
+        mpImpl->mpSub->SetPitchSpeed( pitchSpeed );
+    }
+} 
+
+//--------------------------------------------------------------------------
 bool Simulator::GetEntityPose( const char* entityName, Vector* pPosOut, Vector* pRotationOut ) const
 {
     bool bEntityFound = false;

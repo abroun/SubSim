@@ -40,6 +40,10 @@ class Sub : public Entity
     public: void SetYawSpeed( F32 yawSpeed ) { mYawSpeed = yawSpeed; }
 
     //--------------------------------------------------------------------------
+    //! Sets the desired pitch speed of the submarine in radians per second
+    public: void SetPitchSpeed( F32 pitchSpeed ) { mPitchSpeed = pitchSpeed; }
+    
+    //--------------------------------------------------------------------------
     //! Gets the render target that the simulator will use to render the view
     //! from the submarines camera
     public: irr::video::ITexture* GetCameraRenderTarget() const { return mpCameraRenderTarget; }
@@ -57,6 +61,7 @@ class Sub : public Entity
     private: F32 mForwardSpeed;
     private: F32 mDepthSpeed;
     private: F32 mYawSpeed;
+    private: F32 mPitchSpeed;
     private: irr::video::ITexture* mpCameraRenderTarget;
     private: irr::scene::ICameraSceneNode* mpCameraNode;
     private: char mRenderTargetName[ 16 ];

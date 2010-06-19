@@ -53,6 +53,10 @@ class Simulator
     //--------------------------------------------------------------------------
     //! Sets the desired yaw speed of the submarine in radians per second
     public: void SetSubYawSpeed( F32 yawSpeed );
+    
+    //--------------------------------------------------------------------------
+    //! Sets the desired pitch speed of the submarine in radians per second
+    public: void SetSubPitchSpeed( F32 pitchSpeed );
         
     //--------------------------------------------------------------------------
     //! Routines to get information about an entity. Returns false if the

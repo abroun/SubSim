@@ -268,7 +268,7 @@ int SubSimDriver::LoadDevices( ConfigFile* pConfigFile, int section )
             }
         case PLAYER_POSITION1D_CODE:
             {
-                if ( !player_quiet_startup ) printf( " depth interface.\n" );
+                if ( !player_quiet_startup ) printf( " a depth interface.\n" );
                 pDeviceInterface = new DepthSensorInterface( playerAddr, this, pConfigFile, section );
                 break;
             }
