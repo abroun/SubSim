@@ -198,6 +198,22 @@ F32 Entity::GetPitch() const
 }
 
 //------------------------------------------------------------------------------
+void Entity::SetDepth( F32 depth )
+{
+    if ( mbInitialised )
+    {
+        mTranslation.mZ = depth;
+        UpdateTransform();
+    }
+}
+
+//------------------------------------------------------------------------------
+F32 Entity::GetDepth() const
+{
+    return mTranslation.mZ;
+}
+
+//------------------------------------------------------------------------------
 void Entity::UpdateTransform()
 {
     irr::core::vector3df irrRotation = MathUtils::TransformRotation_SubToIrr( mRotation );

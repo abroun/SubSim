@@ -6,6 +6,7 @@
 //------------------------------------------------------------------------------
 #include "CompassInterface.h"
 
+#include <math.h>
 #include <stdio.h>
 #include "SubSimDriver.h"
 
@@ -49,8 +50,28 @@ void CompassInterface::Update()
 
     data.pose.proll = subRotation.mY;
     data.pose.ppitch = subRotation.mX;
-    data.pose.pyaw = subRotation.mZ;
+    
+    // --------------------------------
+    // Yaw angle: radians
+    F32 radCompassYawAngle = subRotation.mZ;
+    if (radCompassYawAngle != 0.0)
+    {
+         radCompassYawAngle = 2*M_PI - radCompassYawAngle;
+    }
+    while (radCompassYawAngle >= 2*M_PI)
+    {
+        radCompassYawAngle -= 2*M_PI;
+    }
+    
+    while (radCompassYawAngle < 0)
+    {
+        radCompassYawAngle += 2*M_PI;
+    }
+    printf("CompassInterface: radCompassYawAngle = %f\n", radCompassYawAngle*180/M_PI);
+      
+    data.pose.pyaw = radCompassYawAngle;
 
+    // --------------------------------
     mpDriver->Publish( this->mDeviceAddress,
                        PLAYER_MSGTYPE_DATA, PLAYER_IMU_DATA_STATE,
                        (void*)&data, sizeof( data ) );

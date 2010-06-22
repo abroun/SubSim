@@ -125,7 +125,6 @@ bool Sub::Init( irr::scene::ISceneManager* pSceneManager,
         mDepthSpeed = 0.0f;
         mYawSpeed = 0.0f;
         mPitchSpeed = 0.0f;
-
         mbInitialised = true;
     }
 
@@ -173,20 +172,21 @@ void Sub::Update( F32 timeStep )
     //  z
     F32 oldYaw = GetYaw();
     F32 oldPitch = GetPitch();
+    F32 oldDepth = GetDepth();
     Vector heading( -(F32)sin( oldYaw ), (F32)cos( oldYaw ), (F32)sin( oldPitch ) );
-    Vector newPos = GetPosition() + (heading * mForwardSpeed * timeStep) + Vector( 0.0f, 0.0f, mDepthSpeed*timeStep ) ;
+    Vector newPos = GetPosition() + (heading * mForwardSpeed * timeStep);
+    // + Vector( 0.0f, 0.0f, oldDepth ) --> not needed anymore.
+    // depth is included in GetPosition - look at Entity.cpp, SetDepth
     
     F32 newYaw = oldYaw + (mYawSpeed * timeStep);
     F32 newPitch = oldPitch + (mPitchSpeed * timeStep);
+    F32 newDepth = oldDepth + (mDepthSpeed * timeStep);
     
     SetPosition( newPos );
     SetRotation( mRotation );
     SetYaw( newYaw );
     SetPitch( newPitch );
-    
-    // pitch angle
-    // Vector newRotation = mRotation;
-    // newRotation.mX = MathUtils::DegToRad( 120.0f );
+    SetDepth( newDepth );
     
     
     if ( NULL != mpCameraNode )

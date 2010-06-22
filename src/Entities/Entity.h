@@ -71,11 +71,16 @@ class Entity
     public: F32 GetYaw() const;
 
     //--------------------------------------------------------------------------
-    // Accessor for the Pitch of the entity (rotation around the vertical z-axis)
+    // Accessor for the Pitch of the entity (rotation around the x-axis)
     // in radians
     public: void SetPitch( F32 pitchAngle );
     public: F32 GetPitch() const;
     
+    //--------------------------------------------------------------------------
+    // Accessor for the Depth of the entity (translation along the vertical z-axis)
+    // in radians
+    public: void SetDepth( F32 depthAngle );
+    public: F32 GetDepth() const;
     //--------------------------------------------------------------------------
     // Helper routine for working with the entity's transform
     private: void UpdateTransform();
