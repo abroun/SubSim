@@ -4,9 +4,9 @@
         <pos>
             <x>0.0</x>
             <y>0.0</y>
-            <z>-1.0</z>
+            <z>-0.1</z>
         </pos>
-        <yaw>0.0</yaw>
+        <yaw>95.0</yaw>
     </entity>
     <entity type="Buoy">
         <pos>
