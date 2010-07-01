@@ -67,7 +67,7 @@ void CompassInterface::Update()
     {
         radCompassYawAngle += 2*M_PI;
     }
-    printf("CompassInterface: radCompassYawAngle = %f\n", radCompassYawAngle*180/M_PI);
+    //printf("CompassInterface: radCompassYawAngle = %f\n", radCompassYawAngle*180/M_PI);
       
     data.pose.pyaw = radCompassYawAngle;
 

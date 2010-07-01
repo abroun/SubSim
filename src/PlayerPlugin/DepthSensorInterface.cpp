@@ -43,7 +43,9 @@ void DepthSensorInterface::Update()
     Vector subRotation;
     mpDriver->mSim.GetEntityPose( "Sub", &subPos, &subRotation );
     
-    data.pos = subPos.mZ;
+    // Convert to positive depth to make the depth sensor more like the 
+    // real one
+    data.pos = -subPos.mZ*1000;
 
     mpDriver->Publish( this->mDeviceAddress,
                        PLAYER_MSGTYPE_DATA, PLAYER_POSITION1D_DATA_STATE,

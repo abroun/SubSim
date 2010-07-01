@@ -11,7 +11,7 @@
 #include "Position3DInterface.h"
 #include "CompassInterface.h"
 #include "DepthSensorInterface.h"
-
+#include "SonarInterface.h"
 
 //------------------------------------------------------------------------------
 // A factory creation function, declared outside of the class so that it
@@ -270,6 +270,12 @@ int SubSimDriver::LoadDevices( ConfigFile* pConfigFile, int section )
             {
                 if ( !player_quiet_startup ) printf( " a depth interface.\n" );
                 pDeviceInterface = new DepthSensorInterface( playerAddr, this, pConfigFile, section );
+                break;
+            }
+        case PLAYER_MICRONSONAR_CODE:
+            {
+                if ( !player_quiet_startup ) printf( " a micron sonar interface.\n" );
+                pDeviceInterface = new SonarInterface( playerAddr, this, pConfigFile, section );
                 break;
             }
         default:

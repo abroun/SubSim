@@ -46,17 +46,41 @@ void CameraInterface::Update()
     player_camera_data_t data;
     
     // Get the camera image and then return it
-    mpDriver->mSim.GetSubCameraImage( mpImageData, mImageBufferSize );
+    //mpDriver->mSim.GetSubCameraImage( mpImageData, mImageBufferSize );
     mImageTimestamp = mpDriver->mSim.GetSimTime();
     
-    data.width = mImageWidth;
+    /*data.width = mImageWidth;
     data.height = mImageHeight;
     data.bpp = 24;
     data.format = PLAYER_CAMERA_FORMAT_RGB888;
     data.fdiv = 1;
     data.compression = PLAYER_CAMERA_COMPRESS_RAW;
     data.image_count = mImageBufferSize;
-    data.image = mpImageData;
+    data.image = mpImageData;*/
+
+    // Fake data for now as camera is broken
+    data.width = 320;
+    data.height = 240;
+    data.bpp = 24;
+    data.format = PLAYER_CAMERA_FORMAT_RGB888;
+    data.fdiv = 1;
+    data.compression = PLAYER_CAMERA_COMPRESS_RAW;
+    data.image_count = data.width*data.height*3;
+    
+    U8 buffer[ data.image_count ];
+    data.image = buffer;
+
+    // Put something into the buffer
+    for ( S32 y = 0; y < data.height; y++ )
+    {
+        for ( S32 x = 0; x < data.width; x++ )
+        {
+            S32 idx = data.width*y + x*3;
+            data.image[ idx ] = (x-y)%256;
+            data.image[ idx + 1 ] = (x-y)%256;
+            data.image[ idx + 2 ] = (x-y)%256;
+        }
+    }
 
     mpDriver->Publish( this->mDeviceAddress,
                        PLAYER_MSGTYPE_DATA, PLAYER_CAMERA_DATA_STATE,
