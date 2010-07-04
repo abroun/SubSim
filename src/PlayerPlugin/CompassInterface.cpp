@@ -49,7 +49,22 @@ void CompassInterface::Update()
     data.pose.pz = 0.0;
 
     data.pose.proll = subRotation.mY;
-    data.pose.ppitch = subRotation.mX;
+    
+    F32 radCompassPitchAngle = subRotation.mX;
+    if (radCompassPitchAngle != 0.0)
+    {
+         radCompassPitchAngle = 2*M_PI - radCompassPitchAngle;
+    }
+    while (radCompassPitchAngle >= M_PI)
+    {
+        radCompassPitchAngle -= 2*M_PI;
+    }
+    
+    while (radCompassPitchAngle < -M_PI)
+    {
+        radCompassPitchAngle += 2*M_PI;
+    }
+    data.pose.ppitch = radCompassPitchAngle;
     
     // --------------------------------
     // Yaw angle: radians

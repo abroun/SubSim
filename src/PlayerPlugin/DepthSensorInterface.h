@@ -8,7 +8,9 @@
 #define DEPTH_SENSOR_INTERFACE_H
 
 //------------------------------------------------------------------------------
+#include "Common.h"
 #include "SubSimInterface.h"
+#include "Common/HighPrecisionTime.h"
 
 //------------------------------------------------------------------------------
 class DepthSensorInterface : public SubSimInterface
@@ -25,6 +27,11 @@ class DepthSensorInterface : public SubSimInterface
 
     // Update this interface, publish new info.
     public: virtual void Update();
+    
+    private: bool mbDepthSensorBroken;
+    private: F32 mLastValue;
+    private: HighPrecisionTime mWaitForBreakStartTime;
+    private: static const F32 TIME_UNTILL_DEPTH_SENSOR_BREAKS;
 };
 
 #endif // DEPTH_SENSOR_INTERFACE_H

@@ -182,12 +182,19 @@ void Sub::Update( F32 timeStep )
     F32 newPitch = oldPitch + (mPitchSpeed * timeStep);
     F32 newDepth = oldDepth + (mDepthSpeed * timeStep);
     
+    // Very simple constant speed model of buoyancy
+    const F32 BUOYANCY_SPEED = 0.15f;
+    if ( newDepth < 0.0f
+        && ( mDepthSpeed == 0.0f || fabs( mDepthSpeed ) > 0.2f  ) )
+    {
+        newDepth += BUOYANCY_SPEED*timeStep;
+    }
+    
     SetPosition( newPos );
     SetRotation( mRotation );
     SetYaw( newYaw );
     SetPitch( newPitch );
     SetDepth( newDepth );
-    
     
     if ( NULL != mpCameraNode )
     {

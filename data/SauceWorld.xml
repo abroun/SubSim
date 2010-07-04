@@ -18,14 +18,14 @@
     <entity type="Gate">
         <pos>
             <x>0.0</x>
-            <y>7.5</y>
+            <y>5.0</y>
             <z>-2.25</z>
         </pos>
     </entity>
     <entity type="Gate">
         <pos>
             <x>0.0</x>
-            <y>-7.5</y>
+            <y>-5.0</y>
             <z>-2.25</z>
         </pos>
     </entity>
